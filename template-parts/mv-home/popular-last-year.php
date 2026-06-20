@@ -24,6 +24,8 @@ if ( empty( $posts ) ) {
 	return;
 }
 
+$month_label = date_i18n( 'F', strtotime( $month ) );
+
 $items = [];
 foreach ( $posts as $popular_post ) {
 	ob_start();
@@ -37,7 +39,8 @@ foreach ( $posts as $popular_post ) {
 	<div class="mv-container">
 		<?php
 		get_template_part( 'template-parts/mv-shared/section-header', null, [
-			'title' => __( 'Populaire à la même période l’an dernier', 'mavo' ),
+			/* translators: %s: localized month name, e.g. "juin" */
+			'title' => sprintf( __( 'Les articles les plus lus en %s l’an dernier', 'mavo' ), $month_label ),
 		] );
 		get_template_part( 'template-parts/mv-shared/grid-wrapper', null, [
 			'columns' => 3,

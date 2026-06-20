@@ -4,8 +4,9 @@
  *
  * 3 latest posts in the current language. Kept below the evergreen
  * pathway sections on purpose (plan-mid.md §4.1 Section 7: "place lower
- * than evergreen routes"). No "view all" link yet — there's no /blog/
- * (or equivalent) latest-posts page until plan-mid.md Phase 9.
+ * than evergreen routes"). "Voir tous les articles" links to "#" — no
+ * /blog/ (or equivalent) latest-posts page yet (plan Phase 9); swap once
+ * that URL exists.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -42,12 +43,17 @@ foreach ( $recent_query->posts as $recent_post ) {
 	<div class="mv-container">
 		<?php
 		get_template_part( 'template-parts/mv-shared/section-header', null, [
-			'title' => __( 'Derniers articles', 'mavo' ),
+			'title' => __( 'Nos dernières aventures', 'mavo' ),
 		] );
 		get_template_part( 'template-parts/mv-shared/grid-wrapper', null, [
 			'columns' => 3,
 			'items'   => $items,
 		] );
 		?>
+		<p class="mv-recent-posts__more">
+			<a class="mv-button mv-button--secondary" href="#">
+				<?php esc_html_e( 'Voir tous les articles', 'mavo' ); ?>
+			</a>
+		</p>
 	</div>
 </section>
