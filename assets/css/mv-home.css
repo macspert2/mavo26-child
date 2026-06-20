@@ -57,9 +57,16 @@
 	outline-offset: 2px;
 }
 
+.mv-card__image {
+	display: block;
+	aspect-ratio: 3 / 2;
+	overflow: hidden;
+}
+
 .mv-card__image img {
 	width: 100%;
-	height: auto;
+	height: 100%;
+	object-fit: cover;
 	display: block;
 }
 

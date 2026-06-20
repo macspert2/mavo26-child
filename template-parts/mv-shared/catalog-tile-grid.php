@@ -11,9 +11,14 @@
  *       'title'          => 'Voyager selon votre famille',
  *       'keys'           => [ 'bebe', 'une_semaine', 'nature_rando' ],
  *       'columns'        => 4,
- *       'posts_per_key'  => 3,      // optional, how many posts to check per key
+ *       'posts_per_key'  => 6,      // optional, how many posts to check per key
  *       'link_to'        => 'focus', // optional: 'focus' (default) or 'full'
  *   ] );
+ *
+ * `posts_per_key` is also the candidate pool for image de-duplication
+ * (see below) — too small and overlapping keys (e.g. France/Europe/no
+ * jet-lag are all true of the same posts) can exhaust every candidate's
+ * image and fall back to a repeat.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -28,7 +33,7 @@ $section_class = $args['section_class'] ?? '';
 $title         = $args['title'] ?? '';
 $keys          = $args['keys'] ?? [];
 $columns       = (int) ( $args['columns'] ?? 4 );
-$posts_per_key = (int) ( $args['posts_per_key'] ?? 3 );
+$posts_per_key = (int) ( $args['posts_per_key'] ?? 6 );
 $link_to       = $args['link_to'] ?? 'focus';
 
 if ( empty( $keys ) ) {
