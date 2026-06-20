@@ -4,14 +4,27 @@
  *
  * 3 latest posts in the current language. Kept below the evergreen
  * pathway sections on purpose (plan-mid.md §4.1 Section 7: "place lower
- * than evergreen routes"). "Voir tous les articles" links to "#" — no
- * /blog/ (or equivalent) latest-posts page yet (plan Phase 9); swap once
- * that URL exists.
+ * than evergreen routes"). The "view all" link is "#" for every language
+ * — no /blog/ (or equivalent) latest-posts page yet (plan Phase 9).
+ *
+ * Shared across FR/EN/DE homepages (query logic doesn't differ by
+ * language), with just the label text switched — unlike hero/about-mini/
+ * destinations, which differ enough in content to warrant separate files
+ * per language (see template-parts/mv-home-en/, mv-home-de/).
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+$lang = function_exists( 'pll_current_language' ) ? pll_current_language( 'slug' ) : 'fr';
+
+$labels = [
+	'fr' => [ 'title' => 'Nos dernières aventures', 'more' => 'Voir tous les articles' ],
+	'en' => [ 'title' => 'Our latest adventures', 'more' => 'See all articles' ],
+	'de' => [ 'title' => 'Unsere neuesten Abenteuer', 'more' => 'Alle Artikel ansehen' ],
+];
+$label = $labels[ $lang ] ?? $labels['fr'];
 
 $query_args = [
 	'post_type'           => 'post',
@@ -21,7 +34,7 @@ $query_args = [
 ];
 
 if ( function_exists( 'pll_current_language' ) ) {
-	$query_args['lang'] = pll_current_language( 'slug' );
+	$query_args['lang'] = $lang;
 }
 
 $recent_query = new WP_Query( $query_args );
@@ -43,7 +56,7 @@ foreach ( $recent_query->posts as $recent_post ) {
 	<div class="mv-container">
 		<?php
 		get_template_part( 'template-parts/mv-shared/section-header', null, [
-			'title' => __( 'Nos dernières aventures', 'mavo' ),
+			'title' => $label['title'],
 		] );
 		get_template_part( 'template-parts/mv-shared/grid-wrapper', null, [
 			'columns' => 3,
@@ -52,7 +65,7 @@ foreach ( $recent_query->posts as $recent_post ) {
 		?>
 		<p class="mv-recent-posts__more">
 			<a class="mv-button mv-button--secondary" href="#">
-				<?php esc_html_e( 'Voir tous les articles', 'mavo' ); ?>
+				<?php echo esc_html( $label['more'] ); ?>
 			</a>
 		</p>
 	</div>
