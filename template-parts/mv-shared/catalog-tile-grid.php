@@ -48,7 +48,6 @@ $lang               = function_exists( 'pll_current_language' ) ? pll_current_la
 
 $items       = [];
 $used_images = []; // avoid repeating the same photo twice within this section.
-$debug_lines = []; // TEMP — remove once the image-repeat issue is diagnosed.
 
 foreach ( $keys as $key ) {
 	$meta = TVF_Homepage::get_card_meta( $key );
@@ -61,15 +60,11 @@ foreach ( $keys as $key ) {
 		continue; // no matching posts yet — skip rather than show an empty promise.
 	}
 
-	$debug_candidates = array_map(
-		static fn( $p ) => $p->ID . ':' . ( get_the_post_thumbnail_url( $p, 'medium_large' ) ?: 'NO-IMAGE' ),
-		$posts
-	);
-
 	// Prefer the top post's image, but if it was already used earlier in
 	// this section (the same post ranks #1 for more than one tile), fall
 	// through to the next-ranked post that has an unused image instead.
-	$image = null;
+	$image          = null;
+	$is_placeholder = false;
 	foreach ( $posts as $candidate ) {
 		$candidate_image = get_the_post_thumbnail_url( $candidate, 'medium_large' );
 		if ( $candidate_image && ! in_array( $candidate_image, $used_images, true ) ) {
@@ -77,21 +72,19 @@ foreach ( $keys as $key ) {
 			break;
 		}
 	}
-	$fellback = ! $image;
 	if ( ! $image ) {
-		$image = get_the_post_thumbnail_url( $posts[0], 'medium_large' ) ?: $placeholder_image;
+		$image = get_the_post_thumbnail_url( $posts[0], 'medium_large' );
+		if ( ! $image ) {
+			$image          = $placeholder_image;
+			$is_placeholder = true;
+		}
 	}
 
-	$debug_lines[] = sprintf(
-		"key=%s used_images_before=[%s] candidates=[%s] fellback=%s picked=%s",
-		$key,
-		implode( ' | ', $used_images ),
-		implode( ' | ', $debug_candidates ),
-		$fellback ? 'yes' : 'no',
-		$image
-	);
-
-	if ( $image !== $placeholder_image ) {
+	// Track every real photo, even a forced repeat or one that happens to
+	// be the same file as $placeholder_image — only the synthetic "no
+	// photo exists at all" fallback should be exempt, so unrelated tiles
+	// can all safely share it without seeming to "block" each other.
+	if ( ! $is_placeholder ) {
 		$used_images[] = $image;
 	}
 
@@ -110,9 +103,6 @@ if ( empty( $items ) ) {
 	return;
 }
 ?>
-<!-- DEBUG <?php echo esc_html( $section_class ); ?>
-<?php echo esc_html( implode( "\n", $debug_lines ) ); ?>
--->
 <section class="mv-section <?php echo esc_attr( $section_class ); ?>">
 	<div class="mv-container">
 		<?php
