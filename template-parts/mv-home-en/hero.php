@@ -5,9 +5,10 @@
  * approach of separate pages/content per language rather than one
  * language-switching template. Draft copy; swap before launch.
  *
- * Single CTA only (vs. FR's 3) — there's no travel-finder/focus-page or
- * Start Here equivalent for English content yet, so it just scrolls to
- * the destinations tiles below.
+ * No CTA button for the time being — removed on request, may come back
+ * later. (Previously scrolled to the destinations tiles below via
+ * #mv-destinations; that anchor ID is still on the destinations
+ * section's wrapper if this gets restored.)
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -22,10 +23,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<p class="mv-hero__promise">
 			<?php esc_html_e( 'I share our itineraries, our favourite places, and family-tested travel tips to help you plan your next trip with kids.', 'mavo' ); ?>
 		</p>
-		<div class="mv-hero__cta-row">
-			<a class="mv-button mv-button--secondary" href="#mv-destinations">
-				<?php esc_html_e( 'Explore destinations', 'mavo' ); ?>
-			</a>
-		</div>
 	</div>
 </section>
