@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php esc_html_e( 'Je partage ici nos itinéraires, nos coups de cœur et nos conseils testés en famille pour vous aider à préparer vos prochaines vacances avec enfants.', 'mavo' ); ?>
 		</p>
 		<div class="mv-hero__cta-row">
-			<a class="mv-button mv-button--primary" href="#">
+			<a class="mv-button mv-button--primary" href="https://www.mamanvoyage.com/ou-partir-trouvez-votre-prochain-voyage/">
 				<?php esc_html_e( 'Trouver une idée de voyage', 'mavo' ); ?>
 			</a>
 			<a class="mv-button mv-button--secondary" href="#">
