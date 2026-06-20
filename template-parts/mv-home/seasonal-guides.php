@@ -3,10 +3,10 @@
  * Homepage seasonal inspiration — Section 5 (plan-mid.md §4.1).
  *
  * Same tile pattern as primary-pathways.php / family-travel-themes.php,
- * linking to a filtered view of the travel-finder page. Fixed to the 4
- * base seasons for now — no month-based rotation yet (plan-mid.md §4.1
- * Section 5 mentions "plugin-driven by month" as an option; deferred
- * until the static list proves too limiting).
+ * linking to the calm [travel_finder_focus] view, not the full filter
+ * tool. Fixed to the 4 base seasons for now — no month-based rotation yet
+ * (plan-mid.md §4.1 Section 5 mentions "plugin-driven by month" as an
+ * option; deferred until the static list proves too limiting).
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -19,7 +19,7 @@ if ( ! class_exists( 'TVF_Homepage' ) ) {
 
 $selected_keys     = [ 'printemps', 'ete', 'automne', 'hiver' ];
 $placeholder_image = 'https://www.mamanvoyage.com/wp-content/uploads/2024/09/IMG_7174.jpeg';
-$finder_url         = 'https://www.mamanvoyage.com/ou-partir-trouvez-votre-prochain-voyage/';
+$focus_url          = 'https://www.mamanvoyage.com/nos-idees-de-voyage/';
 $lang               = function_exists( 'pll_current_language' ) ? pll_current_language( 'slug' ) : 'fr';
 
 $items = [];
@@ -38,7 +38,7 @@ foreach ( $selected_keys as $key ) {
 
 	ob_start();
 	get_template_part( 'template-parts/mv-shared/card-link', null, [
-		'url'         => add_query_arg( 'f', implode( ',', $meta['slugs'] ), $finder_url ),
+		'url'         => add_query_arg( 'f', implode( ',', $meta['slugs'] ), $focus_url ),
 		'title'       => $meta['label'],
 		'description' => $meta['description'],
 		'image'       => $image,

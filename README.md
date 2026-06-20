@@ -18,11 +18,10 @@ https://www.mamanvoyage.com/accueil-prototype/
    `includes/homepage-catalog.php` and `includes/class-tvf-homepage.php`,
    plus a version bump (1.5.2 → 1.5.3) — done directly in that plugin's
    repo, ready to commit/push/pull onto live.
-4. **Still needed:** create a WordPress page with the `[travel_finder_focus]`
-   shortcode on it (no menu entry needed — it only makes sense as a link
-   target with `?f=...`). That plugin class enqueues this theme's
-   `assets/css/mv-home.css` itself (`TVF_Focus::enqueue_assets()`), so no
-   theme-side wiring needed beyond having that CSS file exist where it is.
+4. Done: page "Nos idées de voyage" (`/nos-idees-de-voyage/`) created with
+   `[travel_finder_focus]`, noindexed via Yoast, not in any menu.
+   `TVF_Focus` enqueues this theme's `assets/css/mv-home.css` itself, so
+   no theme-side wiring was needed beyond that CSS file existing.
 
 ## What's real vs. stubbed
 
@@ -36,14 +35,18 @@ family-travel-themes, recent-posts, about-mini, start-here-cta.
   `/commencez-ici/` doesn't exist yet).
 - featured-destinations / seasonal-guides / family-travel-themes are tiles
   (same pattern as primary-pathways), not post grids: each picks a small
-  curated subset of keys from
-  mavo-travel-finder's `includes/homepage-catalog.php` (a brainstorm of
-  ~30 candidate cards across all three sections), uses the top-matching
-  post's thumbnail, links to a filtered view of the travel-finder page
-  (`/ou-partir-trouvez-votre-prochain-voyage/?f=slug1,slug2`), and skips
-  itself entirely if zero posts match — no plugin changes needed to swap
-  which keys are featured, only the `$selected_keys` array in each
+  curated subset of keys from mavo-travel-finder's
+  `includes/homepage-catalog.php` (a brainstorm of ~30 candidate cards
+  across all three sections), uses the top-matching post's thumbnail,
+  links to the calm `[travel_finder_focus]` view
+  (`/nos-idees-de-voyage/?f=slug1,slug2` — not the full filter tool), and
+  skips itself entirely if zero posts match — no plugin changes needed to
+  swap which keys are featured, only the `$selected_keys` array in each
   template part.
+- Hero's "Trouver une idée de voyage" CTA deliberately still points at
+  the full `/ou-partir-trouvez-votre-prochain-voyage/` tool, not the focus
+  page — it has no pre-selected filter, and the focus page redirects to
+  the homepage when `f` is empty.
 
 ## Known placeholders to revisit
 

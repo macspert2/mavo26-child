@@ -2,12 +2,13 @@
 /**
  * Homepage featured destinations — Section 4 (plan-mid.md §4.1).
  *
- * Same tile pattern as primary-pathways.php, linking to a filtered view
- * of the travel-finder page. Limited to the real geographie filter_slugs
- * (france, angleterre, mediterranee, europe, sans_decalage, plus_loin) —
- * the plan's example list (Italie, Espagne, Grèce, Portugal, Écosse,
- * Croatie) doesn't match the real registry; those would need new
- * filter_slugs and data entry before they could appear here.
+ * Same tile pattern as primary-pathways.php, linking to the calm
+ * [travel_finder_focus] view, not the full filter tool. Limited to the
+ * real geographie filter_slugs (france, angleterre, mediterranee, europe,
+ * sans_decalage, plus_loin) — the plan's example list (Italie, Espagne,
+ * Grèce, Portugal, Écosse, Croatie) doesn't match the real registry;
+ * those would need new filter_slugs and data entry before they could
+ * appear here.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -20,7 +21,7 @@ if ( ! class_exists( 'TVF_Homepage' ) ) {
 
 $selected_keys     = [ 'france', 'angleterre', 'mediterranee', 'europe' ];
 $placeholder_image = 'https://www.mamanvoyage.com/wp-content/uploads/2024/09/IMG_7174.jpeg';
-$finder_url         = 'https://www.mamanvoyage.com/ou-partir-trouvez-votre-prochain-voyage/';
+$focus_url          = 'https://www.mamanvoyage.com/nos-idees-de-voyage/';
 $lang               = function_exists( 'pll_current_language' ) ? pll_current_language( 'slug' ) : 'fr';
 
 $items = [];
@@ -39,7 +40,7 @@ foreach ( $selected_keys as $key ) {
 
 	ob_start();
 	get_template_part( 'template-parts/mv-shared/card-link', null, [
-		'url'         => add_query_arg( 'f', implode( ',', $meta['slugs'] ), $finder_url ),
+		'url'         => add_query_arg( 'f', implode( ',', $meta['slugs'] ), $focus_url ),
 		'title'       => $meta['label'],
 		'description' => $meta['description'],
 		'image'       => $image,
