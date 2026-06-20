@@ -7,11 +7,14 @@
 
 .mv-reading-container {
 	width: min(760px, calc(100% - 32px));
-	margin-inline: auto;
 }
 
 .mv-section {
-	padding-block: clamp(32px, 6vw, 72px);
+	padding-top: clamp(32px, 6vw, 72px);
+}
+
+.mv-section:last-child {
+	padding-bottom: clamp(32px, 6vw, 72px);
 }
 
 .mv-section__header {
@@ -47,7 +50,7 @@
 	border-radius: 16px;
 	overflow: hidden;
 	text-decoration: none;
-	color: inherit;
+	color: #4e74a5;
 	background: #fff;
 	border: 1px solid #e6e6e6;
 }
