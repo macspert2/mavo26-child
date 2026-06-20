@@ -1,14 +1,11 @@
 <?php
 /**
  * Start Here — "Je prépare un grand projet" (plan-mid.md §5.2 group 4):
- * Tour du Monde / long voyage / expatriation Angleterre. None of these
- * map to a travel-finder filter_slug — they're real content pillars
- * (referenced in the homepage trust-bar copy) but not part of the
- * recommendation table, so this group is plain manual links, not
- * catalog-backed like the others.
- *
- * URLs are "#" placeholders — need the real hub/category/tag URLs for
- * Tour du Monde, long-format travel, and England expat content.
+ * Tour du Monde / expatriation Angleterre. Neither maps to a
+ * travel-finder filter_slug — they're real content pillars (referenced
+ * in the homepage trust-bar copy) but not part of the recommendation
+ * table, so this group is plain manual links, not catalog-backed like
+ * the others. "Long voyage" was dropped — no real content for it yet.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -21,17 +18,12 @@ $projects = [
 	[
 		'title'       => __( 'Tour du Monde', 'mavo' ),
 		'description' => __( 'Notre tour du monde en famille, étape par étape.', 'mavo' ),
-		'url'         => '#',
-	],
-	[
-		'title'       => __( 'Long voyage', 'mavo' ),
-		'description' => __( 'Partir plusieurs semaines ou plusieurs mois en famille.', 'mavo' ),
-		'url'         => '#',
+		'url'         => 'https://www.mamanvoyage.com/category/voyages-avec-enfants/notre-tour-du-monde-2016/',
 	],
 	[
 		'title'       => __( 'Expatriation en Angleterre', 'mavo' ),
 		'description' => __( 'Vivre en Angleterre avec des enfants.', 'mavo' ),
-		'url'         => '#',
+		'url'         => 'https://www.mamanvoyage.com/notre-vie-en-angleterre/',
 	],
 ];
 
@@ -55,7 +47,7 @@ foreach ( $projects as $project ) {
 			'title' => __( 'Vous préparez un grand projet ?', 'mavo' ),
 		] );
 		get_template_part( 'template-parts/mv-shared/grid-wrapper', null, [
-			'columns' => 3,
+			'columns' => 2,
 			'items'   => $items,
 		] );
 		?>
