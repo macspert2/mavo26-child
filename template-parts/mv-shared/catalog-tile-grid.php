@@ -41,7 +41,9 @@ $link_base          = 'full' === $link_to
 	: 'https://www.mamanvoyage.com/nos-idees-de-voyage/';
 $lang               = function_exists( 'pll_current_language' ) ? pll_current_language( 'slug' ) : 'fr';
 
-$items = [];
+$items       = [];
+$used_images = []; // avoid repeating the same photo twice within this section.
+
 foreach ( $keys as $key ) {
 	$meta = TVF_Homepage::get_card_meta( $key );
 	if ( ! $meta ) {
@@ -53,7 +55,23 @@ foreach ( $keys as $key ) {
 		continue; // no matching posts yet — skip rather than show an empty promise.
 	}
 
-	$image = get_the_post_thumbnail_url( $posts[0], 'medium_large' ) ?: $placeholder_image;
+	// Prefer the top post's image, but if it was already used earlier in
+	// this section (the same post ranks #1 for more than one tile), fall
+	// through to the next-ranked post that has an unused image instead.
+	$image = null;
+	foreach ( $posts as $candidate ) {
+		$candidate_image = get_the_post_thumbnail_url( $candidate, 'medium_large' );
+		if ( $candidate_image && ! in_array( $candidate_image, $used_images, true ) ) {
+			$image = $candidate_image;
+			break;
+		}
+	}
+	if ( ! $image ) {
+		$image = get_the_post_thumbnail_url( $posts[0], 'medium_large' ) ?: $placeholder_image;
+	}
+	if ( $image !== $placeholder_image ) {
+		$used_images[] = $image;
+	}
 
 	ob_start();
 	get_template_part( 'template-parts/mv-shared/card-link', null, [
