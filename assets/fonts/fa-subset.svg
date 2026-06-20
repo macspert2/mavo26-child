@@ -1,0 +1,36 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
+<metadata>
+Created by FontForge 20201107 at Wed Apr  1 18:43:07 2026
+ By www-data
+</metadata>
+<defs>
+<font id="FontAwesome" horiz-adv-x="896" >
+  <font-face 
+    font-family="FontAwesome"
+    font-weight="400"
+    font-stretch="normal"
+    units-per-em="1792"
+    panose-1="0 0 0 0 0 0 0 0 0 0"
+    ascent="1536"
+    descent="-256"
+    bbox="112 0 784 1536"
+    underline-thickness="0"
+    underline-position="0"
+    unicode-range="U+0020-0020"
+  />
+<missing-glyph 
+d="M224 112h448v1312h-448v-1312zM112 0v1536h672v-1536h-672z" />
+    <glyph glyph-name=".notdef" 
+d="M224 112h448v1312h-448v-1312zM112 0v1536h672v-1536h-672z" />
+    <glyph glyph-name=".null" horiz-adv-x="0" 
+ />
+    <glyph glyph-name="nonmarkingreturn" horiz-adv-x="597" 
+ />
+    <glyph glyph-name="glyph3" 
+d="M224 112h448v1312h-448v-1312zM112 0v1536h672v-1536h-672z" />
+    <glyph glyph-name="space" unicode=" " horiz-adv-x="448" 
+ />
+  </font>
+</defs></svg>

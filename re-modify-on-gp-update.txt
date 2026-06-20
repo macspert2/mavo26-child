@@ -1,0 +1,2 @@
+inc/structure/comments.php:
+add autocomplete="email" to <input with id="email"

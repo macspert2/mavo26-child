@@ -1,0 +1,171 @@
+/* Maman Voyage — homepage prototype components (plan-mid.md Phase 6). */
+
+.mv-container {
+	width: min(1120px, calc(100% - 32px));
+	margin-inline: auto;
+}
+
+.mv-reading-container {
+	width: min(760px, calc(100% - 32px));
+	margin-inline: auto;
+}
+
+.mv-section {
+	padding-block: clamp(32px, 6vw, 72px);
+}
+
+.mv-section__header {
+	max-width: 760px;
+	margin-bottom: 24px;
+}
+
+.mv-section__subtitle {
+	color: #555;
+}
+
+.mv-grid {
+	display: grid;
+	gap: 20px;
+}
+
+@media (min-width: 700px) {
+	.mv-grid--2 {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.mv-grid--3 {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	.mv-grid--4 {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+}
+
+.mv-card {
+	display: block;
+	border-radius: 16px;
+	overflow: hidden;
+	text-decoration: none;
+	color: inherit;
+	background: #fff;
+	border: 1px solid #e6e6e6;
+}
+
+.mv-card:focus-visible {
+	outline: 3px solid #1a73e8;
+	outline-offset: 2px;
+}
+
+.mv-card__image img {
+	width: 100%;
+	height: auto;
+	display: block;
+}
+
+.mv-card__body {
+	display: block;
+	padding: 16px;
+}
+
+.mv-card__title {
+	display: block;
+	font-weight: 600;
+}
+
+.mv-card__description {
+	display: block;
+	margin-top: 4px;
+	color: #555;
+	font-size: 0.9em;
+}
+
+.mv-card__badge {
+	display: inline-block;
+	margin-bottom: 6px;
+	padding: 2px 8px;
+	border-radius: 999px;
+	background: #f0eee9;
+	font-size: 0.75em;
+}
+
+/* Hero */
+
+.mv-hero__inner {
+	text-align: center;
+}
+
+.mv-hero__headline {
+	font-size: clamp(1.6rem, 4vw, 2.4rem);
+	margin-bottom: 16px;
+}
+
+.mv-hero__promise {
+	max-width: 640px;
+	margin-inline: auto;
+	margin-bottom: 24px;
+}
+
+.mv-hero__cta-row {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 12px;
+}
+
+.mv-button {
+	display: inline-block;
+	padding: 10px 20px;
+	border-radius: 999px;
+	text-decoration: none;
+	font-weight: 600;
+}
+
+.mv-button:focus-visible {
+	outline: 3px solid #1a73e8;
+	outline-offset: 2px;
+}
+
+.mv-button--primary {
+	background: #1a1a1a;
+	color: #fff;
+}
+
+.mv-button--secondary {
+	background: #f0eee9;
+	color: #1a1a1a;
+}
+
+/* Trust bar */
+
+.mv-trust-bar__list {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 24px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+}
+
+.mv-trust-stat {
+	display: flex;
+	flex-direction: column;
+}
+
+.mv-trust-stat__number {
+	font-weight: 700;
+	font-size: 1.1em;
+}
+
+.mv-trust-stat__label {
+	color: #555;
+	font-size: 0.85em;
+}
+
+/* Pathway card variant */
+
+.mv-card--pathway .mv-card__body {
+	text-align: center;
+}

@@ -1,0 +1,49 @@
+figure.wp-picture-figure {
+        text-align: center;
+        font-style: italic;
+        margin-bottom: 10px;
+}
+strong {
+	font-weight: bolder;
+}
+a[href^="https://www.booking.com"] {
+  color: rgb(0, 108, 228);
+}
+a:hover {
+	color: #886353;
+	text-decoration: underline;
+}
+.hotelblock {
+	font-style: italic;
+  color: grey;
+  text-align: center;
+}
+/* h2 — section title */
+h2 {
+  font-size: 30px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  margin-top: 2.5rem;
+  margin-bottom: 0.625rem;
+  line-height: 1.25;
+}
+/* h3 — sub-section */
+h3 {
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.35;
+}
+/* h4 — treated as a compact uppercase label */
+h4 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #5c3d2e;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 1.5rem;
+  margin-bottom: 0.25rem;
+  line-height: 1.5;
+}
