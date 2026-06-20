@@ -12,18 +12,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$placeholder_image = 'https://www.mamanvoyage.com/wp-content/uploads/2024/09/IMG_7174.jpeg';
-
 $projects = [
 	[
 		'title'       => __( 'Tour du Monde', 'mavo' ),
 		'description' => __( 'Notre tour du monde en famille, étape par étape.', 'mavo' ),
 		'url'         => 'https://www.mamanvoyage.com/category/voyages-avec-enfants/notre-tour-du-monde-2016/',
+		'image'       => 'https://www.mamanvoyage.com/wp-content/uploads/2016/09/P4151267.jpg',
 	],
 	[
 		'title'       => __( 'Expatriation en Angleterre', 'mavo' ),
 		'description' => __( 'Vivre en Angleterre avec des enfants.', 'mavo' ),
 		'url'         => 'https://www.mamanvoyage.com/notre-vie-en-angleterre/',
+		'image'       => 'https://www.mamanvoyage.com/wp-content/uploads/2018/07/P6020767.jpg.webp',
 	],
 ];
 
@@ -34,7 +34,7 @@ foreach ( $projects as $project ) {
 		'url'         => $project['url'],
 		'title'       => $project['title'],
 		'description' => $project['description'],
-		'image'       => $placeholder_image,
+		'image'       => $project['image'],
 		'variant'     => 'pathway',
 	] );
 	$items[] = ob_get_clean();

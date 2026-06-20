@@ -3,9 +3,10 @@
  * Homepage primary pathways — Section 3 (plan-mid.md §4.1).
  *
  * Each card should link to a hub, tag/category page, or a Start Here
- * anchor. Only "France en famille" has a confirmed URL today (/france/);
- * the rest are placeholders ("#") until those hubs/pages exist — update
- * the `url` value below once each destination is built.
+ * anchor. "France en famille" (/france/) and "Angleterre / expatriation"
+ * (/angleterre/) have confirmed dedicated landing pages; the rest are
+ * placeholders ("#") until those hubs/pages exist — update the `url`
+ * value below once each destination is built.
  *
  * All cards share one placeholder photo for now — swap per-card once
  * real destination images are picked.
@@ -31,7 +32,7 @@ $pathways = [
 	[
 		'title'       => __( 'Angleterre / expatriation', 'mavo' ),
 		'description' => __( 'Vivre et voyager en Angleterre avec des enfants.', 'mavo' ),
-		'url'         => '#',
+		'url'         => home_url( '/angleterre/' ),
 	],
 	[
 		'title'       => __( 'Voyager avec bébé', 'mavo' ),

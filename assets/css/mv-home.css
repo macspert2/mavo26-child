@@ -5,10 +5,6 @@
 	margin-inline: auto;
 }
 
-.mv-reading-container {
-	width: min(760px, calc(100% - 32px));
-}
-
 .mv-section {
 	padding-top: clamp(32px, 6vw, 72px);
 }
@@ -232,6 +228,22 @@
 }
 
 /* Travel-finder focus view (mavo-travel-finder plugin's [travel_finder_focus]) */
+
+/*
+ * Scoped overrides, not changes to .mv-section/.mv-container themselves —
+ * this shortcode renders inside the theme's normal entry-content (960px,
+ * already centered by GeneratePress), so it shouldn't add its own top
+ * padding above the page's H1, nor re-apply mv-container's own width/
+ * centering on top of that already-constrained parent.
+ */
+.mv-travel-finder-focus {
+	padding-top: 0;
+}
+
+.mv-travel-finder-focus .mv-container {
+	width: auto;
+	margin-inline: 0;
+}
 
 .mv-travel-finder-focus .tvf-no-results {
 	text-align: center;

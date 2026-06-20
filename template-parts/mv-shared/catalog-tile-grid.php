@@ -13,6 +13,7 @@
  *       'columns'        => 4,
  *       'posts_per_key'  => 6,      // optional, how many posts to check per key
  *       'link_to'        => 'focus', // optional: 'focus' (default) or 'full'
+ *       'url_overrides'  => [ 'france' => 'https://www.mamanvoyage.com/france/' ], // optional, per-key URL override
  *   ] );
  *
  * `posts_per_key` is also the candidate pool for image de-duplication
@@ -35,6 +36,7 @@ $keys          = $args['keys'] ?? [];
 $columns       = (int) ( $args['columns'] ?? 4 );
 $posts_per_key = (int) ( $args['posts_per_key'] ?? 6 );
 $link_to       = $args['link_to'] ?? 'focus';
+$url_overrides = $args['url_overrides'] ?? [];
 
 if ( empty( $keys ) ) {
 	return;
@@ -88,9 +90,11 @@ foreach ( $keys as $key ) {
 		$used_images[] = $image;
 	}
 
+	$url = $url_overrides[ $key ] ?? add_query_arg( 'f', implode( ',', $meta['slugs'] ), $link_base );
+
 	ob_start();
 	get_template_part( 'template-parts/mv-shared/card-link', null, [
-		'url'         => add_query_arg( 'f', implode( ',', $meta['slugs'] ), $link_base ),
+		'url'         => $url,
 		'title'       => $meta['label'],
 		'description' => $meta['description'],
 		'image'       => $image,
