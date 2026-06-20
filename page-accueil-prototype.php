@@ -19,10 +19,12 @@ get_header();
 	<?php
 	get_template_part( 'template-parts/mv-home/hero' );
 	get_template_part( 'template-parts/mv-home/trust-bar' );
-	get_template_part( 'template-parts/mv-home/primary-pathways' );
+	// primary-pathways ("Par où commencer ?") removed for the time being —
+	// the template part itself is untouched, just not called here.
 	get_template_part( 'template-parts/mv-home/featured-destinations' );
 	get_template_part( 'template-parts/mv-home/seasonal-guides' );
 	get_template_part( 'template-parts/mv-home/family-travel-themes' );
+	get_template_part( 'template-parts/mv-home/popular-last-year' );
 	get_template_part( 'template-parts/mv-home/recent-posts' );
 	get_template_part( 'template-parts/mv-home/about-mini' );
 	get_template_part( 'template-parts/mv-home/start-here-cta' );
