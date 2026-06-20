@@ -43,16 +43,28 @@ if ( empty( $keys ) ) {
 }
 
 $placeholder_image = 'https://www.mamanvoyage.com/wp-content/uploads/2024/09/IMG_7174.jpeg';
-$link_base          = 'full' === $link_to
-	? 'https://www.mamanvoyage.com/ou-partir-trouvez-votre-prochain-voyage/'
-	: 'https://www.mamanvoyage.com/nos-idees-de-voyage/';
 $lang               = function_exists( 'pll_current_language' ) ? pll_current_language( 'slug' ) : 'fr';
+
+// Per-language link targets — only French has a full-finder page today;
+// other languages fall back to French rather than 404. Add an entry here
+// once an EN/DE full-finder page exists.
+$focus_urls = [
+	'fr' => 'https://www.mamanvoyage.com/nos-idees-de-voyage/',
+	'en' => 'https://www.mamanvoyage.com/en/our-travel-ideas/',
+	'de' => 'https://www.mamanvoyage.com/de/unsere-reiseideen/',
+];
+$full_urls  = [
+	'fr' => 'https://www.mamanvoyage.com/ou-partir-trouvez-votre-prochain-voyage/',
+];
+$link_base  = 'full' === $link_to
+	? ( $full_urls[ $lang ] ?? $full_urls['fr'] )
+	: ( $focus_urls[ $lang ] ?? $focus_urls['fr'] );
 
 $items       = [];
 $used_images = []; // avoid repeating the same photo twice within this section.
 
 foreach ( $keys as $key ) {
-	$meta = TVF_Homepage::get_card_meta( $key );
+	$meta = TVF_Homepage::get_card_meta( $key, $lang );
 	if ( ! $meta ) {
 		continue;
 	}

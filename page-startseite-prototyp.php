@@ -26,6 +26,7 @@ get_header();
 	get_template_part( 'template-parts/mv-home-de/hero' );
 	get_template_part( 'template-parts/mv-home-de/trust-bar' );
 	get_template_part( 'template-parts/mv-home-de/destinations' );
+	get_template_part( 'template-parts/mv-home-de/family-travel-themes' );
 	get_template_part( 'template-parts/mv-home/recent-posts' );
 	get_template_part( 'template-parts/mv-home/popular-last-year' );
 	get_template_part( 'template-parts/mv-home-de/about-mini' );
