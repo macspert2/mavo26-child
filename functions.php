@@ -12,6 +12,20 @@ remove_image_size('2048x2048');
 
 add_editor_style( 'editor-style.css' );
 
+/**
+ * Hidden homepage prototype: component CSS, only on that page template.
+ */
+add_action( 'wp_enqueue_scripts', function () {
+    if ( is_page_template( 'page-accueil-prototype.php' ) ) {
+        wp_enqueue_style(
+            'mv-home',
+            get_stylesheet_directory_uri() . '/assets/css/mv-home.css',
+            [],
+            wp_get_theme()->get( 'Version' )
+        );
+    }
+} );
+
 /* temp fix for missing css style in wordpress 7.0 - remove later and test if connectors page works */
 add_action('admin_head', function() {
     echo '<style>
