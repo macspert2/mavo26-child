@@ -169,3 +169,67 @@
 .mv-card--pathway .mv-card__body {
 	text-align: center;
 }
+
+/* About mini */
+
+.mv-about-mini__inner {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+	align-items: center;
+}
+
+.mv-about-mini__image img {
+	width: 160px;
+	height: 160px;
+	border-radius: 50%;
+	object-fit: cover;
+}
+
+.mv-about-mini__body {
+	max-width: 640px;
+	text-align: center;
+}
+
+@media (min-width: 700px) {
+	.mv-about-mini__inner {
+		flex-direction: row;
+		text-align: left;
+		align-items: flex-start;
+	}
+
+	.mv-about-mini__body {
+		text-align: left;
+	}
+}
+
+/* Start Here CTA */
+
+.mv-start-here-cta__inner {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	align-items: center;
+	text-align: center;
+	padding: 32px;
+	border-radius: 16px;
+	background: #f0eee9;
+}
+
+.mv-start-here-cta__text {
+	max-width: 560px;
+	margin: 0;
+}
+
+/* Travel-finder focus view (mavo-travel-finder plugin's [travel_finder_focus]) */
+
+.mv-travel-finder-focus .tvf-no-results {
+	text-align: center;
+	padding: 40px 24px;
+	color: #555;
+}
+
+.mv-travel-finder-focus__more {
+	text-align: center;
+	margin-top: 24px;
+}

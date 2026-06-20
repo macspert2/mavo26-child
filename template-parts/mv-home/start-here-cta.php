@@ -1,11 +1,22 @@
 <?php
 /**
- * Homepage Start Here CTA — Section 9 (plan-mid.md §4.1).
+ * Homepage Start Here CTA — Section 9 (plan-mid.md §4.1 / §4.3).
  *
- * Stub for the next phase: CTA linking to /commencez-ici/ once that page
- * exists (plan-mid.md Phase 5).
+ * Scaffold only: structure + the plan's drafted CTA copy (§4.3), linking
+ * to "#" until /commencez-ici/ (plan Phase 5) exists.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+?>
+<section class="mv-section mv-start-here-cta">
+	<div class="mv-container mv-start-here-cta__inner">
+		<p class="mv-start-here-cta__text">
+			<?php esc_html_e( 'Vous ne savez pas par où commencer ? Consultez notre guide pour trouver les meilleurs articles selon votre famille, votre destination et votre style de voyage.', 'mavo' ); ?>
+		</p>
+		<a class="mv-button mv-button--primary" href="#">
+			<?php esc_html_e( 'Commencer ici', 'mavo' ); ?>
+		</a>
+	</div>
+</section>

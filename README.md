@@ -14,19 +14,29 @@ https://www.mamanvoyage.com/accueil-prototype/
    which doesn't fire for slug-fallback templates that were never
    explicitly assigned in Page Attributes (this caused the CSS to silently
    not load in the first round; now fixed).
-3. The mavo-travel-finder plugin needs two new `require_once` lines in
-   `mavo-travel-finder.php` to load `includes/homepage-catalog.php` and
-   `includes/class-tvf-homepage.php` (added in that plugin's repo, not
-   wired into its bootstrap yet — pending).
+3. `mavo-travel-finder.php` has the two `require_once` lines for
+   `includes/homepage-catalog.php` and `includes/class-tvf-homepage.php`,
+   plus a version bump (1.5.2 → 1.5.3) — done directly in that plugin's
+   repo, ready to commit/push/pull onto live.
+4. **Still needed:** create a WordPress page with the `[travel_finder_focus]`
+   shortcode on it (no menu entry needed — it only makes sense as a link
+   target with `?f=...`). That plugin class enqueues this theme's
+   `assets/css/mv-home.css` itself (`TVF_Focus::enqueue_assets()`), so no
+   theme-side wiring needed beyond having that CSS file exist where it is.
 
 ## What's real vs. stubbed
 
-- **Real content:** hero, trust-bar, primary-pathways, recent-posts,
-  featured-destinations, seasonal-guides, family-travel-themes
-  (plan-mid.md §4.1 sections 1, 2, 3, 4, 5, 6, 7).
-- **Still stubbed:** about-mini, start-here-cta.
-- The last three sections are tiles (same pattern as primary-pathways),
-  not post grids: each picks a small curated subset of keys from
+All 9 sections from plan-mid.md §4.1 / Phase 16's MVP list are now built:
+hero, trust-bar, primary-pathways, featured-destinations, seasonal-guides,
+family-travel-themes, recent-posts, about-mini, start-here-cta.
+
+- **about-mini** and **start-here-cta** are the newest — about-mini has
+  real (draft) editorial copy; start-here-cta is a structural scaffold
+  only (real copy from plan §4.3, but its CTA link is `#` since
+  `/commencez-ici/` doesn't exist yet).
+- featured-destinations / seasonal-guides / family-travel-themes are tiles
+  (same pattern as primary-pathways), not post grids: each picks a small
+  curated subset of keys from
   mavo-travel-finder's `includes/homepage-catalog.php` (a brainstorm of
   ~30 candidate cards across all three sections), uses the top-matching
   post's thumbnail, links to a filtered view of the travel-finder page
