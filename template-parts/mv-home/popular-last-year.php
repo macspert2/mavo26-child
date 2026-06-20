@@ -6,10 +6,15 @@
  * differ by language, see template-parts/mv-home/recent-posts.php for
  * the same reasoning), only the title text switches.
  *
- * Falls back to "currently popular" (most recent available snapshot
- * month) when "last year, same month" has no data — e.g. German view
- * tracking started more recently than a year ago, so that query is
- * always empty for 'de' today.
+ * Falls back to "currently popular" (all-time wp_postmeta view count,
+ * TVF_Popular_Snapshots::get_most_viewed()) when "last year, same
+ * month" has no snapshot data — e.g. German view tracking started more
+ * recently than a year ago, so that query is always empty for 'de'
+ * today. The fallback used to also pull from the snapshot table (most
+ * recent month instead of last year), but that table is too thin for
+ * EN/DE after language filtering (as little as 1 EN / 0 DE post) —
+ * all-time postmeta views across every published post works much
+ * better at this content volume.
  *
  * Reads wp_rpp_monthly_snapshots (a pre-existing stats table from a
  * separate plugin, unrelated to wp_tvf_post_filter) via
@@ -31,7 +36,7 @@ $posts = TVF_Popular_Snapshots::get_top_posts_for_month( $month, $lang, 6 );
 $is_fallback = false;
 
 if ( empty( $posts ) ) {
-	$posts       = TVF_Popular_Snapshots::get_currently_popular( $lang, 6 );
+	$posts       = TVF_Popular_Snapshots::get_most_viewed( $lang, 6 );
 	$is_fallback = true;
 }
 
