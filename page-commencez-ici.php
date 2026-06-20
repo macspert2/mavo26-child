@@ -4,9 +4,11 @@
  *
  * Matches slug `commencez-ici` via the WordPress template hierarchy, same
  * mechanism as page-accueil-prototype.php — no manual "Page Attributes >
- * Template" assignment required. The WordPress page title ("Commencez
- * ici") renders as the page's own H1 via content-page.php; every group
- * below uses an H2, set by mv-shared/section-header.php's default.
+ * Template" assignment required. This is a fully custom template (no
+ * content-page.php in the loop), so the WordPress page title never
+ * renders on its own — template-parts/mv-start-here/intro.php renders
+ * the page's only H1 explicitly. Every group below uses an H2, set by
+ * mv-shared/section-header.php's default.
  *
  * File: page-commencez-ici.php
  */
