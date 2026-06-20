@@ -6,11 +6,16 @@
  * anchor. Only "France en famille" has a confirmed URL today (/france/);
  * the rest are placeholders ("#") until those hubs/pages exist — update
  * the `url` value below once each destination is built.
+ *
+ * All cards share one placeholder photo for now — swap per-card once
+ * real destination images are picked.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+$placeholder_image = 'https://www.mamanvoyage.com/wp-content/uploads/2024/09/IMG_7174.jpeg';
 
 $pathways = [
 	[
@@ -62,6 +67,7 @@ foreach ( $pathways as $pathway ) {
 		'url'         => $pathway['url'],
 		'title'       => $pathway['title'],
 		'description' => $pathway['description'],
+		'image'       => $placeholder_image,
 		'variant'     => 'pathway',
 	] );
 	$items[] = ob_get_clean();
