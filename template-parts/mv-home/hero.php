@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<?php esc_html_e( 'Explorer les destinations', 'mavo' ); ?>
 			</a>
 			<a class="mv-button mv-button--secondary" href="https://www.mamanvoyage.com/commencez-ici/">
-				<?php esc_html_e( 'Commencer ici', 'mavo' ); ?>
+				<?php esc_html_e( 'Commencez ici', 'mavo' ); ?>
 			</a>
 		</div>
 	</div>

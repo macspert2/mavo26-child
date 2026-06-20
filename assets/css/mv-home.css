@@ -128,23 +128,32 @@
 }
 
 .mv-button--primary {
-	background: #1a1a1a;
+	background: #4e74a5;
 	color: #fff;
 }
 
 .mv-button--secondary {
 	background: #f0eee9;
-	color: #1a1a1a;
+	color: #4e74a5;
 }
 
-/* Hero CTAs: same look for all 3, scoped here only — start-here-cta.php
-   and about-mini.php still use the regular --primary/--secondary look. */
-.mv-hero__cta-row .mv-button {
+/* Hero CTAs: same look for all 3, scoped here only. Specificity is kept
+   equal to .mv-button--primary/--secondary via :where() (zero added
+   specificity) on purpose — a plain ".mv-hero__cta-row .mv-button"
+   two-class selector previously outranked the site's global
+   a:hover{color:var(--hover)} rule, which is what made hover stop
+   turning brown. With equal specificity, source order decides again,
+   same as every other .mv-button, and hover works correctly. */
+:where(.mv-hero__cta-row) .mv-button {
 	background: #f0eee9;
 	color: #4e74a5;
 }
 
 /* Trust bar */
+
+.mv-trust-bar {
+	padding-top: clamp(8px, 2vw, 24px);
+}
 
 .mv-trust-bar__list {
 	display: flex;
@@ -165,6 +174,7 @@
 .mv-trust-stat__number {
 	font-weight: 700;
 	font-size: 1.1em;
+	color: #800080;
 }
 
 .mv-trust-stat__label {

@@ -5,35 +5,38 @@
  * Hardcoded landing-page links, not catalog/wp_tvf_post_filter-backed —
  * each of these 4 destinations has its own dedicated page, so this
  * section just links straight there (same pattern as primary-pathways.php),
- * instead of going through TVF_Homepage/catalog-tile-grid.php.
+ * instead of going through TVF_Homepage/catalog-tile-grid.php. Each has
+ * its own real photo now too.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$placeholder_image = 'https://www.mamanvoyage.com/wp-content/uploads/2024/09/IMG_7174.jpeg';
-
 $destinations = [
 	[
 		'title'       => __( 'France', 'mavo' ),
 		'description' => __( 'Nos meilleures idées pour voyager en France en famille.', 'mavo' ),
 		'url'         => 'https://www.mamanvoyage.com/france/',
+		'image'       => 'https://www.mamanvoyage.com/wp-content/uploads/2018/01/IMG_0745.jpg',
 	],
 	[
 		'title'       => __( 'Angleterre', 'mavo' ),
 		'description' => __( 'Vivre et voyager en Angleterre avec des enfants.', 'mavo' ),
 		'url'         => 'https://www.mamanvoyage.com/angleterre/',
+		'image'       => 'https://www.mamanvoyage.com/wp-content/uploads/2026/05/IMG_6132.jpeg.webp',
 	],
 	[
 		'title'       => __( 'Italie', 'mavo' ),
 		'description' => __( 'Voyager en Italie en famille.', 'mavo' ),
 		'url'         => 'https://www.mamanvoyage.com/italie/',
+		'image'       => 'https://www.mamanvoyage.com/wp-content/uploads/2010/03/26023_408646857888_508957888_4904843_5309085_n.jpg',
 	],
 	[
 		'title'       => __( 'Espagne', 'mavo' ),
 		'description' => __( 'Voyager en Espagne en famille.', 'mavo' ),
 		'url'         => 'https://www.mamanvoyage.com/espagne/',
+		'image'       => 'https://www.mamanvoyage.com/wp-content/uploads/2019/10/P9031799.jpeg',
 	],
 ];
 
@@ -44,7 +47,7 @@ foreach ( $destinations as $destination ) {
 		'url'         => $destination['url'],
 		'title'       => $destination['title'],
 		'description' => $destination['description'],
-		'image'       => $placeholder_image,
+		'image'       => $destination['image'],
 		'variant'     => 'pathway',
 	] );
 	$items[] = ob_get_clean();
