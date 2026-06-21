@@ -108,13 +108,15 @@
 	gap: 12px;
 }
 
-/* Unified button look — also applied to one element we don't control
-   the markup of (GP's search-submit input), via descendant selectors
-   grouped into the same rules rather than duplicating the values.
-   Blog pagination is deliberately left as standard GeneratePress, not
+/* Unified button look — also applied to elements we don't control the
+   markup of (GP's search-submit input, both the sidebar's and the
+   search page header's own copy), via descendant selectors grouped
+   into the same rules rather than duplicating the values. Blog
+   pagination is deliberately left as standard GeneratePress, not
    unified here. */
 .mv-button,
-#mv-search-again .search-submit {
+#mv-search-again .search-submit,
+.mv-search-header .search-submit {
 	display: inline-block;
 	box-sizing: border-box;
 	padding: 10px 20px;
@@ -128,7 +130,8 @@
 }
 
 .mv-button:focus-visible,
-#mv-search-again .search-submit:focus-visible {
+#mv-search-again .search-submit:focus-visible,
+.mv-search-header .search-submit:focus-visible {
 	outline: 3px solid #1a73e8;
 	outline-offset: 2px;
 }
@@ -139,7 +142,8 @@
 }
 
 .mv-button--secondary,
-#mv-search-again .search-submit {
+#mv-search-again .search-submit,
+.mv-search-header .search-submit {
 	background: #f0eee9;
 	color: #4e74a5;
 }

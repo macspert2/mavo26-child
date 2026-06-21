@@ -46,6 +46,7 @@ function mv_get_settings_defaults(): array {
 			'de_popular_last_year'     => true,
 			'de_about_mini'            => true,
 
+			'sidebar_search_again'     => false, // redundant since plan3.md's top-of-page search form (inc/mv-search-page.php).
 			'sidebar_start_here'       => true,
 			'sidebar_refine_theme'     => true,
 			'sidebar_most_read'        => true,
@@ -189,6 +190,7 @@ function mv_render_settings_page(): void {
 		'sidebar' => [
 			'title' => __( 'Barre latérale des résultats de recherche', 'mavo' ),
 			'keys'  => [
+				'sidebar_search_again'    => __( 'Nouvelle recherche (désactivé par défaut — redondant avec le formulaire en haut de page)', 'mavo' ),
 				'sidebar_start_here'      => __( '« Commencez ici » (Français uniquement, géré par le modèle)', 'mavo' ),
 				'sidebar_refine_theme'    => __( 'Voyagez par thème', 'mavo' ),
 				'sidebar_most_read'       => __( 'Les plus lus', 'mavo' ),

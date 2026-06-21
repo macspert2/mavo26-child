@@ -86,10 +86,12 @@ $blog_url = $blog_urls[ $lang ] ?? $blog_urls['fr'];
 $placeholder_image = mv_get_placeholder_image();
 ?>
 
+<?php if ( mv_section_enabled( 'sidebar_search_again' ) ) : ?>
 <aside id="mv-search-again" class="widget widget_search">
 	<h2 class="widget-title"><?php echo esc_html( $t['search_again'] ); ?></h2>
 	<?php get_search_form(); ?>
 </aside>
+<?php endif; ?>
 
 <?php if ( mv_section_enabled( 'sidebar_refine_theme' ) && class_exists( 'TVF_Homepage' ) ) : ?>
 	<?php

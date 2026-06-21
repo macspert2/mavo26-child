@@ -82,7 +82,7 @@ function mv_render_search_page_header(): void {
 			<p><?php echo esc_html( $t['orientation_text'] ); ?></p>
 			<div class="mv-search-header__orientation-buttons">
 				<?php foreach ( $page_buttons as $button ) : ?>
-					<a class="mv-button mv-button--secondary" href="<?php echo esc_url( $button['url'] ); ?>"><?php echo esc_html( $button['label'] ); ?></a>
+					<a class="mv-button mv-button--primary" href="<?php echo esc_url( $button['url'] ); ?>"><?php echo esc_html( $button['label'] ); ?></a>
 				<?php endforeach; ?>
 			</div>
 		</div>
