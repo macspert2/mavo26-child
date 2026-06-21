@@ -110,7 +110,7 @@
 .mv-hero__cta-row {
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: flex-start;
+	justify-content: space-between;
 	gap: 12px;
 }
 
