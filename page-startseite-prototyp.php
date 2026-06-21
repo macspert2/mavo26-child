@@ -30,14 +30,16 @@ get_header();
 	if ( mv_section_enabled( 'de_trust_bar' ) ) {
 		get_template_part( 'template-parts/mv-home-de/trust-bar' );
 	}
+	// Background rhythm per plan2.md §10.3 — mirrors the FR homepage's
+	// alternation for visual consistency across languages.
 	if ( mv_section_enabled( 'de_destinations' ) ) {
-		get_template_part( 'template-parts/mv-home-de/destinations' );
+		get_template_part( 'template-parts/mv-home-de/destinations', null, [ 'background' => 'cream' ] );
 	}
 	if ( mv_section_enabled( 'de_trip_type' ) ) {
 		get_template_part( 'template-parts/mv-home-de/trip-type' );
 	}
 	if ( mv_section_enabled( 'de_family_travel_themes' ) ) {
-		get_template_part( 'template-parts/mv-home-de/family-travel-themes' );
+		get_template_part( 'template-parts/mv-home-de/family-travel-themes', null, [ 'background' => 'blue-tint' ] );
 	}
 	if ( mv_section_enabled( 'de_recent_posts' ) ) {
 		get_template_part( 'template-parts/mv-home/recent-posts' );
@@ -46,7 +48,7 @@ get_header();
 		get_template_part( 'template-parts/mv-home/popular-last-year' );
 	}
 	if ( mv_section_enabled( 'de_about_mini' ) ) {
-		get_template_part( 'template-parts/mv-home-de/about-mini' );
+		get_template_part( 'template-parts/mv-home-de/about-mini', null, [ 'background' => 'cream' ] );
 	}
 	?>
 </main>

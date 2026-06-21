@@ -14,6 +14,7 @@
  *       'posts_per_key'  => 6,      // optional, how many posts to check per key
  *       'link_to'        => 'focus', // optional: 'focus' (default) or 'full'
  *       'url_overrides'  => [ 'france' => 'https://www.mamanvoyage.com/france/' ], // optional, per-key URL override
+ *       'background'     => 'cream', // optional, plan2.md §10.3 — unset/'' = unchanged (white)
  *   ] );
  *
  * `posts_per_key` is also the candidate pool for image de-duplication
@@ -37,6 +38,7 @@ $columns       = (int) ( $args['columns'] ?? 4 );
 $posts_per_key = (int) ( $args['posts_per_key'] ?? 6 );
 $link_to       = $args['link_to'] ?? 'focus';
 $url_overrides = $args['url_overrides'] ?? [];
+$background    = $args['background'] ?? '';
 
 if ( empty( $keys ) ) {
 	return;
@@ -118,8 +120,13 @@ foreach ( $keys as $key ) {
 if ( empty( $items ) ) {
 	return;
 }
+
+$section_classes = 'mv-section ' . $section_class;
+if ( $background ) {
+	$section_classes .= ' mv-section--bg-' . sanitize_html_class( $background );
+}
 ?>
-<section id="<?php echo esc_attr( $section_class ); ?>" class="mv-section <?php echo esc_attr( $section_class ); ?>">
+<section id="<?php echo esc_attr( $section_class ); ?>" class="<?php echo esc_attr( $section_classes ); ?>">
 	<div class="mv-container">
 		<?php
 		get_template_part( 'template-parts/mv-shared/section-header', null, [

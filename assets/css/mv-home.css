@@ -103,7 +103,6 @@
 }
 
 .mv-hero__promise {
-	max-width: 640px;
 	margin-bottom: 24px;
 }
 
@@ -421,4 +420,23 @@
 .mv-landing-footer__newsletter {
 	min-width: 240px;
 	max-width: 320px;
+}
+
+/* Optional section background variants (plan2.md §10.3) — subtle,
+   reusing colors already on the page (the existing tan accent and a
+   light tint of the primary blue) rather than introducing new ones.
+   Sections default to no background (white) unless a caller explicitly
+   opts in via the 'background' template-part argument. */
+
+.mv-section--bg-cream,
+.mv-section--bg-blue-tint {
+	padding-bottom: clamp(32px, 6vw, 72px);
+}
+
+.mv-section--bg-cream {
+	background-color: #f7f4ef;
+}
+
+.mv-section--bg-blue-tint {
+	background-color: #eef3f8;
 }

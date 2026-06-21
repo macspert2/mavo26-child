@@ -13,8 +13,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $about_image = 'https://www.mamanvoyage.com/wp-content/uploads/2018/01/3verres1bib_bannerIcon-1.jpg';
+
+$background      = $args['background'] ?? '';
+$section_classes = 'mv-section mv-about-mini';
+if ( $background ) {
+	$section_classes .= ' mv-section--bg-' . sanitize_html_class( $background );
+}
 ?>
-<section class="mv-section mv-about-mini">
+<section class="<?php echo esc_attr( $section_classes ); ?>">
 	<div class="mv-container mv-about-mini__inner">
 		<span class="mv-about-mini__image">
 			<img src="<?php echo esc_url( $about_image ); ?>" alt="" loading="lazy">

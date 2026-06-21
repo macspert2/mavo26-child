@@ -52,8 +52,14 @@ foreach ( $destinations as $destination ) {
 	] );
 	$items[] = ob_get_clean();
 }
+
+$background       = $args['background'] ?? '';
+$section_classes   = 'mv-section mv-featured-destinations';
+if ( $background ) {
+	$section_classes .= ' mv-section--bg-' . sanitize_html_class( $background );
+}
 ?>
-<section class="mv-section mv-featured-destinations">
+<section class="<?php echo esc_attr( $section_classes ); ?>">
 	<div class="mv-container">
 		<?php
 		get_template_part( 'template-parts/mv-shared/section-header', null, [

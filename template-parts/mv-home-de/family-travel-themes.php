@@ -15,4 +15,5 @@ get_template_part( 'template-parts/mv-shared/catalog-tile-grid', null, [
 	'title'         => __( 'Reisen für jede Familie', 'mavo' ),
 	'keys'          => function_exists( 'tvf_get_family_travel_theme_keys' ) ? tvf_get_family_travel_theme_keys() : [ 'bebe', 'jeunes_enfants', 'ados' ],
 	'columns'       => 3,
+	'background'    => $args['background'] ?? '',
 ] );
