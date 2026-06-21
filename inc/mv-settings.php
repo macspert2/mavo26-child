@@ -55,7 +55,6 @@ function mv_get_settings_defaults(): array {
 			'sidebar_social'           => true,
 			'sidebar_latest_articles'  => true,
 
-			'footer_simplified'        => true,
 			'footer_newsletter'        => true,
 		],
 		'counts' => [
@@ -63,6 +62,10 @@ function mv_get_settings_defaults(): array {
 			'sidebar_latest_articles_count' => 3,
 		],
 		'placeholder_image' => 'https://www.mamanvoyage.com/wp-content/uploads/2024/09/IMG_7174.jpeg',
+		// 'widgets_2col' (GP's own footer-1/footer-3 widget areas, 2 columns
+		// instead of 3) | 'simplified' (the original custom minimal footer,
+		// kept available not deleted) | 'full' (GP's unmodified 3-column footer).
+		'footer_mode' => 'widgets_2col',
 	];
 }
 
@@ -75,6 +78,7 @@ function mv_get_settings(): array {
 			'sections'          => array_merge( $defaults['sections'], $saved['sections'] ?? [] ),
 			'counts'            => array_merge( $defaults['counts'], $saved['counts'] ?? [] ),
 			'placeholder_image' => $saved['placeholder_image'] ?? $defaults['placeholder_image'],
+			'footer_mode'       => $saved['footer_mode'] ?? $defaults['footer_mode'],
 		];
 	}
 	return $settings;
@@ -128,12 +132,18 @@ function mv_handle_save_settings(): void {
 
 	$placeholder_image = esc_url_raw( wp_unslash( $_POST['placeholder_image'] ?? $defaults['placeholder_image'] ) );
 
+	$footer_mode = sanitize_key( wp_unslash( $_POST['footer_mode'] ?? $defaults['footer_mode'] ) );
+	if ( ! in_array( $footer_mode, [ 'widgets_2col', 'simplified', 'full' ], true ) ) {
+		$footer_mode = $defaults['footer_mode'];
+	}
+
 	update_option(
 		'mv_theme_settings',
 		[
 			'sections'          => $sections,
 			'counts'            => $counts,
 			'placeholder_image' => $placeholder_image,
+			'footer_mode'       => $footer_mode,
 		]
 	);
 
@@ -201,10 +211,9 @@ function mv_render_settings_page(): void {
 			],
 		],
 		'footer' => [
-			'title' => __( 'Pied de page simplifié (pages d’accueil + Commencez ici)', 'mavo' ),
+			'title' => __( 'Pied de page (pages d’accueil + Commencez ici)', 'mavo' ),
 			'keys'  => [
-				'footer_simplified' => __( 'Utiliser le pied de page simplifié au lieu du pied de page habituel', 'mavo' ),
-				'footer_newsletter' => __( 'Inclure le bloc newsletter dans ce pied de page simplifié', 'mavo' ),
+				'footer_newsletter' => __( 'Inclure le bloc newsletter (uniquement en mode « pied de page simplifié »)', 'mavo' ),
 			],
 		],
 	];
@@ -229,6 +238,27 @@ function mv_render_settings_page(): void {
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 			<?php wp_nonce_field( 'mv_save_settings', 'mv_settings_nonce' ); ?>
 			<input type="hidden" name="action" value="mv_save_settings">
+
+			<h2><?php esc_html_e( 'Mode de pied de page (pages d’accueil + Commencez ici)', 'mavo' ); ?></h2>
+			<table class="form-table">
+				<tr>
+					<th scope="row"><?php esc_html_e( 'Mode', 'mavo' ); ?></th>
+					<td>
+						<label style="display:block;margin-bottom:8px;">
+							<input type="radio" name="footer_mode" value="widgets_2col" <?php checked( 'widgets_2col', $settings['footer_mode'] ); ?>>
+							<?php esc_html_e( 'Widgets habituels, 2 colonnes (Footer Widget 1 + 3, sans le 2)', 'mavo' ); ?>
+						</label>
+						<label style="display:block;margin-bottom:8px;">
+							<input type="radio" name="footer_mode" value="simplified" <?php checked( 'simplified', $settings['footer_mode'] ); ?>>
+							<?php esc_html_e( 'Pied de page simplifié personnalisé (logo, liens, réseaux sociaux, newsletter)', 'mavo' ); ?>
+						</label>
+						<label style="display:block;">
+							<input type="radio" name="footer_mode" value="full" <?php checked( 'full', $settings['footer_mode'] ); ?>>
+							<?php esc_html_e( 'Pied de page habituel du site, sans modification (3 colonnes)', 'mavo' ); ?>
+						</label>
+					</td>
+				</tr>
+			</table>
 
 			<?php foreach ( $groups as $group ) : ?>
 				<h2><?php echo esc_html( $group['title'] ); ?></h2>

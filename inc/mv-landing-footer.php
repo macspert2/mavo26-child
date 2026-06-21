@@ -1,20 +1,29 @@
 <?php
 /**
- * Simplified landing-page footer — plan2.md §5. The curated homepage
- * prototypes and Start Here page currently fall back into GP's normal
- * footer widget stack (full category lists, archive dropdown,
- * subscribe block, destinations list) once the curated content ends,
+ * Landing-page footer — plan2.md §5, revised per a later request. The
+ * curated homepage prototypes and Start Here page currently fall back
+ * into GP's normal footer widget stack once the curated content ends,
  * which undercuts the "modern landing page" feeling.
  *
- * Approach: unhook generate_construct_footer_widgets (GP's own widget-
- * area renderer, hooked to generate_footer at priority 5 — see GP's
- * inc/structure/footer.php) on these specific pages only, and hook a
- * much smaller replacement at the same priority instead. The copyright/
- * site-info bar (generate_construct_footer, priority 10) is untouched —
- * that's a normal, expected bit of footer, not "legacy clutter".
+ * Two alternative footers are available, selected via Réglages MaVo's
+ * footer_mode setting (see mv-settings.php) — both achieved by
+ * unhooking generate_construct_footer_widgets (GP's own widget-area
+ * renderer, hooked to generate_footer at priority 5 — see GP's
+ * inc/structure/footer.php) on these specific pages only, and hooking
+ * a replacement at the same priority instead:
  *
- * Toggleable from Réglages MaVo (mv_section_enabled) in case this
- * doesn't look right in practice and needs reverting quickly.
+ * - 'widgets_2col' (current default): reuses GP's own footer-1/footer-3
+ *   widget areas and generate_do_footer_widget() helper directly (that
+ *   function isn't wrapped in function_exists(), so it's always
+ *   globally callable) — same widgets as every other page, just
+ *   skipping the middle one and using 50% width instead of 33%.
+ * - 'simplified': the original custom minimal footer (logo/tagline,
+ *   key links, social, optional newsletter) — kept available, not
+ *   deleted, in case this gets revisited.
+ *
+ * Either way, the copyright/site-info bar (generate_construct_footer,
+ * priority 10) is untouched — that's normal, expected footer, not
+ * "legacy clutter".
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -29,12 +38,36 @@ add_action( 'wp', function () {
 	if ( ! mv_is_landing_page() ) {
 		return;
 	}
-	if ( ! mv_section_enabled( 'footer_simplified' ) ) {
+
+	$mode = mv_get_settings()['footer_mode'] ?? 'widgets_2col';
+
+	if ( 'simplified' === $mode ) {
+		remove_action( 'generate_footer', 'generate_construct_footer_widgets', 5 );
+		add_action( 'generate_footer', 'mv_render_landing_footer', 5 );
+	} elseif ( 'widgets_2col' === $mode ) {
+		remove_action( 'generate_footer', 'generate_construct_footer_widgets', 5 );
+		add_action( 'generate_footer', 'mv_render_landing_footer_widgets_2col', 5 );
+	}
+	// 'full' (or anything unrecognized): leave GP's own 3-column footer untouched.
+} );
+
+function mv_render_landing_footer_widgets_2col(): void {
+	if ( ! is_active_sidebar( 'footer-1' ) && ! is_active_sidebar( 'footer-3' ) ) {
 		return;
 	}
-	remove_action( 'generate_footer', 'generate_construct_footer_widgets', 5 );
-	add_action( 'generate_footer', 'mv_render_landing_footer', 5 );
-} );
+	?>
+	<div id="footer-widgets" class="site footer-widgets">
+		<div <?php generate_do_attr( 'footer-widgets-container' ); ?>>
+			<div class="inside-footer-widgets">
+				<?php
+				generate_do_footer_widget( '50', 1 );
+				generate_do_footer_widget( '50', 3 );
+				?>
+			</div>
+		</div>
+	</div>
+	<?php
+}
 
 function mv_render_landing_footer(): void {
 	$lang = function_exists( 'pll_current_language' ) ? pll_current_language( 'slug' ) : 'fr';
