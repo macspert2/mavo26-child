@@ -20,6 +20,16 @@
  * list of posts, and have_posts()/the_post() (used inside
  * generate_do_template_part()) operate on that global.
  *
+ * is_home is also force-set true on that query. GeneratePress's own
+ * pagination (generate_content_nav(), hooked to generate_after_loop via
+ * generate_do_post_navigation) only renders prev/next links when
+ * is_home()||is_archive()||is_search() — conditional tags that read
+ * whatever $wp_query currently points at, not a fixed snapshot of the
+ * real request. A freshly-built WP_Query for post_type=post doesn't get
+ * flagged as any of those on its own, so without this, GP's pagination
+ * silently no-ops on a page template even though max_num_pages is set
+ * correctly.
+ *
  * Deliberately NOT using WordPress's official "Posts page" Reading
  * setting — that's only assignable once "homepage displays" is also
  * switched to a static page, which hasn't happened yet.
@@ -52,6 +62,7 @@ if ( function_exists( 'pll_current_language' ) ) {
 
 global $wp_query;
 $wp_query = new WP_Query( $query_args );
+$wp_query->is_home = true;
 ?>
 
 	<div <?php generate_do_attr( 'content' ); ?>>
