@@ -26,6 +26,34 @@ add_action( 'wp_enqueue_scripts', function () {
     }
 } );
 
+/**
+ * Search results: enable the sidebar (generate_sidebar_layout filter,
+ * see inc/theme-functions.php in GeneratePress), suppress the generic
+ * fallback widgets (search box + monthly archives, see
+ * generate_show_default_sidebar_widgets in inc/structure/sidebars.php),
+ * and render our own content instead via the existing
+ * generate_before_right_sidebar_content hook.
+ */
+add_filter( 'generate_sidebar_layout', function ( $layout ) {
+    if ( is_search() ) {
+        return 'right-sidebar';
+    }
+    return $layout;
+} );
+
+add_filter( 'generate_show_default_sidebar_widgets', function ( $show ) {
+    if ( is_search() ) {
+        return false;
+    }
+    return $show;
+} );
+
+add_action( 'generate_before_right_sidebar_content', function () {
+    if ( is_search() ) {
+        get_template_part( 'template-parts/mv-search-sidebar' );
+    }
+} );
+
 /* temp fix for missing css style in wordpress 7.0 - remove later and test if connectors page works */
 add_action('admin_head', function() {
     echo '<style>

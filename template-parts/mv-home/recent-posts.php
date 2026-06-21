@@ -4,8 +4,9 @@
  *
  * 3 latest posts in the current language. Kept below the evergreen
  * pathway sections on purpose (plan-mid.md §4.1 Section 7: "place lower
- * than evergreen routes"). The "view all" link is "#" for every language
- * — no /blog/ (or equivalent) latest-posts page yet (plan Phase 9).
+ * than evergreen routes"). The "view all" link goes to the Phase 9
+ * blog-index page — slugs differ per language since Polylang wouldn't
+ * allow reusing slug `blog` across all three here (see page-blog.php).
  *
  * Shared across FR/EN/DE homepages (query logic doesn't differ by
  * language), with just the label text switched — unlike hero/about-mini/
@@ -25,6 +26,13 @@ $labels = [
 	'de' => [ 'title' => 'Unsere neuesten Abenteuer', 'more' => 'Alle Artikel ansehen' ],
 ];
 $label = $labels[ $lang ] ?? $labels['fr'];
+
+$blog_urls = [
+	'fr' => 'https://www.mamanvoyage.com/blog/',
+	'en' => 'https://www.mamanvoyage.com/en/blog-en/',
+	'de' => 'https://www.mamanvoyage.com/de/blog-de/',
+];
+$blog_url = $blog_urls[ $lang ] ?? $blog_urls['fr'];
 
 $query_args = [
 	'post_type'           => 'post',
@@ -64,7 +72,7 @@ foreach ( $recent_query->posts as $recent_post ) {
 		] );
 		?>
 		<p class="mv-recent-posts__more">
-			<a class="mv-button mv-button--secondary" href="#">
+			<a class="mv-button mv-button--secondary" href="<?php echo esc_url( $blog_url ); ?>">
 				<?php echo esc_html( $label['more'] ); ?>
 			</a>
 		</p>
