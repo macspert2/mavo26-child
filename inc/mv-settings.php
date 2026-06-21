@@ -149,7 +149,7 @@ function mv_render_settings_page(): void {
 			'title' => __( 'Page d’accueil — Français', 'mavo' ),
 			'keys'  => [
 				'fr_trust_bar'             => __( 'Bandeau de confiance', 'mavo' ),
-				'fr_primary_pathways'      => __( 'Par où commencer ? (désactivé actuellement)', 'mavo' ),
+				'fr_primary_pathways'      => __( 'Par où commencer ?', 'mavo' ),
 				'fr_featured_destinations' => __( 'Destinations phares', 'mavo' ),
 				'fr_seasonal_guides'       => __( 'Guides saisonniers', 'mavo' ),
 				'fr_family_travel_themes'  => __( 'Voyager selon votre famille', 'mavo' ),
