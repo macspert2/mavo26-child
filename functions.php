@@ -4,6 +4,8 @@ if ( ! defined( 'ABSPATH' ) ) {
         exit; // Exit if accessed directly.
 }
 
+require_once get_stylesheet_directory() . '/inc/mv-settings.php';
+
 add_theme_support('post-thumbnails');
 add_image_size('medium-responsive', 640, 0, false);
 add_image_size('small-responsive', 480, 0, false);

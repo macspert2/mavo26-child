@@ -83,7 +83,7 @@ $blog_urls = [
 ];
 $blog_url = $blog_urls[ $lang ] ?? $blog_urls['fr'];
 
-$placeholder_image = 'https://www.mamanvoyage.com/wp-content/uploads/2024/09/IMG_7174.jpeg';
+$placeholder_image = mv_get_placeholder_image();
 ?>
 
 <aside id="mv-search-again" class="widget widget_search">
@@ -91,14 +91,14 @@ $placeholder_image = 'https://www.mamanvoyage.com/wp-content/uploads/2024/09/IMG
 	<?php get_search_form(); ?>
 </aside>
 
-<?php if ( 'fr' === $lang ) : ?>
+<?php if ( 'fr' === $lang && mv_section_enabled( 'sidebar_start_here' ) ) : ?>
 <aside id="mv-search-start-here" class="widget">
 	<h2 class="widget-title"><?php echo esc_html( $t['start_here'] ); ?></h2>
 	<p><a class="mv-button mv-button--secondary" href="https://www.mamanvoyage.com/commencez-ici/"><?php echo esc_html( $t['start_here_cta'] ); ?></a></p>
 </aside>
 <?php endif; ?>
 
-<?php if ( class_exists( 'TVF_Homepage' ) ) : ?>
+<?php if ( mv_section_enabled( 'sidebar_refine_theme' ) && class_exists( 'TVF_Homepage' ) ) : ?>
 	<?php
 	$theme_items = [];
 	$used_images = [];
@@ -147,8 +147,8 @@ $placeholder_image = 'https://www.mamanvoyage.com/wp-content/uploads/2024/09/IMG
 	<?php endif; ?>
 <?php endif; ?>
 
-<?php if ( class_exists( 'TVF_Popular_Snapshots' ) ) : ?>
-	<?php $popular_posts = TVF_Popular_Snapshots::get_most_viewed( $lang, 4 ); ?>
+<?php if ( mv_section_enabled( 'sidebar_most_read' ) && class_exists( 'TVF_Popular_Snapshots' ) ) : ?>
+	<?php $popular_posts = TVF_Popular_Snapshots::get_most_viewed( $lang, mv_get_setting_count( 'sidebar_most_read_count', 4 ) ); ?>
 	<?php if ( ! empty( $popular_posts ) ) : ?>
 	<aside id="mv-search-popular" class="widget">
 		<h2 class="widget-title"><?php echo esc_html( $t['popular'] ); ?></h2>
@@ -166,6 +166,7 @@ $placeholder_image = 'https://www.mamanvoyage.com/wp-content/uploads/2024/09/IMG
 	<?php endif; ?>
 <?php endif; ?>
 
+<?php if ( mv_section_enabled( 'sidebar_about' ) ) : ?>
 <aside id="mv-search-about" class="widget">
 	<h2 class="widget-title"><?php echo esc_html( $t['about'] ); ?></h2>
 	<p>
@@ -174,12 +175,16 @@ $placeholder_image = 'https://www.mamanvoyage.com/wp-content/uploads/2024/09/IMG
 	</p>
 	<p><a class="mv-button mv-button--secondary" href="<?php echo esc_url( $about_url ); ?>"><?php echo esc_html( $t['about_cta'] ); ?></a></p>
 </aside>
+<?php endif; ?>
 
+<?php if ( mv_section_enabled( 'sidebar_newsletter' ) ) : ?>
 <aside id="mv-search-newsletter" class="widget">
 	<h2 class="widget-title"><?php echo esc_html( $t['newsletter'] ); ?></h2>
 	<?php echo do_blocks( '<!-- wp:jetpack/subscriptions /-->' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- block output, not user input. ?>
 </aside>
+<?php endif; ?>
 
+<?php if ( mv_section_enabled( 'sidebar_social' ) ) : ?>
 <aside id="mv-search-social" class="widget">
 	<h2 class="widget-title"><?php echo esc_html( $t['follow'] ); ?></h2>
 	<?php
@@ -194,20 +199,21 @@ $placeholder_image = 'https://www.mamanvoyage.com/wp-content/uploads/2024/09/IMG
 	); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- block output, not user input.
 	?>
 </aside>
+<?php endif; ?>
 
 <?php
 $latest_query_args = [
 	'post_type'           => 'post',
 	'post_status'         => 'publish',
-	'posts_per_page'      => 3,
+	'posts_per_page'      => mv_get_setting_count( 'sidebar_latest_articles_count', 3 ),
 	'ignore_sticky_posts' => true,
 ];
 if ( function_exists( 'pll_current_language' ) ) {
 	$latest_query_args['lang'] = $lang;
 }
-$latest_query = new WP_Query( $latest_query_args );
+$latest_query = mv_section_enabled( 'sidebar_latest_articles' ) ? new WP_Query( $latest_query_args ) : null;
 ?>
-<?php if ( $latest_query->have_posts() ) : ?>
+<?php if ( $latest_query && $latest_query->have_posts() ) : ?>
 <aside id="mv-search-latest" class="widget">
 	<h2 class="widget-title"><?php echo esc_html( $t['latest'] ); ?></h2>
 	<div class="mv-search-sidebar__cards">

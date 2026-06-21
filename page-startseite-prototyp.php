@@ -23,14 +23,31 @@ get_header();
 
 <main id="primary" class="site-main mv-home mv-home--prototype">
 	<?php
+	// Section visibility is controlled from Réglages MaVo (wp-admin) —
+	// see inc/mv-settings.php. Hero always shows.
 	get_template_part( 'template-parts/mv-home-de/hero' );
-	get_template_part( 'template-parts/mv-home-de/trust-bar' );
-	get_template_part( 'template-parts/mv-home-de/destinations' );
-	get_template_part( 'template-parts/mv-home-de/trip-type' );
-	get_template_part( 'template-parts/mv-home-de/family-travel-themes' );
-	get_template_part( 'template-parts/mv-home/recent-posts' );
-	get_template_part( 'template-parts/mv-home/popular-last-year' );
-	get_template_part( 'template-parts/mv-home-de/about-mini' );
+
+	if ( mv_section_enabled( 'de_trust_bar' ) ) {
+		get_template_part( 'template-parts/mv-home-de/trust-bar' );
+	}
+	if ( mv_section_enabled( 'de_destinations' ) ) {
+		get_template_part( 'template-parts/mv-home-de/destinations' );
+	}
+	if ( mv_section_enabled( 'de_trip_type' ) ) {
+		get_template_part( 'template-parts/mv-home-de/trip-type' );
+	}
+	if ( mv_section_enabled( 'de_family_travel_themes' ) ) {
+		get_template_part( 'template-parts/mv-home-de/family-travel-themes' );
+	}
+	if ( mv_section_enabled( 'de_recent_posts' ) ) {
+		get_template_part( 'template-parts/mv-home/recent-posts' );
+	}
+	if ( mv_section_enabled( 'de_popular_last_year' ) ) {
+		get_template_part( 'template-parts/mv-home/popular-last-year' );
+	}
+	if ( mv_section_enabled( 'de_about_mini' ) ) {
+		get_template_part( 'template-parts/mv-home-de/about-mini' );
+	}
 	?>
 </main>
 

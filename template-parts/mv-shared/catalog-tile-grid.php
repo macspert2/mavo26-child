@@ -42,7 +42,7 @@ if ( empty( $keys ) ) {
 	return;
 }
 
-$placeholder_image = 'https://www.mamanvoyage.com/wp-content/uploads/2024/09/IMG_7174.jpeg';
+$placeholder_image = mv_get_placeholder_image();
 $lang               = function_exists( 'pll_current_language' ) ? pll_current_language( 'slug' ) : 'fr';
 
 // Per-language link targets — only French has a full-finder page today;

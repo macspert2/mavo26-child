@@ -17,17 +17,39 @@ get_header();
 
 <main id="primary" class="site-main mv-home mv-home--prototype">
 	<?php
+	// Section visibility is controlled from Réglages MaVo (wp-admin) —
+	// see inc/mv-settings.php. Hero always shows; everything else is
+	// toggleable. primary-pathways defaults off, matching its previous
+	// hardcoded-disabled state, but can now be turned on without code.
 	get_template_part( 'template-parts/mv-home/hero' );
-	get_template_part( 'template-parts/mv-home/trust-bar' );
-	// primary-pathways ("Par où commencer ?") removed for the time being —
-	// the template part itself is untouched, just not called here.
-	get_template_part( 'template-parts/mv-home/featured-destinations' );
-	get_template_part( 'template-parts/mv-home/seasonal-guides' );
-	get_template_part( 'template-parts/mv-home/family-travel-themes' );
-	get_template_part( 'template-parts/mv-home/popular-last-year' );
-	get_template_part( 'template-parts/mv-home/recent-posts' );
-	get_template_part( 'template-parts/mv-home/about-mini' );
-	get_template_part( 'template-parts/mv-home/start-here-cta' );
+
+	if ( mv_section_enabled( 'fr_trust_bar' ) ) {
+		get_template_part( 'template-parts/mv-home/trust-bar' );
+	}
+	if ( mv_section_enabled( 'fr_primary_pathways' ) ) {
+		get_template_part( 'template-parts/mv-home/primary-pathways' );
+	}
+	if ( mv_section_enabled( 'fr_featured_destinations' ) ) {
+		get_template_part( 'template-parts/mv-home/featured-destinations' );
+	}
+	if ( mv_section_enabled( 'fr_seasonal_guides' ) ) {
+		get_template_part( 'template-parts/mv-home/seasonal-guides' );
+	}
+	if ( mv_section_enabled( 'fr_family_travel_themes' ) ) {
+		get_template_part( 'template-parts/mv-home/family-travel-themes' );
+	}
+	if ( mv_section_enabled( 'fr_popular_last_year' ) ) {
+		get_template_part( 'template-parts/mv-home/popular-last-year' );
+	}
+	if ( mv_section_enabled( 'fr_recent_posts' ) ) {
+		get_template_part( 'template-parts/mv-home/recent-posts' );
+	}
+	if ( mv_section_enabled( 'fr_about_mini' ) ) {
+		get_template_part( 'template-parts/mv-home/about-mini' );
+	}
+	if ( mv_section_enabled( 'fr_start_here_cta' ) ) {
+		get_template_part( 'template-parts/mv-home/start-here-cta' );
+	}
 	?>
 </main>
 

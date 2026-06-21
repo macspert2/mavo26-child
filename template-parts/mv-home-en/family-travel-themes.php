@@ -16,6 +16,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 get_template_part( 'template-parts/mv-shared/catalog-tile-grid', null, [
 	'section_class' => 'mv-family-travel-themes',
 	'title'         => __( 'Travel with your family', 'mavo' ),
-	'keys'          => [ 'bebe', 'jeunes_enfants', 'ados' ],
+	'keys'          => function_exists( 'tvf_get_family_travel_theme_keys' ) ? tvf_get_family_travel_theme_keys() : [ 'bebe', 'jeunes_enfants', 'ados' ],
 	'columns'       => 3,
 ] );
