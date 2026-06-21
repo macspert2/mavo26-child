@@ -292,16 +292,36 @@
 	margin-bottom: 12px;
 }
 
-/* GeneratePress's flexbox search button is icon-only by default — give
-   it a visible background so it reads clearly as a button here. */
+/* GeneratePress hides .search-submit entirely inside .widget_search
+   (`.widget_search .search-submit{display:none;}`) — override that
+   (the #mv-search-again ID beats GP's two-class selector, no
+   !important needed) and stack the button on its own line below the
+   input instead of squeezing it alongside. */
 #mv-search-again .search-form {
 	display: flex;
+	flex-direction: column;
 	gap: 8px;
 }
 
 #mv-search-again .search-submit {
+	display: block;
+	width: 100%;
 	background-color: #4e74a5;
 	color: #fff;
 	border-radius: 4px;
-	flex-shrink: 0;
+	padding: 10px;
+	text-align: center;
+}
+
+/* Jetpack's subscribe form puts the email field and button side by
+   side by default, and styles the button black — stack it below the
+   input instead, and match the site's blue. */
+#mv-search-newsletter .wp-block-jetpack-subscriptions__container {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+#mv-search-newsletter button[type="submit"] {
+	background-color: #4e74a5;
 }
