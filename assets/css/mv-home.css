@@ -275,6 +275,14 @@
 
 /* Blog index */
 
+/* Matches the site's native reading width instead of mv-container's
+   wider 1120px box — same technique as .mv-travel-finder-focus, since
+   this page reuses content.php (designed for that narrower column). */
+.mv-blog-index .mv-container {
+	width: auto;
+	margin-inline: 0;
+}
+
 .mv-blog-index .mv-section__title {
 	margin-bottom: 24px;
 }

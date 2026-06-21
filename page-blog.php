@@ -6,6 +6,20 @@
  * — the query/layout doesn't differ by language, only label text, same
  * reasoning as template-parts/mv-home/recent-posts.php.
  *
+ * Renders exactly like the site's current chronological homepage (`/`,
+ * GeneratePress's own index.php) on request: each post via this child
+ * theme's own content.php — full content up to any manual <!--more-->
+ * tag, with the featured image and title, not a card grid. Reuses
+ * content.php directly (not a re-implementation) for guaranteed visual
+ * parity. posts_per_page matches the site's own "Posts per page" core
+ * setting, so it shows the same count as the homepage automatically.
+ *
+ * content.php's post-divider logic reads the *global* $wp_query
+ * ($wp_query->current_post/post_count), so the global is temporarily
+ * swapped to this page's own query for the loop and restored via
+ * wp_reset_query() afterward — otherwise that logic would silently look
+ * at the wrong query object (this page's own singular main query).
+ *
  * Deliberately NOT using WordPress's official "Posts page" Reading
  * setting — that's only assignable once "homepage displays" is also
  * switched to a static page, which hasn't happened yet. This is a plain
@@ -43,8 +57,8 @@ $paged = max( 1, (int) ( $_GET['paged'] ?? 1 ) );
 $query_args = [
 	'post_type'           => 'post',
 	'post_status'         => 'publish',
-	'posts_per_page'      => 12,
-	'paged'               => $paged,
+	'posts_per_page'      => get_option( 'posts_per_page' ),
+	'paged'                => $paged,
 	'ignore_sticky_posts' => true,
 ];
 
@@ -62,18 +76,15 @@ $blog_query = new WP_Query( $query_args );
 
 			<?php if ( $blog_query->have_posts() ) : ?>
 				<?php
-				$items = [];
-				foreach ( $blog_query->posts as $blog_post ) {
-					ob_start();
-					get_template_part( 'template-parts/mv-shared/card-post', null, [
-						'post' => $blog_post,
-					] );
-					$items[] = ob_get_clean();
-				}
-				get_template_part( 'template-parts/mv-shared/grid-wrapper', null, [
-					'columns' => 3,
-					'items'   => $items,
-				] );
+				global $wp_query;
+				$wp_query = $blog_query; // so content.php's $wp_query-based divider logic sees this loop, not the page's own singular query.
+
+				while ( have_posts() ) :
+					the_post();
+					get_template_part( 'content', get_post_format() );
+				endwhile;
+
+				wp_reset_query(); // restores the global $wp_query and calls wp_reset_postdata().
 				?>
 				<nav class="mv-blog-index__pagination" aria-label="<?php esc_attr_e( 'Pagination', 'mavo' ); ?>">
 					<?php if ( $paged > 1 ) : ?>
