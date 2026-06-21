@@ -8,9 +8,12 @@
  * site's current chronological homepage (/) using the theme's existing
  * CSS — no new CSS needed.
  *
- * One shared template for all 3 languages (FR /blog/, EN /en/blog/, DE
- * /de/blog/ — all the identical slug "blog", linked as Polylang
- * translations of each other) — the query doesn't differ by language.
+ * One shared template for all 3 languages — FR /blog/ (slug `blog`,
+ * matched directly), EN /en/blog/ and DE /de/blog/ (slugs `blog-en`/
+ * `blog-de` — Polylang wouldn't allow reusing the identical slug
+ * `blog` across languages here, unlike other pages in this project, so
+ * page-blog-en.php/page-blog-de.php just require this file directly).
+ * The query doesn't differ by language.
  *
  * The only addition vs. index.php: a custom WP_Query (latest posts,
  * language-filtered, posts_per_page matching the site's own "Posts per
