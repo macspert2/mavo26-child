@@ -114,15 +114,29 @@
 	gap: 12px;
 }
 
-.mv-button {
+/* Unified button look — also applied to two elements we don't control
+   the markup of (GP's search-submit input, GP's native pagination
+   links), via descendant selectors grouped into the same rules rather
+   than duplicating the values. */
+.mv-button,
+#mv-search-again .search-submit,
+#nav-below .prev a,
+#nav-below .next a {
 	display: inline-block;
 	padding: 10px 20px;
+	border: none;
 	border-radius: 999px;
 	text-decoration: none;
 	font-weight: 600;
+	font-family: inherit;
+	font-size: inherit;
+	cursor: pointer;
 }
 
-.mv-button:focus-visible {
+.mv-button:focus-visible,
+#mv-search-again .search-submit:focus-visible,
+#nav-below .prev a:focus-visible,
+#nav-below .next a:focus-visible {
 	outline: 3px solid #1a73e8;
 	outline-offset: 2px;
 }
@@ -132,9 +146,19 @@
 	color: #fff;
 }
 
-.mv-button--secondary {
+.mv-button--secondary,
+#mv-search-again .search-submit,
+#nav-below .prev a,
+#nav-below .next a {
 	background: #f0eee9;
 	color: #4e74a5;
+}
+
+/* generate_content_nav() doesn't expose a filter to add classes to its
+   <a> tags or drop its arrow icon, so this hides it rather than fight
+   its positioning inside the new pill shape. */
+#nav-below .gp-icon {
+	display: none;
 }
 
 /* Hero CTAs: same look for all 3, scoped here only. Specificity is kept
@@ -296,21 +320,12 @@
    (`.widget_search .search-submit{display:none;}`) — override that
    (the #mv-search-again ID beats GP's two-class selector, no
    !important needed) and stack the button on its own line below the
-   input instead of squeezing it alongside. */
+   input instead of squeezing it alongside. Shape/color is handled by
+   the grouped .mv-button rules above. */
 #mv-search-again .search-form {
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
-}
-
-#mv-search-again .search-submit {
-	display: block;
-	width: 100%;
-	background-color: #4e74a5;
-	color: #fff;
-	border-radius: 4px;
-	padding: 10px;
-	text-align: center;
 }
 
 /* The email field and submit button are sibling <p id="subscribe-email">
@@ -323,6 +338,16 @@
 	gap: 8px;
 }
 
+/* Jetpack's button ships its own inline style="" (border-radius,
+   border-width, padding, font-size) which beats any external CSS
+   regardless of selector specificity — !important is the only way to
+   actually override an inline style, not a sign of fighting the
+   cascade unnecessarily. */
 #mv-search-newsletter button[type="submit"] {
-	background-color: #4e74a5;
+	background-color: #4e74a5 !important;
+	color: #fff !important;
+	border: none !important;
+	border-radius: 999px !important;
+	padding: 10px 20px !important;
+	font-weight: 600 !important;
 }
