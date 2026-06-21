@@ -313,10 +313,11 @@
 	text-align: center;
 }
 
-/* Jetpack's subscribe form puts the email field and button side by
-   side by default, and styles the button black — stack it below the
-   input instead, and match the site's blue. */
-#mv-search-newsletter .wp-block-jetpack-subscriptions__container {
+/* The email field and submit button are sibling <p id="subscribe-email">
+   / <p id="subscribe-submit"> elements inside .form-elements (not the
+   outer .container, which doesn't need any layout change) — that's the
+   actual flex row that needs to become a column. */
+#mv-search-newsletter .wp-block-jetpack-subscriptions__form-elements {
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
