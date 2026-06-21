@@ -16,25 +16,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 $destinations = [
 	[
 		'title'       => __( 'France', 'mavo' ),
-		'description' => __( 'Nos meilleures idées pour voyager en France en famille.', 'mavo' ),
+		'description' => __( 'Week-ends, villages, nature, vélo et vacances sans partir trop loin.', 'mavo' ),
 		'url'         => 'https://www.mamanvoyage.com/france/',
 		'image'       => 'https://www.mamanvoyage.com/wp-content/uploads/2018/01/IMG_0745.jpg',
 	],
 	[
 		'title'       => __( 'Angleterre', 'mavo' ),
-		'description' => __( 'Vivre et voyager en Angleterre avec des enfants.', 'mavo' ),
+		'description' => __( 'Nos idées depuis notre vie d’expatriés : Londres, sud de l’Angleterre, nature et escapades en train.', 'mavo' ),
 		'url'         => 'https://www.mamanvoyage.com/angleterre/',
 		'image'       => 'https://www.mamanvoyage.com/wp-content/uploads/2026/05/IMG_6132.jpeg.webp',
 	],
 	[
 		'title'       => __( 'Italie', 'mavo' ),
-		'description' => __( 'Voyager en Italie en famille.', 'mavo' ),
+		'description' => __( 'City-trips, îles, randonnées et road trips gourmands avec enfants.', 'mavo' ),
 		'url'         => 'https://www.mamanvoyage.com/italie/',
 		'image'       => 'https://www.mamanvoyage.com/wp-content/uploads/2010/03/26023_408646857888_508957888_4904843_5309085_n.jpg',
 	],
 	[
 		'title'       => __( 'Espagne', 'mavo' ),
-		'description' => __( 'Voyager en Espagne en famille.', 'mavo' ),
+		'description' => __( 'Baléares, Catalogne, villes et soleil — testés en famille.', 'mavo' ),
 		'url'         => 'https://www.mamanvoyage.com/espagne/',
 		'image'       => 'https://www.mamanvoyage.com/wp-content/uploads/2019/10/P9031799.jpeg',
 	],

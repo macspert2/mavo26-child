@@ -53,6 +53,9 @@ function mv_get_settings_defaults(): array {
 			'sidebar_newsletter'       => true,
 			'sidebar_social'           => true,
 			'sidebar_latest_articles'  => true,
+
+			'footer_simplified'        => true,
+			'footer_newsletter'        => true,
 		],
 		'counts' => [
 			'sidebar_most_read_count'       => 4,
@@ -193,6 +196,13 @@ function mv_render_settings_page(): void {
 				'sidebar_newsletter'      => __( 'Abonnement newsletter', 'mavo' ),
 				'sidebar_social'          => __( 'Réseaux sociaux', 'mavo' ),
 				'sidebar_latest_articles' => __( 'Derniers articles', 'mavo' ),
+			],
+		],
+		'footer' => [
+			'title' => __( 'Pied de page simplifié (pages d’accueil + Commencez ici)', 'mavo' ),
+			'keys'  => [
+				'footer_simplified' => __( 'Utiliser le pied de page simplifié au lieu du pied de page habituel', 'mavo' ),
+				'footer_newsletter' => __( 'Inclure le bloc newsletter dans ce pied de page simplifié', 'mavo' ),
 			],
 		],
 	];

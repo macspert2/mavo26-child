@@ -40,7 +40,7 @@ foreach ( $projects as $project ) {
 	$items[] = ob_get_clean();
 }
 ?>
-<section class="mv-section mv-start-here-big-projects">
+<section id="mv-start-here-big-projects" class="mv-section mv-start-here-big-projects">
 	<div class="mv-container">
 		<?php
 		get_template_part( 'template-parts/mv-shared/section-header', null, [

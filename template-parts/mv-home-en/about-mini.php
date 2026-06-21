@@ -1,7 +1,9 @@
 <?php
 /**
- * English homepage about mini. Same real photo as the FR version;
- * translated copy is a draft.
+ * English homepage about mini. Same real photo as the FR version.
+ * Copy translated from plan2.md §12.3's FR version, for parity now that
+ * the FR about-mini names Christine/Ticoeur/Titpuce explicitly rather
+ * than staying generic.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -20,10 +22,7 @@ $about_image = 'https://www.mamanvoyage.com/wp-content/uploads/2018/01/3verres1b
 				<?php esc_html_e( "Who's behind Maman Voyage?", 'mavo' ); ?>
 			</h2>
 			<p>
-				<?php esc_html_e( 'I set off on a world tour with my children, and I never really stopped travelling since. On this blog, I share our itineraries, our mistakes, and everything that makes family travel easier.', 'mavo' ); ?>
-			</p>
-			<p>
-				<?php esc_html_e( "Whether you're planning a weekend close to home or a bigger trip abroad, I hope you'll find what you need here to plan your next adventure.", 'mavo' ); ?>
+				<?php esc_html_e( "I'm Christine, mum to Ticoeur and Titpuce. Since 2009, I've been sharing our family trips: weekends close to home, routes across Europe, a round-the-world trip, hikes, and discoveries from our life in England. Every tip published here comes from real experience with my own children.", 'mavo' ); ?>
 			</p>
 			<a class="mv-button mv-button--secondary" href="https://www.mamanvoyage.com/en/about/">
 				<?php esc_html_e( 'Learn more about us', 'mavo' ); ?>

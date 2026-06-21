@@ -44,22 +44,41 @@ if ( empty( $posts ) ) {
 	return;
 }
 
+/**
+ * Titles/subtitles reframed per plan2.md §9 — the old fallback title
+ * ("Actuellement les plus lus" / "Currently most read") and non-fallback
+ * title ("Les articles les plus lus en %s l'an dernier") exposed the
+ * analytics logic instead of giving the visitor a reason to read.
+ * EN/DE's non-fallback case isn't addressed by the plan (it rarely
+ * fires today — both languages' "last year" query is reliably empty,
+ * see TVF_Popular_Snapshots), so it keeps its previous wording rather
+ * than guessing at unrequested copy.
+ */
 if ( $is_fallback ) {
 	$titles = [
-		'fr' => 'Actuellement les plus lus',
-		'en' => 'Currently most read',
-		'de' => 'Aktuell meistgelesen',
+		'fr' => 'Les idées de voyage qui plaisent en ce moment',
+		'en' => 'Popular family travel ideas right now',
+		'de' => 'Beliebte Reiseideen im Moment',
 	];
-	$title = $titles[ $lang ] ?? $titles['fr'];
+	$subtitles = [
+		'fr' => 'Une sélection de nos articles les plus appréciés actuellement.',
+		'en' => 'A seasonal selection of articles readers often come back to at this time of year.',
+		'de' => 'Eine saisonale Auswahl von Artikeln, die Familien zu dieser Jahreszeit besonders oft lesen.',
+	];
+	$title    = $titles[ $lang ] ?? $titles['fr'];
+	$subtitle = $subtitles[ $lang ] ?? $subtitles['fr'];
+} elseif ( 'fr' === $lang ) {
+	$title    = 'Vos idées de voyage préférées pour cette période';
+	$subtitle = 'Une sélection d’articles souvent consultés à cette période de l’année.';
 } else {
 	$month_label = date_i18n( 'F', strtotime( $month ) );
-	/* translators: %s: localized month name, e.g. "juin" / "June" / "Juni" */
+	/* translators: %s: localized month name, e.g. "June" / "Juni" */
 	$title_formats = [
-		'fr' => 'Les articles les plus lus en %s l’an dernier',
 		'en' => 'Most read in %s last year',
 		'de' => 'Meistgelesen im %s letzten Jahres',
 	];
-	$title = sprintf( $title_formats[ $lang ] ?? $title_formats['fr'], $month_label );
+	$title    = sprintf( $title_formats[ $lang ] ?? $title_formats['en'], $month_label );
+	$subtitle = '';
 }
 
 $items = [];
@@ -75,7 +94,8 @@ foreach ( $posts as $popular_post ) {
 	<div class="mv-container">
 		<?php
 		get_template_part( 'template-parts/mv-shared/section-header', null, [
-			'title' => $title,
+			'title'    => $title,
+			'subtitle' => $subtitle,
 		] );
 		get_template_part( 'template-parts/mv-shared/grid-wrapper', null, [
 			'columns' => 3,

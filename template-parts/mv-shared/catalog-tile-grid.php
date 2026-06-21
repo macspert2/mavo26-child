@@ -119,7 +119,7 @@ if ( empty( $items ) ) {
 	return;
 }
 ?>
-<section class="mv-section <?php echo esc_attr( $section_class ); ?>">
+<section id="<?php echo esc_attr( $section_class ); ?>" class="mv-section <?php echo esc_attr( $section_class ); ?>">
 	<div class="mv-container">
 		<?php
 		get_template_part( 'template-parts/mv-shared/section-header', null, [
