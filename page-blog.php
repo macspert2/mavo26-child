@@ -37,12 +37,26 @@
  * Matches slug `blog` via the WordPress template hierarchy, same
  * mechanism as page-accueil-prototype.php.
  *
+ * The home/blog body classes are added below via the body_class filter
+ * (registered before get_header() so it's in place when the body tag
+ * prints). WordPress sets those classes from is_home(), which is
+ * decided before this template's later $wp_query swap even runs — so
+ * without this, GeneratePress's own .home/.blog-scoped CSS (e.g.
+ * `body.home h2.entry-title{font-size:40px;}`) never matches here, even
+ * though the visual content is otherwise identical to the homepage.
+ *
  * File: page-blog.php
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+add_filter( 'body_class', function ( $classes ) {
+	$classes[] = 'home';
+	$classes[] = 'blog';
+	return $classes;
+} );
 
 get_header();
 
