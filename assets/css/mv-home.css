@@ -446,3 +446,83 @@
 .mv-section--bg-blue-tint .mv-container {
 	background-color: #eef3f8;
 }
+
+/* Search results page polish (plan3.md). Scoped to body.search-results
+   throughout — content.php is shared with the blog index (page-blog.php),
+   which must stay unaffected. */
+
+/* GP's own h1.page-title already renders "Résultats de recherche pour
+   <span>{query}</span>" — add quote marks around the query via ::before/
+   ::after rather than touching that title's source, which we don't
+   control (GeneratePress's own archive-title mechanism). */
+body.search-results .page-title span::before {
+	content: "\201C";
+}
+
+body.search-results .page-title span::after {
+	content: "\201D";
+}
+
+.mv-search-header {
+	margin-bottom: 32px;
+}
+
+.mv-search-header__helper {
+	margin-top: 8px;
+	color: #555;
+}
+
+.mv-search-header__suggestions {
+	margin-top: 8px;
+	font-size: 0.9em;
+	color: #555;
+}
+
+.mv-search-header__orientation {
+	margin-top: 24px;
+	padding: 20px;
+	border-radius: 16px;
+	background: #f0eee9;
+}
+
+.mv-search-header__orientation-title {
+	margin: 0 0 8px;
+	font-size: 1.1em;
+}
+
+.mv-search-header__orientation-buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-top: 12px;
+}
+
+/* Result card spacing/typography — plan3.md §8, selectors adapted to
+   this theme's actual markup (verified live) rather than the plan's
+   generic GeneratePress example. */
+body.search-results .hentry {
+	padding: 1.25rem 0;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+body.search-results .entry-title {
+	margin-bottom: 0.4rem;
+	font-size: clamp(1.25rem, 2vw, 1.55rem);
+	line-height: 1.25;
+}
+
+body.search-results .entry-summary {
+	line-height: 1.65;
+}
+
+body.search-results .entry-meta {
+	font-size: 0.9rem;
+	opacity: 0.75;
+}
+
+.mv-no-results__buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-top: 16px;
+}

@@ -6,6 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once get_stylesheet_directory() . '/inc/mv-settings.php';
 require_once get_stylesheet_directory() . '/inc/mv-landing-footer.php';
+require_once get_stylesheet_directory() . '/inc/mv-search-page.php';
 
 add_theme_support('post-thumbnails');
 add_image_size('medium-responsive', 640, 0, false);

@@ -91,13 +91,6 @@ $placeholder_image = mv_get_placeholder_image();
 	<?php get_search_form(); ?>
 </aside>
 
-<?php if ( 'fr' === $lang && mv_section_enabled( 'sidebar_start_here' ) ) : ?>
-<aside id="mv-search-start-here" class="widget">
-	<h2 class="widget-title"><?php echo esc_html( $t['start_here'] ); ?></h2>
-	<p><a class="mv-button mv-button--secondary" href="https://www.mamanvoyage.com/commencez-ici/"><?php echo esc_html( $t['start_here_cta'] ); ?></a></p>
-</aside>
-<?php endif; ?>
-
 <?php if ( mv_section_enabled( 'sidebar_refine_theme' ) && class_exists( 'TVF_Homepage' ) ) : ?>
 	<?php
 	$theme_items = [];
@@ -227,5 +220,22 @@ $latest_query = mv_section_enabled( 'sidebar_latest_articles' ) ? new WP_Query( 
 		<?php endforeach; ?>
 	</div>
 	<p class="mv-search-sidebar__more"><a href="<?php echo esc_url( $blog_url ); ?>"><?php echo esc_html( $t['latest_link'] ); ?></a></p>
+</aside>
+<?php endif; ?>
+
+<?php
+/**
+ * Moved to the bottom of the sidebar on request — there's now also a
+ * prominent "Commencez ici" orientation box at the top of the main
+ * content area (inc/mv-search-page.php), so this stays far away from
+ * it even on desktop's two-column layout, rather than sitting right
+ * under the search box and effectively repeating the same CTA twice in
+ * the same glance.
+ */
+?>
+<?php if ( 'fr' === $lang && mv_section_enabled( 'sidebar_start_here' ) ) : ?>
+<aside id="mv-search-start-here" class="widget">
+	<h2 class="widget-title"><?php echo esc_html( $t['start_here'] ); ?></h2>
+	<p><a class="mv-button mv-button--secondary" href="https://www.mamanvoyage.com/commencez-ici/"><?php echo esc_html( $t['start_here_cta'] ); ?></a></p>
 </aside>
 <?php endif; ?>
