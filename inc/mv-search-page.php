@@ -18,6 +18,13 @@
  * ?f= argument — see TVF_Focus::maybe_redirect()) and shows a single
  * button rather than FR's two (a second, identically-targeted button
  * would be redundant).
+ *
+ * If the search term matches a known place name, the mavo-geotag-plus
+ * plugin's geo_tagger_search_hierarchy() (guarded with function_exists,
+ * since the theme shouldn't hard-depend on that plugin) replaces the
+ * generic "Essayez par exemple..." suggestions line with real links to
+ * that place's city/region/country tag archives — more useful than
+ * generic examples when a real match exists.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -75,7 +82,18 @@ function mv_render_search_page_header(): void {
 		<p class="mv-search-header__helper"><?php echo esc_html( $t['helper'] ); ?></p>
 
 		<?php get_search_form(); ?>
-		<p class="mv-search-header__suggestions"><?php echo esc_html( $t['suggestions'] ); ?></p>
+		<?php
+		$geo_hierarchy = function_exists( 'geo_tagger_search_hierarchy' )
+			? geo_tagger_search_hierarchy( get_search_query(), $lang )
+			: '';
+		if ( $geo_hierarchy ) {
+			echo $geo_hierarchy; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped at the source (GeoTagger\SearchHierarchy::render()).
+		} else {
+			?>
+			<p class="mv-search-header__suggestions"><?php echo esc_html( $t['suggestions'] ); ?></p>
+			<?php
+		}
+		?>
 
 		<div class="mv-search-header__orientation">
 			<h2 class="mv-search-header__orientation-title"><?php echo esc_html( $t['orientation_title'] ); ?></h2>
