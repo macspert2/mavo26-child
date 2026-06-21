@@ -423,23 +423,18 @@
    Sections default to no background (white) unless a caller explicitly
    opts in via the 'background' template-part argument.
 
-   Applied to .mv-container, not the outer <section> — a full-bleed
-   <section> background would make border-radius invisible (the corners
-   would sit off-screen past the viewport edge). .mv-container itself is
-   full-width by default (no max-width/centering of its own), so these
-   variants define their own 1120px-constrained, centered width — that
-   width is otherwise only this panel's concern, not a general
-   .mv-container behavior. Also defines its own padding rather than
-   inheriting the section's between-sections spacing (clamp 32-72px,
-   meant to separate sections from each other), which made the gap
-   between the color and its own title/content inconsistent and too
+   Applied to .mv-container, not the outer <section> — both are
+   full-width by default, on request, so border-radius is currently not
+   visible either way (the corners sit off-screen past the viewport
+   edge regardless of which element it's on). Defines its own padding
+   rather than inheriting the section's between-sections spacing (clamp
+   32-72px, meant to separate sections from each other), which made the
+   gap between the color and its own title/content inconsistent and too
    generous — this smaller, fixed padding keeps every panel hugging its
    content the same way. */
 .mv-section--bg-cream .mv-container,
 .mv-section--bg-blue-tint .mv-container {
 	box-sizing: border-box;
-	width: min(1120px, calc(100% - 32px));
-	margin-inline: auto;
 	padding: 40px clamp(20px, 4vw, 48px);
 	border-radius: 16px;
 }
