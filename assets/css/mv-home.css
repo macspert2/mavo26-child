@@ -426,17 +426,28 @@
    reusing colors already on the page (the existing tan accent and a
    light tint of the primary blue) rather than introducing new ones.
    Sections default to no background (white) unless a caller explicitly
-   opts in via the 'background' template-part argument. */
+   opts in via the 'background' template-part argument.
 
-.mv-section--bg-cream,
-.mv-section--bg-blue-tint {
-	padding-bottom: clamp(32px, 6vw, 72px);
+   Applied to .mv-container (already width-constrained to 1120px and
+   centered), not the outer <section> — a full-bleed <section> background
+   would make border-radius invisible (the corners would sit off-screen
+   past the viewport edge), and inheriting the section's own
+   between-sections spacing (clamp 32-72px, meant to separate sections
+   from each other) made the gap between the color and its own title/
+   content inconsistent and too generous. This own, smaller padding
+   defines that gap directly, regardless of the outer rhythm, so every
+   panel hugs its content the same way. */
+.mv-section--bg-cream .mv-container,
+.mv-section--bg-blue-tint .mv-container {
+	box-sizing: border-box;
+	padding: 40px clamp(20px, 4vw, 48px);
+	border-radius: 16px;
 }
 
-.mv-section--bg-cream {
+.mv-section--bg-cream .mv-container {
 	background-color: #f7f4ef;
 }
 
-.mv-section--bg-blue-tint {
+.mv-section--bg-blue-tint .mv-container {
 	background-color: #eef3f8;
 }
