@@ -114,14 +114,13 @@
 	gap: 12px;
 }
 
-/* Unified button look — also applied to two elements we don't control
-   the markup of (GP's search-submit input, GP's native pagination
-   links), via descendant selectors grouped into the same rules rather
-   than duplicating the values. */
+/* Unified button look — also applied to one element we don't control
+   the markup of (GP's search-submit input), via descendant selectors
+   grouped into the same rules rather than duplicating the values.
+   Blog pagination is deliberately left as standard GeneratePress, not
+   unified here. */
 .mv-button,
-#mv-search-again .search-submit,
-#nav-below .prev a,
-#nav-below .next a {
+#mv-search-again .search-submit {
 	display: inline-block;
 	padding: 10px 20px;
 	border: none;
@@ -134,9 +133,7 @@
 }
 
 .mv-button:focus-visible,
-#mv-search-again .search-submit:focus-visible,
-#nav-below .prev a:focus-visible,
-#nav-below .next a:focus-visible {
+#mv-search-again .search-submit:focus-visible {
 	outline: 3px solid #1a73e8;
 	outline-offset: 2px;
 }
@@ -147,18 +144,9 @@
 }
 
 .mv-button--secondary,
-#mv-search-again .search-submit,
-#nav-below .prev a,
-#nav-below .next a {
+#mv-search-again .search-submit {
 	background: #f0eee9;
 	color: #4e74a5;
-}
-
-/* generate_content_nav() doesn't expose a filter to add classes to its
-   <a> tags or drop its arrow icon, so this hides it rather than fight
-   its positioning inside the new pill shape. */
-#nav-below .gp-icon {
-	display: none;
 }
 
 /* Hero CTAs: same look for all 3, scoped here only. Specificity is kept
@@ -308,6 +296,16 @@
 
 .mv-search-sidebar__more {
 	margin-top: 12px;
+}
+
+/* .inside-right-sidebar is GP's own wrapper around all the sidebar
+   widgets (sidebar.php) — scoping here, not on .mv-button itself, since
+   this should only widen buttons inside the sidebar, not the homepage/
+   focus-page ones, which stay their natural content width. */
+.inside-right-sidebar .mv-button {
+	display: block;
+	width: 100%;
+	text-align: center;
 }
 
 .mv-search-sidebar__about-image {
