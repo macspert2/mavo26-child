@@ -28,7 +28,9 @@
  *
  * The 4 main strings (helper, suggestions, orientation title/text) are
  * editable from Réglages MaVo (mv_get_string()) — button labels stay
- * hardcoded here, that wasn't part of what got exposed.
+ * hardcoded here, that wasn't part of what got exposed. The orientation
+ * box itself (title + text + buttons) can be hidden entirely via the
+ * 'search_orientation_box' toggle, also in Réglages MaVo.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -84,6 +86,7 @@ function mv_render_search_page_header(): void {
 		}
 		?>
 
+		<?php if ( mv_section_enabled( 'search_orientation_box' ) ) : ?>
 		<div class="mv-search-header__orientation">
 			<h2 class="mv-search-header__orientation-title"><?php echo esc_html( $t['orientation_title'] ); ?></h2>
 			<p><?php echo esc_html( $t['orientation_text'] ); ?></p>
@@ -93,6 +96,7 @@ function mv_render_search_page_header(): void {
 				<?php endforeach; ?>
 			</div>
 		</div>
+		<?php endif; ?>
 	</div>
 	<?php
 }

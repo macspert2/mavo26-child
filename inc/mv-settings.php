@@ -47,6 +47,8 @@ function mv_get_settings_defaults(): array {
 			'de_popular_last_year'     => true,
 			'de_about_mini'            => true,
 
+			'search_orientation_box'   => true,
+
 			'sidebar_search_again'     => false, // redundant since plan3.md's top-of-page search form (inc/mv-search-page.php).
 			'sidebar_start_here'       => true,
 			'sidebar_refine_theme'     => true,
@@ -317,6 +319,12 @@ function mv_render_settings_page(): void {
 				'de_recent_posts'         => __( 'Neueste Artikel', 'mavo' ),
 				'de_popular_last_year'    => __( 'Meistgelesen', 'mavo' ),
 				'de_about_mini'           => __( 'Über uns (Mini)', 'mavo' ),
+			],
+		],
+		'search_page' => [
+			'title' => __( 'Page de recherche — zone principale', 'mavo' ),
+			'keys'  => [
+				'search_orientation_box' => __( 'Encadré d’orientation « Vous ne savez pas par où commencer ? »', 'mavo' ),
 			],
 		],
 		'sidebar' => [
