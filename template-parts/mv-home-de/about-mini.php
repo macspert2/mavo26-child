@@ -25,13 +25,13 @@ if ( $background ) {
 		</span>
 		<div class="mv-about-mini__body">
 			<h2 class="mv-section__title">
-				<?php esc_html_e( 'Wer steckt hinter Maman Voyage?', 'mavo' ); ?>
+				<?php echo esc_html( mv_get_string( 'about_title', 'de' ) ); ?>
 			</h2>
 			<p>
-				<?php esc_html_e( 'Ich bin Christine, Mama von Ticoeur und Titpuce. Seit 2009 teile ich unsere Familienreisen: Wochenenden in der Nähe, Routen durch Europa, eine Weltreise, Wanderungen und Entdeckungen aus unserem Leben in England. Alle Tipps hier stammen aus echten Erfahrungen mit meinen Kindern.', 'mavo' ); ?>
+				<?php echo esc_html( mv_get_string( 'about_text', 'de' ) ); ?>
 			</p>
 			<a class="mv-button mv-button--secondary" href="https://www.mamanvoyage.com/de/ueber-mich/">
-				<?php esc_html_e( 'Mehr über uns erfahren', 'mavo' ); ?>
+				<?php echo esc_html( mv_get_string( 'about_cta', 'de' ) ); ?>
 			</a>
 		</div>
 	</div>

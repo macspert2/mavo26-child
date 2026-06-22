@@ -21,10 +21,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 <section class="mv-section mv-hero">
 	<div class="mv-container mv-hero__inner">
 		<h1 class="mv-hero__headline">
-			<?php esc_html_e( 'Family travel ideas from a French mum living in England.', 'mavo' ); ?>
+			<?php echo esc_html( mv_get_string( 'hero_headline', 'en' ) ); ?>
 		</h1>
 		<p class="mv-hero__promise">
-			<?php esc_html_e( 'Discover tried-and-tested family trips in the UK, France, Europe, and beyond — with practical tips from years of travelling with children.', 'mavo' ); ?>
+			<?php echo esc_html( mv_get_string( 'hero_promise', 'en' ) ); ?>
 		</p>
 	</div>
 </section>

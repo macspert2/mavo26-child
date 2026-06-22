@@ -13,10 +13,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 <section class="mv-section mv-hero">
 	<div class="mv-container mv-hero__inner">
 		<h1 class="mv-hero__headline">
-			<?php esc_html_e( 'Voyager en famille, sans perdre le plaisir de préparer.', 'mavo' ); ?>
+			<?php echo esc_html( mv_get_string( 'hero_headline', 'fr' ) ); ?>
 		</h1>
 		<p class="mv-hero__promise">
-			<?php esc_html_e( 'Depuis 2009, je partage nos itinéraires testés avec enfants, nos coups de cœur en Europe et autour du monde, et mes conseils pour vous aider à trouver le voyage qui vous ressemble.', 'mavo' ); ?>
+			<?php echo esc_html( mv_get_string( 'hero_promise', 'fr' ) ); ?>
 		</p>
 		<div class="mv-hero__cta-row">
 			<a class="mv-button mv-button--primary" href="https://www.mamanvoyage.com/ou-partir-trouvez-votre-prochain-voyage/">

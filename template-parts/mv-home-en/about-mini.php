@@ -25,13 +25,13 @@ if ( $background ) {
 		</span>
 		<div class="mv-about-mini__body">
 			<h2 class="mv-section__title">
-				<?php esc_html_e( "Who's behind Maman Voyage?", 'mavo' ); ?>
+				<?php echo esc_html( mv_get_string( 'about_title', 'en' ) ); ?>
 			</h2>
 			<p>
-				<?php esc_html_e( "I'm Christine, mum to Ticoeur and Titpuce. Since 2009, I've been sharing our family trips: weekends close to home, routes across Europe, a round-the-world trip, hikes, and discoveries from our life in England. Every tip published here comes from real experience with my own children.", 'mavo' ); ?>
+				<?php echo esc_html( mv_get_string( 'about_text', 'en' ) ); ?>
 			</p>
 			<a class="mv-button mv-button--secondary" href="https://www.mamanvoyage.com/en/about/">
-				<?php esc_html_e( 'Learn more about us', 'mavo' ); ?>
+				<?php echo esc_html( mv_get_string( 'about_cta', 'en' ) ); ?>
 			</a>
 		</div>
 	</div>

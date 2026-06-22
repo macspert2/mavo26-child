@@ -21,10 +21,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 <section class="mv-section mv-hero">
 	<div class="mv-container mv-hero__inner">
 		<h1 class="mv-hero__headline">
-			<?php esc_html_e( 'Erprobte Familienreisen in Europa und rund um die Welt.', 'mavo' ); ?>
+			<?php echo esc_html( mv_get_string( 'hero_headline', 'de' ) ); ?>
 		</h1>
 		<p class="mv-hero__promise">
-			<?php esc_html_e( 'Seit 2009 teile ich auf Maman Voyage unsere Reiserouten, Lieblingsorte und praktischen Tipps für entspanntere Reisen mit Kindern.', 'mavo' ); ?>
+			<?php echo esc_html( mv_get_string( 'hero_promise', 'de' ) ); ?>
 		</p>
 	</div>
 </section>

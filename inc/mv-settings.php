@@ -66,6 +66,56 @@ function mv_get_settings_defaults(): array {
 		// instead of 3) | 'simplified' (the original custom minimal footer,
 		// kept available not deleted) | 'full' (GP's unmodified 3-column footer).
 		'footer_mode' => 'widgets_2col',
+		// Editable copy, per language. Defaults are the current hardcoded
+		// text in each template part — editing here overrides it via
+		// mv_get_string(), without touching the template files.
+		'strings' => [
+			'hero_headline' => [
+				'fr' => 'Voyager en famille, sans perdre le plaisir de préparer.',
+				'en' => 'Family travel ideas from a French mum living in England.',
+				'de' => 'Erprobte Familienreisen in Europa und rund um die Welt.',
+			],
+			'hero_promise' => [
+				'fr' => 'Depuis 2009, je partage nos itinéraires testés avec enfants, nos coups de cœur en Europe et autour du monde, et mes conseils pour vous aider à trouver le voyage qui vous ressemble.',
+				'en' => 'Discover tried-and-tested family trips in the UK, France, Europe, and beyond — with practical tips from years of travelling with children.',
+				'de' => 'Seit 2009 teile ich auf Maman Voyage unsere Reiserouten, Lieblingsorte und praktischen Tipps für entspanntere Reisen mit Kindern.',
+			],
+			'about_title' => [
+				'fr' => 'Qui se cache derrière Maman Voyage ?',
+				'en' => "Who's behind Maman Voyage?",
+				'de' => 'Wer steckt hinter Maman Voyage?',
+			],
+			'about_text' => [
+				'fr' => 'Je suis Christine, maman de Ticoeur et Titpuce. Depuis 2009, je partage nos voyages en famille : week-ends près de chez nous, itinéraires en Europe, tour du monde, randonnées et découvertes depuis notre vie en Angleterre. Tous les conseils publiés ici viennent d’expériences vécues avec mes enfants.',
+				'en' => "I'm Christine, mum to Ticoeur and Titpuce. Since 2009, I've been sharing our family trips: weekends close to home, routes across Europe, a round-the-world trip, hikes, and discoveries from our life in England. Every tip published here comes from real experience with my own children.",
+				'de' => 'Ich bin Christine, Mama von Ticoeur und Titpuce. Seit 2009 teile ich unsere Familienreisen: Wochenenden in der Nähe, Routen durch Europa, eine Weltreise, Wanderungen und Entdeckungen aus unserem Leben in England. Alle Tipps hier stammen aus echten Erfahrungen mit meinen Kindern.',
+			],
+			'about_cta' => [
+				'fr' => 'En savoir plus sur nous',
+				'en' => 'Learn more about us',
+				'de' => 'Mehr über uns erfahren',
+			],
+			'search_helper' => [
+				'fr' => 'Vous cherchez une destination, une idée de week-end ou un article précis ? Essayez aussi un pays, une région ou un type de voyage.',
+				'en' => 'Looking for a destination, a weekend idea or a specific article? Try searching for a country, region or type of trip.',
+				'de' => 'Sucht ihr ein Reiseziel, eine Wochenendidee oder einen bestimmten Artikel? Probiert auch ein Land, eine Region oder eine Reiseart.',
+			],
+			'search_suggestions' => [
+				'fr' => 'Essayez par exemple : France, Angleterre, randonnée, bébé, ados, road trip…',
+				'en' => 'Try for example: France, England, hiking, baby, teens, road trip…',
+				'de' => 'Zum Beispiel: Frankreich, England, Wandern, Baby, Teenager, Roadtrip…',
+			],
+			'search_orientation_title' => [
+				'fr' => 'Vous ne savez pas par où commencer ?',
+				'en' => 'Not sure where to start?',
+				'de' => 'Ihr wisst nicht, wo ihr anfangen sollt?',
+			],
+			'search_orientation_text' => [
+				'fr' => 'Notre guide « Commencez ici » vous aide à trouver des idées par destination, âge des enfants, durée, budget ou type de voyage.',
+				'en' => 'Visit our homepage to browse family travel ideas by destination and theme.',
+				'de' => 'Besucht unsere Startseite, um Reiseideen nach Reiseziel und Thema zu entdecken.',
+			],
+		],
 	];
 }
 
@@ -74,11 +124,25 @@ function mv_get_settings(): array {
 	if ( null === $settings ) {
 		$saved    = get_option( 'mv_theme_settings', [] );
 		$defaults = mv_get_settings_defaults();
+
+		// Per-key merge (not a flat array_merge) — each 'strings' entry is
+		// itself a [lang => text] array, so a saved entry should only
+		// override the languages it actually contains, not replace the
+		// whole key (e.g. if a future default adds a 4th language before
+		// the option is ever re-saved).
+		$strings = $defaults['strings'];
+		foreach ( ( $saved['strings'] ?? [] ) as $key => $langs ) {
+			if ( isset( $strings[ $key ] ) && is_array( $langs ) ) {
+				$strings[ $key ] = array_merge( $strings[ $key ], $langs );
+			}
+		}
+
 		$settings = [
 			'sections'          => array_merge( $defaults['sections'], $saved['sections'] ?? [] ),
 			'counts'            => array_merge( $defaults['counts'], $saved['counts'] ?? [] ),
 			'placeholder_image' => $saved['placeholder_image'] ?? $defaults['placeholder_image'],
 			'footer_mode'       => $saved['footer_mode'] ?? $defaults['footer_mode'],
+			'strings'           => $strings,
 		];
 	}
 	return $settings;
@@ -96,6 +160,18 @@ function mv_get_setting_count( string $key, int $default ): int {
 
 function mv_get_placeholder_image(): string {
 	return mv_get_settings()['placeholder_image'];
+}
+
+/**
+ * Reads an editable frontend string for a given language — falls back
+ * to French if the requested language isn't set, matching the same
+ * fallback convention used everywhere else in this project
+ * (tvf_resolve_catalog_text(), the various $labels[$lang] ?? $labels['fr']
+ * lookups throughout template-parts/).
+ */
+function mv_get_string( string $key, string $lang ): string {
+	$strings = mv_get_settings()['strings'][ $key ] ?? [];
+	return $strings[ $lang ] ?? ( $strings['fr'] ?? '' );
 }
 
 add_action( 'admin_menu', 'mv_register_settings_page' );
@@ -137,6 +213,22 @@ function mv_handle_save_settings(): void {
 		$footer_mode = $defaults['footer_mode'];
 	}
 
+	$strings = [];
+	foreach ( $defaults['strings'] as $key => $langs ) {
+		foreach ( array_keys( $langs ) as $lang ) {
+			$posted = isset( $_POST['strings'][ $key ][ $lang ] )
+				? sanitize_textarea_field( wp_unslash( $_POST['strings'][ $key ][ $lang ] ) )
+				: '';
+			// Empty (including just-whitespace) reverts to the default,
+			// per the admin page's own stated behaviour — otherwise an
+			// accidentally-cleared field would save a blank string and
+			// silently remove that text from the live site.
+			$strings[ $key ][ $lang ] = '' === trim( $posted )
+				? $defaults['strings'][ $key ][ $lang ]
+				: $posted;
+		}
+	}
+
 	update_option(
 		'mv_theme_settings',
 		[
@@ -144,6 +236,7 @@ function mv_handle_save_settings(): void {
 			'counts'            => $counts,
 			'placeholder_image' => $placeholder_image,
 			'footer_mode'       => $footer_mode,
+			'strings'           => $strings,
 		]
 	);
 
@@ -157,6 +250,33 @@ function mv_render_settings_page(): void {
 	}
 
 	$settings = mv_get_settings();
+
+	$string_groups = [
+		'hero' => [
+			'title' => __( 'Hero de la page d’accueil', 'mavo' ),
+			'keys'  => [
+				'hero_headline' => __( 'Titre principal (H1)', 'mavo' ),
+				'hero_promise'  => __( 'Texte d’accroche', 'mavo' ),
+			],
+		],
+		'about' => [
+			'title' => __( '« Qui se cache derrière Maman Voyage »', 'mavo' ),
+			'keys'  => [
+				'about_title' => __( 'Titre', 'mavo' ),
+				'about_text'  => __( 'Texte', 'mavo' ),
+				'about_cta'   => __( 'Libellé du bouton', 'mavo' ),
+			],
+		],
+		'search' => [
+			'title' => __( 'Page de recherche', 'mavo' ),
+			'keys'  => [
+				'search_helper'            => __( 'Texte d’aide (sous le titre)', 'mavo' ),
+				'search_suggestions'       => __( 'Suggestions ("Essayez par exemple…")', 'mavo' ),
+				'search_orientation_title' => __( 'Titre de l’encadré d’orientation', 'mavo' ),
+				'search_orientation_text'  => __( 'Texte de l’encadré d’orientation', 'mavo' ),
+			],
+		],
+	];
 
 	$groups = [
 		'fr' => [
@@ -296,6 +416,27 @@ function mv_render_settings_page(): void {
 					<td><input type="url" class="regular-text" name="placeholder_image" value="<?php echo esc_attr( $settings['placeholder_image'] ); ?>"></td>
 				</tr>
 			</table>
+
+			<h2><?php esc_html_e( 'Textes éditables', 'mavo' ); ?></h2>
+			<p><?php esc_html_e( 'Remplace le texte codé en dur dans les fichiers du thème, par langue. Laisser vide reviendra au texte par défaut à la prochaine sauvegarde.', 'mavo' ); ?></p>
+			<?php foreach ( $string_groups as $string_group ) : ?>
+				<h3><?php echo esc_html( $string_group['title'] ); ?></h3>
+				<table class="form-table">
+					<?php foreach ( $string_group['keys'] as $key => $label ) : ?>
+						<tr>
+							<th scope="row"><?php echo esc_html( $label ); ?></th>
+							<td>
+								<?php foreach ( [ 'fr' => 'FR', 'en' => 'EN', 'de' => 'DE' ] as $lang_code => $lang_label ) : ?>
+									<p style="margin-bottom:8px;">
+										<label><strong><?php echo esc_html( $lang_label ); ?></strong></label><br>
+										<textarea name="strings[<?php echo esc_attr( $key ); ?>][<?php echo esc_attr( $lang_code ); ?>]" rows="2" class="large-text"><?php echo esc_textarea( $settings['strings'][ $key ][ $lang_code ] ?? '' ); ?></textarea>
+									</p>
+								<?php endforeach; ?>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+				</table>
+			<?php endforeach; ?>
 
 			<?php submit_button( __( 'Enregistrer les réglages', 'mavo' ) ); ?>
 		</form>

@@ -25,6 +25,10 @@
  * generic "Essayez par exemple..." suggestions line with real links to
  * that place's city/region/country tag archives — more useful than
  * generic examples when a real match exists.
+ *
+ * The 4 main strings (helper, suggestions, orientation title/text) are
+ * editable from Réglages MaVo (mv_get_string()) — button labels stay
+ * hardcoded here, that wasn't part of what got exposed.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -39,27 +43,12 @@ function mv_render_search_page_header(): void {
 
 	$lang = function_exists( 'pll_current_language' ) ? pll_current_language( 'slug' ) : 'fr';
 
-	$strings = [
-		'fr' => [
-			'helper'             => 'Vous cherchez une destination, une idée de week-end ou un article précis ? Essayez aussi un pays, une région ou un type de voyage.',
-			'suggestions'        => 'Essayez par exemple : France, Angleterre, randonnée, bébé, ados, road trip…',
-			'orientation_title'  => 'Vous ne savez pas par où commencer ?',
-			'orientation_text'   => 'Notre guide « Commencez ici » vous aide à trouver des idées par destination, âge des enfants, durée, budget ou type de voyage.',
-		],
-		'en' => [
-			'helper'             => 'Looking for a destination, a weekend idea or a specific article? Try searching for a country, region or type of trip.',
-			'suggestions'        => 'Try for example: France, England, hiking, baby, teens, road trip…',
-			'orientation_title'  => 'Not sure where to start?',
-			'orientation_text'   => 'Visit our homepage to browse family travel ideas by destination and theme.',
-		],
-		'de' => [
-			'helper'             => 'Sucht ihr ein Reiseziel, eine Wochenendidee oder einen bestimmten Artikel? Probiert auch ein Land, eine Region oder eine Reiseart.',
-			'suggestions'        => 'Zum Beispiel: Frankreich, England, Wandern, Baby, Teenager, Roadtrip…',
-			'orientation_title'  => 'Ihr wisst nicht, wo ihr anfangen sollt?',
-			'orientation_text'   => 'Besucht unsere Startseite, um Reiseideen nach Reiseziel und Thema zu entdecken.',
-		],
+	$t = [
+		'helper'            => mv_get_string( 'search_helper', $lang ),
+		'suggestions'       => mv_get_string( 'search_suggestions', $lang ),
+		'orientation_title' => mv_get_string( 'search_orientation_title', $lang ),
+		'orientation_text'  => mv_get_string( 'search_orientation_text', $lang ),
 	];
-	$t = $strings[ $lang ] ?? $strings['fr'];
 
 	// FR: 2 buttons (real Start Here page + real destinations hub).
 	// EN/DE: 1 button (homepage) — no equivalent pages exist for either,
