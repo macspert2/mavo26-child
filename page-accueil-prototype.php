@@ -37,6 +37,9 @@ get_header();
 	if ( mv_section_enabled( 'fr_seasonal_guides' ) ) {
 		get_template_part( 'template-parts/mv-home/seasonal-guides' );
 	}
+	if ( mv_section_enabled( 'fr_trip_type' ) ) {
+		get_template_part( 'template-parts/mv-home/trip-type' );
+	}
 	if ( mv_section_enabled( 'fr_family_travel_themes' ) ) {
 		get_template_part( 'template-parts/mv-home/family-travel-themes', null, [ 'background' => 'blue-tint' ] );
 	}

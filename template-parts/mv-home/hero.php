@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<a class="mv-button mv-button--primary" href="https://www.mamanvoyage.com/ou-partir-trouvez-votre-prochain-voyage/">
 				<?php esc_html_e( 'Trouvez une idée de voyage', 'mavo' ); ?>
 			</a>
-			<a class="mv-button mv-button--secondary" href="https://www.mamanvoyage.com/nos-voyages/destinations/">
+			<a class="mv-button mv-button--secondary" href="https://www.mamanvoyage.com/europe/">
 				<?php esc_html_e( 'Explorez les destinations', 'mavo' ); ?>
 			</a>
 			<a class="mv-button mv-button--secondary" href="https://www.mamanvoyage.com/commencez-ici/">

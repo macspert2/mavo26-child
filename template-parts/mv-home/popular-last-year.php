@@ -56,20 +56,20 @@ if ( empty( $posts ) ) {
  */
 if ( $is_fallback ) {
 	$titles = [
-		'fr' => 'Les idées de voyage qui plaisent en ce moment',
-		'en' => 'Popular family travel ideas right now',
-		'de' => 'Beliebte Reiseideen im Moment',
+		'fr' => 'Les idées de voyage les plus populaires',
+		'en' => 'Popular family travel ideas',
+		'de' => 'Beliebte Reiseideen',
 	];
 	$subtitles = [
-		'fr' => 'Une sélection de nos articles les plus appréciés actuellement.',
-		'en' => 'A seasonal selection of articles readers often come back to at this time of year.',
-		'de' => 'Eine saisonale Auswahl von Artikeln, die Familien zu dieser Jahreszeit besonders oft lesen.',
+		'fr' => 'Une sélection de nos articles les plus appréciés.',
+		'en' => 'A seasonal selection of articles readers often come back to.',
+		'de' => 'Eine saisonale Auswahl von Artikeln, die bei Familien besonders beliebt ist.',
 	];
 	$title    = $titles[ $lang ] ?? $titles['fr'];
 	$subtitle = $subtitles[ $lang ] ?? $subtitles['fr'];
 } elseif ( 'fr' === $lang ) {
-	$title    = 'Vos idées de voyage préférées pour cette période';
-	$subtitle = 'Une sélection d’articles souvent consultés à cette période de l’année.';
+	$title    = 'Vos idées de voyage préférées';
+	$subtitle = 'Une sélection d’articles souvent consultés.';
 } else {
 	$month_label = date_i18n( 'F', strtotime( $month ) );
 	/* translators: %s: localized month name, e.g. "June" / "Juni" */

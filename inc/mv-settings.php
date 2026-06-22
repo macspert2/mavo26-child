@@ -24,6 +24,7 @@ function mv_get_settings_defaults(): array {
 			'fr_primary_pathways'      => false, // matches the section's current disabled-by-default state.
 			'fr_featured_destinations' => true,
 			'fr_seasonal_guides'       => true,
+			'fr_trip_type'             => true,
 			'fr_family_travel_themes'  => true,
 			'fr_popular_last_year'     => true,
 			'fr_recent_posts'          => true,
@@ -286,6 +287,7 @@ function mv_render_settings_page(): void {
 				'fr_primary_pathways'      => __( 'Par où commencer ?', 'mavo' ),
 				'fr_featured_destinations' => __( 'Destinations phares', 'mavo' ),
 				'fr_seasonal_guides'       => __( 'Guides saisonniers', 'mavo' ),
+				'fr_trip_type'             => __( 'Envie de quel type de voyage ?', 'mavo' ),
 				'fr_family_travel_themes'  => __( 'Voyager selon votre famille', 'mavo' ),
 				'fr_popular_last_year'     => __( 'Articles populaires (l’an dernier / actuellement)', 'mavo' ),
 				'fr_recent_posts'          => __( 'Derniers articles', 'mavo' ),
