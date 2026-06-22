@@ -39,7 +39,7 @@ $mv_t = $mv_strings[ $mv_lang ] ?? $mv_strings['fr'];
 // 3 buttons pointing at pages that don't exist for them.
 $mv_buttons = [
 	'fr' => [
-		[ 'label' => 'Commencez ici', 'url' => 'https://www.mamanvoyage.com/commencez-ici/' ],
+		[ 'label' => 'Explorer Maman Voyage', 'url' => 'https://www.mamanvoyage.com/explorer/' ],
 		[ 'label' => 'Toutes nos destinations', 'url' => 'https://www.mamanvoyage.com/nos-voyages/destinations/' ],
 		[ 'label' => 'Retour à l’accueil', 'url' => 'https://www.mamanvoyage.com/accueil-prototype/' ],
 	],

@@ -31,7 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 function mv_is_landing_page(): bool {
-	return is_page( [ 'accueil-prototype', 'home-prototype', 'startseite-prototyp', 'commencez-ici' ] );
+	return is_page( [ 'accueil-prototype', 'home-prototype', 'startseite-prototyp', 'explorer' ] );
 }
 
 add_action( 'wp', function () {

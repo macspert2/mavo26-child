@@ -2,15 +2,18 @@
 /**
  * Start Here page template (plan-mid.md Phase 5).
  *
- * Matches slug `commencez-ici` via the WordPress template hierarchy, same
- * mechanism as page-accueil-prototype.php — no manual "Page Attributes >
- * Template" assignment required. This is a fully custom template (no
- * content-page.php in the loop), so the WordPress page title never
- * renders on its own — template-parts/mv-start-here/intro.php renders
- * the page's only H1 explicitly. Every group below uses an H2, set by
- * mv-shared/section-header.php's default.
+ * Page renamed from "Commencez ici" (slug commencez-ici) to "Explorer
+ * Maman Voyage" (slug explorer) — an in-between step from the homepage
+ * to the more technical "où partir" page. This file was renamed to
+ * match, since the template hierarchy matches by slug: matches slug
+ * `explorer`, same mechanism as page-accueil-prototype.php — no manual
+ * "Page Attributes > Template" assignment required. This is a fully
+ * custom template (no content-page.php in the loop), so the WordPress
+ * page title never renders on its own — template-parts/mv-start-here/intro.php
+ * renders the page's only H1 explicitly. Every group below uses an H2,
+ * set by mv-shared/section-header.php's default.
  *
- * File: page-commencez-ici.php
+ * File: page-explorer.php
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

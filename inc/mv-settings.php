@@ -112,7 +112,7 @@ function mv_get_settings_defaults(): array {
 				'de' => 'Ihr wisst nicht, wo ihr anfangen sollt?',
 			],
 			'search_orientation_text' => [
-				'fr' => 'Notre guide « Commencez ici » vous aide à trouver des idées par destination, âge des enfants, durée, budget ou type de voyage.',
+				'fr' => 'Notre guide « Explorer Maman Voyage » vous aide à trouver des idées par destination, âge des enfants, durée, budget ou type de voyage.',
 				'en' => 'Visit our homepage to browse family travel ideas by destination and theme.',
 				'de' => 'Besucht unsere Startseite, um Reiseideen nach Reiseziel und Thema zu entdecken.',
 			],
@@ -292,7 +292,7 @@ function mv_render_settings_page(): void {
 				'fr_popular_last_year'     => __( 'Articles populaires (l’an dernier / actuellement)', 'mavo' ),
 				'fr_recent_posts'          => __( 'Derniers articles', 'mavo' ),
 				'fr_about_mini'            => __( 'Qui se cache derrière Maman Voyage', 'mavo' ),
-				'fr_start_here_cta'        => __( 'Appel à l’action « Commencez ici »', 'mavo' ),
+				'fr_start_here_cta'        => __( 'Appel à l’action « Explorer Maman Voyage »', 'mavo' ),
 			],
 		],
 		'en' => [
@@ -323,7 +323,7 @@ function mv_render_settings_page(): void {
 			'title' => __( 'Barre latérale des résultats de recherche', 'mavo' ),
 			'keys'  => [
 				'sidebar_search_again'    => __( 'Nouvelle recherche (désactivé par défaut — redondant avec le formulaire en haut de page)', 'mavo' ),
-				'sidebar_start_here'      => __( '« Commencez ici » (Français uniquement, géré par le modèle)', 'mavo' ),
+				'sidebar_start_here'      => __( '« Explorer Maman Voyage » (Français uniquement, géré par le modèle)', 'mavo' ),
 				'sidebar_refine_theme'    => __( 'Voyagez par thème', 'mavo' ),
 				'sidebar_most_read'       => __( 'Les plus lus', 'mavo' ),
 				'sidebar_about'           => __( 'Mini biographie', 'mavo' ),
@@ -333,7 +333,7 @@ function mv_render_settings_page(): void {
 			],
 		],
 		'footer' => [
-			'title' => __( 'Pied de page (pages d’accueil + Commencez ici)', 'mavo' ),
+			'title' => __( 'Pied de page (pages d’accueil + Explorer Maman Voyage)', 'mavo' ),
 			'keys'  => [
 				'footer_newsletter' => __( 'Inclure le bloc newsletter (uniquement en mode « pied de page simplifié »)', 'mavo' ),
 			],
@@ -361,7 +361,7 @@ function mv_render_settings_page(): void {
 			<?php wp_nonce_field( 'mv_save_settings', 'mv_settings_nonce' ); ?>
 			<input type="hidden" name="action" value="mv_save_settings">
 
-			<h2><?php esc_html_e( 'Mode de pied de page (pages d’accueil + Commencez ici)', 'mavo' ); ?></h2>
+			<h2><?php esc_html_e( 'Mode de pied de page (pages d’accueil + Explorer Maman Voyage)', 'mavo' ); ?></h2>
 			<table class="form-table">
 				<tr>
 					<th scope="row"><?php esc_html_e( 'Mode', 'mavo' ); ?></th>

@@ -23,7 +23,7 @@ $strings = [
 	'fr' => [
 		'search_again' => 'Nouvelle recherche',
 		'start_here'   => 'Vous ne savez pas par où commencer ?',
-		'start_here_cta' => 'Commencez ici',
+		'start_here_cta' => 'Explorer Maman Voyage',
 		'refine'       => 'Voyagez par thème',
 		'popular'      => 'Les plus lus',
 		'about'        => 'Qui se cache derrière Maman Voyage ?',
@@ -228,8 +228,8 @@ $latest_query = mv_section_enabled( 'sidebar_latest_articles' ) ? new WP_Query( 
 <?php
 /**
  * Moved to the bottom of the sidebar on request — there's now also a
- * prominent "Commencez ici" orientation box at the top of the main
- * content area (inc/mv-search-page.php), so this stays far away from
+ * prominent "Explorer Maman Voyage" orientation box at the top of the
+ * main content area (inc/mv-search-page.php), so this stays far away from
  * it even on desktop's two-column layout, rather than sitting right
  * under the search box and effectively repeating the same CTA twice in
  * the same glance.
@@ -238,6 +238,6 @@ $latest_query = mv_section_enabled( 'sidebar_latest_articles' ) ? new WP_Query( 
 <?php if ( 'fr' === $lang && mv_section_enabled( 'sidebar_start_here' ) ) : ?>
 <aside id="mv-search-start-here" class="widget">
 	<h2 class="widget-title"><?php echo esc_html( $t['start_here'] ); ?></h2>
-	<p><a class="mv-button mv-button--secondary" href="https://www.mamanvoyage.com/commencez-ici/"><?php echo esc_html( $t['start_here_cta'] ); ?></a></p>
+	<p><a class="mv-button mv-button--secondary" href="https://www.mamanvoyage.com/explorer/"><?php echo esc_html( $t['start_here_cta'] ); ?></a></p>
 </aside>
 <?php endif; ?>

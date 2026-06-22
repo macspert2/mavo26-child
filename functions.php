@@ -20,7 +20,7 @@ add_editor_style( 'editor-style.css' );
  * Hidden homepage prototype: component CSS, only on that page template.
  */
 add_action( 'wp_enqueue_scripts', function () {
-    if ( is_page( [ 'accueil-prototype', 'commencez-ici', 'home-prototype', 'startseite-prototyp' ] ) || is_search() ) {
+    if ( is_page( [ 'accueil-prototype', 'explorer', 'home-prototype', 'startseite-prototyp' ] ) || is_search() ) {
         wp_enqueue_style(
             'mv-home',
             get_stylesheet_directory_uri() . '/assets/css/mv-home.css',

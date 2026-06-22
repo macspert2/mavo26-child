@@ -55,7 +55,7 @@ function mv_render_search_page_header(): void {
 	// so a second button would just point at the same place.
 	$buttons = [
 		'fr' => [
-			[ 'label' => 'Commencez ici', 'url' => 'https://www.mamanvoyage.com/commencez-ici/' ],
+			[ 'label' => 'Explorer Maman Voyage', 'url' => 'https://www.mamanvoyage.com/explorer/' ],
 			[ 'label' => 'Toutes nos destinations', 'url' => 'https://www.mamanvoyage.com/nos-voyages/destinations/' ],
 		],
 		'en' => [

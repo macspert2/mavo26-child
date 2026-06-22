@@ -3,7 +3,7 @@
  * Start Here intro — page H1 + short framing line + "how to use this
  * page" guidance + anchor jump-links, per plan2.md §13.3/§13.6.
  *
- * page-commencez-ici.php is a fully custom template (get_header() +
+ * page-explorer.php is a fully custom template (get_header() +
  * template parts, no content-page.php in the loop), so the WordPress
  * page title never renders on its own — same situation as
  * page-accueil-prototype.php, where hero.php's <h1> is the only one.
