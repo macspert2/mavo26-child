@@ -6,9 +6,9 @@
  * page-explorer.php is a fully custom template (get_header() +
  * template parts, no content-page.php in the loop), so the WordPress
  * page title never renders on its own — same situation as
- * page-accueil-prototype.php, where hero.php's <h1> is the only one.
- * This is that page's missing H1, using the real page title so it stays
- * correct if the page is ever renamed.
+ * page-accueil.php (the FR homepage), where hero.php's <h1> is the only
+ * one. This is that page's missing H1, using the real page title so it
+ * stays correct if the page is ever renamed.
  *
  * Anchor targets are the IDs added to each group's own <section> tag
  * (catalog-tile-grid.php and big-projects.php), matching their

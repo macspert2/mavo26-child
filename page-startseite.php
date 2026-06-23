@@ -1,17 +1,14 @@
 <?php
 /**
- * Hidden German homepage prototype template.
+ * German homepage template — promoted from prototype to the live front
+ * page. Originally slug `startseite-prototyp`, renamed to `startseite`;
+ * this file was renamed to match, same mechanism as page-accueil.php.
+ * Linked as the German translation of the French front page via
+ * Polylang, so it appears at https://www.mamanvoyage.com/de/ once
+ * Settings > Reading and Polylang's per-language static front page are
+ * both configured.
  *
- * Matches slug `startseite-prototyp` via the WordPress template
- * hierarchy, same mechanism as page-accueil-prototype.php. With
- * Polylang, a page using this template and linked as the German
- * translation of the (eventually promoted) French front page will
- * appear at https://www.mamanvoyage.com/de/ once Settings > Reading is
- * configured (verified live: /de/ already resolves today, to the
- * default blog index, confirming Polylang's URL structure works this
- * way).
- *
- * File: page-startseite-prototyp.php
+ * File: page-startseite.php
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -21,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 get_header();
 ?>
 
-<main id="primary" class="site-main mv-home mv-home--prototype">
+<main id="primary" class="site-main mv-home">
 	<?php
 	// Section visibility is controlled from Réglages MaVo (wp-admin) —
 	// see inc/mv-settings.php. Hero always shows.

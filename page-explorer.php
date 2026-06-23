@@ -6,7 +6,7 @@
  * Maman Voyage" (slug explorer) — an in-between step from the homepage
  * to the more technical "où partir" page. This file was renamed to
  * match, since the template hierarchy matches by slug: matches slug
- * `explorer`, same mechanism as page-accueil-prototype.php — no manual
+ * `explorer`, same mechanism as page-accueil.php — no manual
  * "Page Attributes > Template" assignment required. This is a fully
  * custom template (no content-page.php in the loop), so the WordPress
  * page title never renders on its own — template-parts/mv-start-here/intro.php

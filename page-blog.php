@@ -34,11 +34,16 @@
  * correctly.
  *
  * Deliberately NOT using WordPress's official "Posts page" Reading
- * setting — that's only assignable once "homepage displays" is also
- * switched to a static page, which hasn't happened yet.
+ * setting, even now that "homepage displays" is a static page and the
+ * dropdown is assignable — that setting routes through the home.php/
+ * index.php template hierarchy, completely bypassing this page's own
+ * page-{slug}.php template (the same kind of slug-vs-front-page
+ * gotcha as page-accueil.php itself), which would silently undo
+ * everything this file does. Leave "Posts page" unset; this page's own
+ * slug-matched template is what actually serves /blog/.
  *
  * Matches slug `blog` via the WordPress template hierarchy, same
- * mechanism as page-accueil-prototype.php.
+ * mechanism as page-accueil.php.
  *
  * The home/blog body classes are added below via the body_class filter
  * (registered before get_header() so it's in place when the body tag

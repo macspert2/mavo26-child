@@ -61,10 +61,10 @@ function mv_render_search_page_header(): void {
 			[ 'label' => 'Toutes nos destinations', 'url' => 'https://www.mamanvoyage.com/nos-voyages/destinations/' ],
 		],
 		'en' => [
-			[ 'label' => 'Explore the homepage', 'url' => 'https://www.mamanvoyage.com/en/home-prototype/' ],
+			[ 'label' => 'Explore the homepage', 'url' => 'https://www.mamanvoyage.com/en/' ],
 		],
 		'de' => [
-			[ 'label' => 'Zur Startseite', 'url' => 'https://www.mamanvoyage.com/de/startseite-prototyp/' ],
+			[ 'label' => 'Zur Startseite', 'url' => 'https://www.mamanvoyage.com/de/' ],
 		],
 	];
 	$page_buttons = $buttons[ $lang ] ?? $buttons['fr'];

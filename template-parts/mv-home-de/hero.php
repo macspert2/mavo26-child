@@ -1,9 +1,7 @@
 <?php
 /**
  * German homepage hero. Separate file from mv-home/hero.php on purpose —
- * see template-parts/mv-home-en/hero.php for the rationale. Draft copy
- * (translation, not native-reviewed) — please check tone/grammar before
- * launch.
+ * see template-parts/mv-home-en/hero.php for the rationale.
  *
  * No CTA button for the time being — removed on request, may come back
  * later. (Previously scrolled to the destinations tiles below via

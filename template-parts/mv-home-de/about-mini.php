@@ -3,7 +3,7 @@
  * German homepage about mini. Same real photo as the FR version.
  * Copy translated from plan2.md §12.3's FR version, for parity now that
  * the FR about-mini names Christine/Ticoeur/Titpuce explicitly rather
- * than staying generic. Not native-reviewed.
+ * than staying generic.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

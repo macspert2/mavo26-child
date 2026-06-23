@@ -1,16 +1,13 @@
 <?php
 /**
- * Hidden English homepage prototype template.
+ * English homepage template — promoted from prototype to the live front
+ * page. Originally slug `home-prototype`, renamed to `home`; this file
+ * was renamed to match, same mechanism as page-accueil.php. Linked as
+ * the English translation of the French front page via Polylang, so it
+ * appears at https://www.mamanvoyage.com/en/ once Settings > Reading
+ * and Polylang's per-language static front page are both configured.
  *
- * Matches slug `home-prototype` via the WordPress template hierarchy,
- * same mechanism as page-accueil-prototype.php. With Polylang, a page
- * using this template and linked as the English translation of the
- * (eventually promoted) French front page will appear at
- * https://www.mamanvoyage.com/en/ once Settings > Reading is configured
- * (verified live: /en/ already resolves today, to the default blog
- * index, confirming Polylang's URL structure works this way).
- *
- * File: page-home-prototype.php
+ * File: page-home.php
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -20,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 get_header();
 ?>
 
-<main id="primary" class="site-main mv-home mv-home--prototype">
+<main id="primary" class="site-main mv-home">
 	<?php
 	// Section visibility is controlled from Réglages MaVo (wp-admin) —
 	// see inc/mv-settings.php. Hero always shows.

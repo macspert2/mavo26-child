@@ -41,13 +41,13 @@ $mv_buttons = [
 	'fr' => [
 		[ 'label' => 'Explorer Maman Voyage', 'url' => 'https://www.mamanvoyage.com/explorer/' ],
 		[ 'label' => 'Toutes nos destinations', 'url' => 'https://www.mamanvoyage.com/nos-voyages/destinations/' ],
-		[ 'label' => 'Retour à l’accueil', 'url' => 'https://www.mamanvoyage.com/accueil-prototype/' ],
+		[ 'label' => 'Retour à l’accueil', 'url' => 'https://www.mamanvoyage.com/' ],
 	],
 	'en' => [
-		[ 'label' => 'Back to homepage', 'url' => 'https://www.mamanvoyage.com/en/home-prototype/' ],
+		[ 'label' => 'Back to homepage', 'url' => 'https://www.mamanvoyage.com/en/' ],
 	],
 	'de' => [
-		[ 'label' => 'Zur Startseite', 'url' => 'https://www.mamanvoyage.com/de/startseite-prototyp/' ],
+		[ 'label' => 'Zur Startseite', 'url' => 'https://www.mamanvoyage.com/de/' ],
 	],
 ];
 $mv_page_buttons = $mv_buttons[ $mv_lang ] ?? $mv_buttons['fr'];

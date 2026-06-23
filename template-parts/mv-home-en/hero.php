@@ -3,7 +3,7 @@
  * English homepage hero. Separate file from mv-home/hero.php on purpose
  * (not a parameterized/shared template) — matches the project's chosen
  * approach of separate pages/content per language rather than one
- * language-switching template. Draft copy; swap before launch.
+ * language-switching template.
  *
  * No CTA button for the time being — removed on request, may come back
  * later. (Previously scrolled to the destinations tiles below via

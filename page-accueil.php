@@ -1,11 +1,15 @@
 <?php
 /**
- * Hidden homepage prototype template.
+ * French homepage template — promoted from prototype to the live front
+ * page. Originally slug `accueil-prototype`, renamed to `accueil`; this
+ * file was renamed to match, since the WordPress template hierarchy
+ * matches by slug. Once assigned as the static front page in
+ * Settings > Reading, this still applies via the normal page-template
+ * fallback (front-page.php takes priority over page-{slug}.php, but
+ * this theme has no front-page.php, so WordPress falls through to this
+ * file) — no manual "Page Attributes > Template" assignment needed.
  *
- * Matches slug `accueil-prototype` via the WordPress template hierarchy,
- * so no manual "Page Attributes > Template" assignment is required.
- *
- * File: page-accueil-prototype.php
+ * File: page-accueil.php
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -15,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 get_header();
 ?>
 
-<main id="primary" class="site-main mv-home mv-home--prototype">
+<main id="primary" class="site-main mv-home">
 	<?php
 	// Section visibility is controlled from Réglages MaVo (wp-admin) —
 	// see inc/mv-settings.php. Hero always shows; everything else is
