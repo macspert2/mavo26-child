@@ -68,7 +68,7 @@ if ( $is_fallback ) {
 	$title    = $titles[ $lang ] ?? $titles['fr'];
 	$subtitle = $subtitles[ $lang ] ?? $subtitles['fr'];
 } elseif ( 'fr' === $lang ) {
-	$title    = 'Notre séléction du moment';
+	$title    = 'Notre sélection du moment';
 	$subtitle = '';
 } else {
 	$month_label = date_i18n( 'F', strtotime( $month ) );
