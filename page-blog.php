@@ -9,11 +9,12 @@
  * CSS — no new CSS needed.
  *
  * One shared template for all 3 languages — FR /blog/ (slug `blog`,
- * matched directly), EN /en/blog/ and DE /de/blog/ (slugs `blog-en`/
- * `blog-de` — Polylang wouldn't allow reusing the identical slug
- * `blog` across languages here, unlike other pages in this project, so
- * page-blog-en.php/page-blog-de.php just require this file directly).
- * The query doesn't differ by language.
+ * matched directly), EN /en/blog-en/ and DE /de/blog-de/ (slugs
+ * `blog-en`/`blog-de` — Polylang wouldn't allow reusing the identical
+ * slug `blog` across languages here, unlike other pages in this
+ * project, so the URL itself carries the language suffix too, not just
+ * the slug internally — confirmed live; page-blog-en.php/page-blog-de.php
+ * just require this file directly). The query doesn't differ by language.
  *
  * The only addition vs. index.php: a custom WP_Query (latest posts,
  * language-filtered, posts_per_page matching the site's own "Posts per
@@ -70,11 +71,22 @@ get_header();
 
 $lang = function_exists( 'pll_current_language' ) ? pll_current_language( 'slug' ) : 'fr';
 
+// Pretty-permalink pagination on a *page* request (e.g. /blog/page/2/)
+// never sets $_GET['paged'] — WordPress's rewrite rules parse that URL
+// segment into the 'page' query var instead ('paged' is reserved for
+// true archive/home requests). Checking both covers whichever one
+// WordPress actually populates here, rather than betting on just one.
+$paged = (int) get_query_var( 'paged' );
+if ( ! $paged ) {
+	$paged = (int) get_query_var( 'page' );
+}
+$paged = max( 1, $paged );
+
 $query_args = [
 	'post_type'           => 'post',
 	'post_status'         => 'publish',
 	'posts_per_page'      => get_option( 'posts_per_page' ),
-	'paged'               => max( 1, (int) ( $_GET['paged'] ?? 1 ) ),
+	'paged'               => $paged,
 	'ignore_sticky_posts' => true,
 ];
 

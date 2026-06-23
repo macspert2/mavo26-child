@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <section class="mv-section mv-start-here-cta">
 	<div class="mv-container mv-start-here-cta__inner">
 		<p class="mv-start-here-cta__text">
-			<?php esc_html_e( 'Besoin d'inspiration ? Consultez nos voyages par destination, par type, par saison, par durée, selon l'âge de vos enfants et selon votre budget.', 'mavo' ); ?>
+			<?php esc_html_e( "Besoin d'inspiration ? Consultez nos voyages par destination, par type, par saison, par durée, selon l'âge de vos enfants et selon votre budget.", 'mavo' ); ?>
 		</p>
 		<a class="mv-button mv-button--primary" href="https://www.mamanvoyage.com/explorer/">
 			<?php esc_html_e( 'Explorez nos voyages par catégorie', 'mavo' ); ?>
