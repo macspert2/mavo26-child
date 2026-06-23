@@ -23,6 +23,7 @@ $jump_links = [
 	'mv-start-here-destination'  => __( 'Destinations', 'mavo' ),
 	'mv-start-here-with-whom'    => __( 'Âge des enfants', 'mavo' ),
 	'mv-start-here-trip-type'    => __( 'Type de voyage', 'mavo' ),
+        'mv-seasonal-guides'         => __( 'Saison', 'mavo' ),
 	'mv-start-here-duration'     => __( 'Durée', 'mavo' ),
 	'mv-start-here-budget'       => __( 'Budget', 'mavo' ),
 	'mv-start-here-big-projects' => __( 'Grand projet', 'mavo' ),
