@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $stats = [
-	[ 'number' => __( 'Seit 2009', 'mavo' ), 'label' => __( '15+ Jahre Familienreisen', 'mavo' ) ],
+	[ 'number' => __( 'Seit 2009', 'mavo' ), 'label' => __( '16 Jahre Familienreisen', 'mavo' ) ],
 	[ 'number' => __( '180+', 'mavo' ), 'label' => __( 'Familienreisen', 'mavo' ) ],
 	[ 'number' => __( 'Weltreise', 'mavo' ), 'label' => __( 'als Familie', 'mavo' ) ],
 	[ 'number' => __( 'Leben', 'mavo' ), 'label' => __( 'in England', 'mavo' ) ],

@@ -10,11 +10,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $stats = [
-	[ 'number' => __( 'Depuis 2009', 'mavo' ), 'label' => __( '15+ ans de voyages en famille', 'mavo' ) ],
+	[ 'number' => __( 'Depuis 2009', 'mavo' ), 'label' => __( '16 ans de voyages en famille', 'mavo' ) ],
 	[ 'number' => __( '180+', 'mavo' ), 'label' => __( 'voyages en famille', 'mavo' ) ],
 	[ 'number' => __( '1200+', 'mavo' ), 'label' => __( 'articles', 'mavo' ) ],
 	[ 'number' => __( 'Tour du monde', 'mavo' ), 'label' => __( 'en famille', 'mavo' ) ],
-	[ 'number' => __( 'Expatriés', 'mavo' ), 'label' => __( 'en Angleterre', 'mavo' ) ],
+	[ 'number' => __( 'Notre vie', 'mavo' ), 'label' => __( 'en Angleterre', 'mavo' ) ],
 ];
 ?>
 <section class="mv-section mv-trust-bar">
