@@ -29,6 +29,7 @@ get_header();
 	get_template_part( 'template-parts/mv-start-here/destination' );
 	get_template_part( 'template-parts/mv-start-here/with-whom' );
 	get_template_part( 'template-parts/mv-start-here/trip-type' );
+        get_template_part( 'template-parts/mv-start-here/seasonal-guides.php' );
 	get_template_part( 'template-parts/mv-start-here/duration' );
 	get_template_part( 'template-parts/mv-start-here/budget' );
 	get_template_part( 'template-parts/mv-start-here/big-projects' );

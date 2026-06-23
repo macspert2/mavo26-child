@@ -38,7 +38,7 @@ foreach ( $posts as $best_post ) {
 	<div class="mv-container">
 		<?php
 		get_template_part( 'template-parts/mv-shared/section-header', null, [
-			'title' => __( 'Les articles les plus lus', 'mavo' ),
+			'title' => __( 'Notre séléction du moment', 'mavo' ),
 		] );
 		get_template_part( 'template-parts/mv-shared/grid-wrapper', null, [
 			'columns' => 3,
