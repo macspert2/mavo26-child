@@ -68,8 +68,8 @@ if ( $is_fallback ) {
 	$title    = $titles[ $lang ] ?? $titles['fr'];
 	$subtitle = $subtitles[ $lang ] ?? $subtitles['fr'];
 } elseif ( 'fr' === $lang ) {
-	$title    = 'Vos idées de voyage préférées';
-	$subtitle = 'Une sélection d’articles souvent consultés.';
+	$title    = 'Notre séléction du moment';
+	$subtitle = '';
 } else {
 	$month_label = date_i18n( 'F', strtotime( $month ) );
 	/* translators: %s: localized month name, e.g. "June" / "Juni" */
