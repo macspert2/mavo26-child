@@ -14,7 +14,7 @@ $stats = [
 	[ 'number' => __( '180+', 'mavo' ), 'label' => __( 'voyages en famille', 'mavo' ) ],
 	[ 'number' => __( '1200+', 'mavo' ), 'label' => __( 'articles', 'mavo' ) ],
 	[ 'number' => __( 'Tour du monde', 'mavo' ), 'label' => __( 'en famille', 'mavo' ) ],
-	[ 'number' => __( 'Notre vie', 'mavo' ), 'label' => __( 'en Angleterre', 'mavo' ) ],
+	[ 'number' => __( 'Expat', 'mavo' ), 'label' => __( 'en Angleterre', 'mavo' ) ],
 ];
 ?>
 <section class="mv-section mv-trust-bar">
