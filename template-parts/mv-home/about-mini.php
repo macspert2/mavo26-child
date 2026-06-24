@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$about_image = 'https://www.mamanvoyage.com/wp-content/uploads/2018/01/3verres1bib_bannerIcon-1.jpg';
+$about_image = 'https://www.mamanvoyage.com/wp-content/uploads/2026/06/portrait-MV.jpg';
 
 $background      = $args['background'] ?? '';
 $section_classes = 'mv-section mv-about-mini';
