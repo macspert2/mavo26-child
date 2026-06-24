@@ -23,19 +23,19 @@ $trip_types = [
 	],
 	[
 		'title'       => __( 'City-trips', 'mavo' ),
-		'description' => __( 'Escapades urbaines en famille.', 'mavo' ),
+		'description' => __( 'Visites culturelles en famille.', 'mavo' ),
 		'url'         => 'https://www.mamanvoyage.com/category/voyages-avec-enfants/citytrip/',
 		'image'       => 'https://www.mamanvoyage.com/wp-content/uploads/2025/05/IMG_7333.jpeg.webp',
 	],
 	[
 		'title'       => __( 'Plage', 'mavo' ),
-		'description' => __( 'Vacances à la plage en famille.', 'mavo' ),
+		'description' => __( 'Vacances à la mer avec les enfants.', 'mavo' ),
 		'url'         => 'https://www.mamanvoyage.com/category/voyages-avec-enfants/plages/',
 		'image'       => 'https://www.mamanvoyage.com/wp-content/uploads/2026/02/IMG_2571.jpeg',
 	],
 	[
 		'title'       => __( 'Road trip', 'mavo' ),
-		'description' => __( 'Voyager en road trip avec des enfants.', 'mavo' ),
+		'description' => __( 'Nos plus beaux itinéraires en famille.', 'mavo' ),
 		'url'         => 'https://www.mamanvoyage.com/category/voyages-avec-enfants/roadtrip/',
 		'image'       => 'https://www.mamanvoyage.com/wp-content/uploads/2026/06/IMG_5870.jpeg',
 	],

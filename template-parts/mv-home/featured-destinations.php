@@ -16,13 +16,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 $destinations = [
 	[
 		'title'       => __( 'France', 'mavo' ),
-		'description' => __( 'Week-ends, vacances, nature, plages, culture, vélo, van-life sans partir trop loin', 'mavo' ),
+		'description' => __( 'Week-ends, vacances, nature, plages, culture, vélo, van-life sans partir trop loin.', 'mavo' ),
 		'url'         => 'https://www.mamanvoyage.com/france/',
 		'image'       => 'https://www.mamanvoyage.com/wp-content/uploads/2018/01/IMG_0745.jpg',
 	],
 	[
 		'title'       => __( 'Angleterre', 'mavo' ),
-		'description' => __( "Nos découvertes dans notre pays d'adoption : Londres, sud de l’Angleterre et autres escapades", 'mavo' ),
+		'description' => __( "Londres, sud de l’Angleterre et autres comtés en famille.", 'mavo' ),
 		'url'         => 'https://www.mamanvoyage.com/angleterre/',
 		'image'       => 'https://www.mamanvoyage.com/wp-content/uploads/2026/05/IMG_6132.jpeg.webp',
 	],
@@ -34,7 +34,7 @@ $destinations = [
 	],
 	[
 		'title'       => __( 'Espagne', 'mavo' ),
-		'description' => __( 'Andalousie, Baléares, Canaries, Catalogne : culture, plages et randos en famille', 'mavo' ),
+		'description' => __( 'Andalousie, Baléares, Canaries, Catalogne : culture, plages et randos en famille.', 'mavo' ),
 		'url'         => 'https://www.mamanvoyage.com/espagne/',
 		'image'       => 'https://www.mamanvoyage.com/wp-content/uploads/2019/10/P9031799.jpeg',
 	],
