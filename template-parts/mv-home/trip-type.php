@@ -22,7 +22,7 @@ $trip_types = [
 		'image'       => 'https://www.mamanvoyage.com/wp-content/uploads/2026/04/IMG_1669.jpeg',
 	],
 	[
-		'title'       => __( 'City-trips', 'mavo' ),
+		'title'       => __( 'City-trip', 'mavo' ),
 		'description' => __( 'Visites culturelles en famille.', 'mavo' ),
 		'url'         => 'https://www.mamanvoyage.com/category/voyages-avec-enfants/citytrip/',
 		'image'       => 'https://www.mamanvoyage.com/wp-content/uploads/2025/05/IMG_7333.jpeg.webp',
