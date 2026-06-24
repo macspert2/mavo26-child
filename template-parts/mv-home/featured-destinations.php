@@ -22,7 +22,7 @@ $destinations = [
 	],
 	[
 		'title'       => __( 'Angleterre', 'mavo' ),
-		'description' => __( 'Nos découvertes dans notre pays d'adoption : Londres, sud de l’Angleterre et autres escapades', 'mavo' ),
+		'description' => __( "Nos découvertes dans notre pays d'adoption : Londres, sud de l’Angleterre et autres escapades", 'mavo' ),
 		'url'         => 'https://www.mamanvoyage.com/angleterre/',
 		'image'       => 'https://www.mamanvoyage.com/wp-content/uploads/2026/05/IMG_6132.jpeg.webp',
 	],
