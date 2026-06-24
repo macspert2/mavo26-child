@@ -25,7 +25,7 @@ $trip_types = [
 		'title'       => __( 'City-trips', 'mavo' ),
 		'description' => __( 'Escapades urbaines en famille.', 'mavo' ),
 		'url'         => 'https://www.mamanvoyage.com/category/voyages-avec-enfants/citytrip/',
-		'image'       => 'https://www.mamanvoyage.com/wp-content/uploads/2026/06/IMG_6968.jpeg',
+		'image'       => 'https://www.mamanvoyage.com/wp-content/uploads/2025/05/IMG_7333.jpeg.webp',
 	],
 	[
 		'title'       => __( 'Plage', 'mavo' ),
