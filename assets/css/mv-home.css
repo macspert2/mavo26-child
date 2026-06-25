@@ -1,5 +1,27 @@
 /* Maman Voyage — homepage prototype components (plan-mid.md Phase 6). */
 
+:root {
+  --mv-color-text: #3a3a3a;
+  --mv-color-heading: #3a3a3a;
+  --mv-color-muted: #555555;
+  --mv-color-subtle: #757575;
+
+  --mv-color-primary: #4e74a5;
+  --mv-color-primary-rgb: 78, 116, 165;
+  --mv-color-warm: #886353;
+  --mv-color-warm-dark: #5c3d2e;
+  --mv-color-focus: #4e74a5;
+  --mv-color-highlight: rgb(128, 0, 128);
+
+  --mv-color-surface: #ffffff;
+  --mv-color-bg-soft: #f0eee9;
+  --mv-color-bg-cream: #f7f4ef;
+  --mv-color-bg-blue-tint: #eef3f8;
+
+  --mv-color-border: #e6e6e6;
+  --mv-color-divider: rgba(0, 0, 0, 0.08);
+}
+
 .mv-section {
 	padding-top: clamp(32px, 6vw, 72px);
 }
@@ -41,14 +63,9 @@
 	border-radius: 16px;
 	overflow: hidden;
 	text-decoration: none;
-	color: #4e74a5;
-	background: #fff;
-	border: 1px solid #e6e6e6;
-}
-
-.mv-card:focus-visible {
-	outline: 3px solid #1a73e8;
-	outline-offset: 2px;
+	color: var(--mv-color-primary);
+	background-color: var(--mv-color-surface);
+	border: 1px solid var(--mv-color-border);
 }
 
 .mv-card__image {
@@ -129,23 +146,24 @@
 	cursor: pointer;
 }
 
+.mv-card:focus-visible,
 .mv-button:focus-visible,
 #mv-search-again .search-submit:focus-visible,
 .mv-search-header .search-submit:focus-visible {
-	outline: 3px solid #1a73e8;
-	outline-offset: 2px;
+	outline: 3px solid var(--mv-color-focus);
+	outline-offset: 3px;
 }
 
 .mv-button--primary {
-	background: #4e74a5;
-	color: #fff;
+  background-color: var(--mv-color-primary);
+  color: var(--mv-color-surface);
 }
 
 .mv-button--secondary,
 #mv-search-again .search-submit,
 .mv-search-header .search-submit {
-	background: #f0eee9;
-	color: #4e74a5;
+  background-color: var(--mv-color-bg-soft);
+  color: var(--mv-color-primary);
 }
 
 /* Hero CTAs: same look for all 3, scoped here only. Specificity is kept
@@ -156,8 +174,8 @@
    turning brown. With equal specificity, source order decides again,
    same as every other .mv-button, and hover works correctly. */
 :where(.mv-hero__cta-row) .mv-button {
-	background: #f0eee9;
-	color: #4e74a5;
+  background-color: var(--mv-color-bg-soft);
+  color: var(--mv-color-primary);
 }
 
 /* Trust bar */
@@ -185,7 +203,7 @@
 .mv-trust-stat__number {
 	font-weight: 700;
 	font-size: 1.1em;
-	color: #800080;
+	color: var(--mv-color-highlight);
 }
 
 .mv-trust-stat__label {
@@ -242,7 +260,7 @@
 	text-align: center;
 	padding: 32px;
 	border-radius: 16px;
-	background: #f0eee9;
+	background: var(--mv-color-bg-soft);
 }
 
 .mv-start-here-cta__text {
@@ -271,7 +289,7 @@
 .mv-travel-finder-focus .tvf-no-results {
 	text-align: center;
 	padding: 40px 24px;
-	color: #555;
+	color: var(--mv-color-muted);
 }
 
 .mv-travel-finder-focus__more {
@@ -345,8 +363,8 @@
    actually override an inline style, not a sign of fighting the
    cascade unnecessarily. */
 #mv-search-newsletter button[type="submit"] {
-	background-color: #4e74a5 !important;
-	color: #fff !important;
+	background-color: var(--mv-color-primary) !important;
+	color: var(--mv-color-surface) !important;
 	border: none !important;
 	border-radius: 999px !important;
 	padding: 10px 20px !important;
@@ -444,11 +462,11 @@
 }
 
 .mv-section--bg-cream .mv-container {
-	background-color: #f7f4ef;
+	background-color: var(--mv-color-bg-cream);
 }
 
 .mv-section--bg-blue-tint .mv-container {
-	background-color: #eef3f8;
+	background-color: var(--mv-color-bg-blue-tint);
 }
 
 /* Search results page polish (plan3.md). Scoped to body.search-results
@@ -506,7 +524,7 @@ body.search-results .page-title span::after {
    generic GeneratePress example. */
 body.search-results .hentry {
 	padding: 1.25rem 0;
-	border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+	border-bottom: 1px solid var(--mv-color-divider);
 }
 
 body.search-results .entry-title {
