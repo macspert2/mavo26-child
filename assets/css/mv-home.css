@@ -7,7 +7,7 @@
   --mv-color-subtle: #757575;
 
   --mv-color-primary: #4e74a5;
-  --mv-color-primary-contrast: 71, 108, 153;
+  --mv-color-primary-contrast: rgb(71, 108, 153);
   --mv-color-warm: #886353;
   --mv-color-warm-dark: #5c3d2e;
   --mv-color-focus: #4e74a5;
