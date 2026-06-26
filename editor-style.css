@@ -29,6 +29,7 @@ h2 {
   margin-top: 2.5rem;
   margin-bottom: 0.625rem;
   line-height: 1.25;
+  color: #886353;
 }
 /* h3 — sub-section */
 h3 {
@@ -38,7 +39,7 @@ h3 {
   margin-top: 1.75rem;
   margin-bottom: 0.5rem;
   line-height: 1.35;
-}
+  color: #886353;}
 /* h4 — treated as a compact uppercase label */
 h4 {
   font-size: 17px;
@@ -49,4 +50,5 @@ h4 {
   margin-top: 1.5rem;
   margin-bottom: 0.25rem;
   line-height: 1.5;
+  color: #886353;
 }
