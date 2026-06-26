@@ -14,7 +14,24 @@ add_image_size('small-responsive', 480, 0, false);
 remove_image_size('1536x1536');
 remove_image_size('2048x2048');
 
-add_editor_style( 'editor-style.css' );
+add_filter('mce_css', function ($mce_css) {
+    $editor_css_url = get_stylesheet_directory_uri() . '/editor-style.css';
+    $editor_css_path = get_stylesheet_directory() . '/editor-style.css';
+
+    $version = file_exists($editor_css_path)
+        ? filemtime($editor_css_path)
+        : time();
+
+    $editor_css_url = add_query_arg('ver', $version, $editor_css_url);
+
+    if (!empty($mce_css)) {
+        $mce_css .= ',';
+    }
+
+    $mce_css .= $editor_css_url;
+
+    return $mce_css;
+});
 function mytheme_change_tinymce_colors( $init ) {
     $default_colours = '
         "000000", "Black",
