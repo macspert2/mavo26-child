@@ -97,17 +97,17 @@ add_filter('tiny_mce_before_init', function ($init) {
         // Each array child is a format with it's own settings - add as many as you want
         array(
             'title'    => 'purple h2', 
-            'selector' => 'h2', // Element to target in editor
+            'block' => 'h2', // Element to target in editor
             'classes'  => 'mv-highlight' // Class name used for CSS
         ),
         array(
             'title'    => 'purple h3',
-            'selector' => 'h3', // Element to target in editor
+            'block' => 'h3', // Element to target in editor
             'classes'  => 'mv-highlight' // Class name used for CSS
         ),
         array(
             'title'    => 'purple h4',
-            'selector' => 'h4', // Element to target in editor
+            'block' => 'h4', // Element to target in editor
             'classes'  => 'mv-highlight' // Class name used for CSS
         ),
     );
