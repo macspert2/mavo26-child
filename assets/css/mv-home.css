@@ -7,7 +7,7 @@
   --mv-color-subtle: #757575;
 
   --mv-color-primary: #4e74a5;
-  --mv-color-primary-rgb: 78, 116, 165;
+  --mv-color-primary-contrast: 71, 108, 153;
   --mv-color-warm: #886353;
   --mv-color-warm-dark: #5c3d2e;
   --mv-color-focus: #4e74a5;
@@ -163,7 +163,7 @@
 #mv-search-again .search-submit,
 .mv-search-header .search-submit {
   background-color: var(--mv-color-bg-soft);
-  color: var(--mv-color-primary);
+  color: var(--mv-color-primary-contrast);
 }
 
 /* Hero CTAs: same look for all 3, scoped here only. Specificity is kept
@@ -175,7 +175,7 @@
    same as every other .mv-button, and hover works correctly. */
 :where(.mv-hero__cta-row) .mv-button {
   background-color: var(--mv-color-bg-soft);
-  color: var(--mv-color-primary);
+  color: var(--mv-color-primary-contrast);
 }
 
 /* Trust bar */
