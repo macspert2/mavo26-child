@@ -70,12 +70,12 @@ function mytheme_change_tinymce_colors( $init ) {
     return $init;
 }
 add_filter('tiny_mce_before_init', 'mytheme_change_tinymce_colors');
-function myprefix_mce_buttons_1( $buttons ) {
+
+add_filter( 'mce_buttons_2', function ( $buttons ) {
     array_unshift( $buttons, 'styleselect' );
     return $buttons;
-}
-add_filter( 'mce_buttons_1', 'myprefix_mce_buttons_1' );
-function myprefix_add_format_styles( $init_array ) {
+});
+add_filter('tiny_mce_before_init', function ($init) {
     $style_formats = array(
         // Each array child is a format with it's own settings - add as many as you want
         array(
@@ -94,10 +94,9 @@ function myprefix_add_format_styles( $init_array ) {
             'classes'  => 'mv-highlight' // Class name used for CSS
         ),
     );
-    $init_array['style_formats'] = json_encode( $style_formats );
-    return $init_array;
-} 
-add_filter( 'tiny_mce_before_init', 'myprefix_add_format_styles' );
+    $init['style_formats'] = json_encode( $style_formats );
+    return $init;
+} );
 
 /**
  * Hidden homepage prototype: component CSS, only on that page template.
