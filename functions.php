@@ -79,17 +79,17 @@ function myprefix_add_format_styles( $init_array ) {
     $style_formats = array(
         // Each array child is a format with it's own settings - add as many as you want
         array(
-            'title'    => __( 'purple h2', 'text-domain' ), 
+            'title'    => 'purple h2', 
             'selector' => 'h2', // Element to target in editor
             'classes'  => 'mv-highlight' // Class name used for CSS
         ),
         array(
-            'title'    => __( 'purple h3', 'text-domain' ),
+            'title'    => 'purple h3',
             'selector' => 'h3', // Element to target in editor
             'classes'  => 'mv-highlight' // Class name used for CSS
         ),
         array(
-            'title'    => __( 'purple h4', 'text-domain' ),
+            'title'    => 'purple h4',
             'selector' => 'h4', // Element to target in editor
             'classes'  => 'mv-highlight' // Class name used for CSS
         ),
@@ -98,6 +98,7 @@ function myprefix_add_format_styles( $init_array ) {
     return $init_array;
 } 
 add_filter( 'tiny_mce_before_init', 'myprefix_add_format_styles' );
+
 /**
  * Hidden homepage prototype: component CSS, only on that page template.
  */
