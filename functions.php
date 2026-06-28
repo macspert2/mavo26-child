@@ -288,8 +288,11 @@ add_shortcode('dcard-inside-ul', 'theme_shortcode_detailcard'); // legacy — mi
 function mv_shortcode_tile_grid( $atts, $content = null ) {
 	$atts      = shortcode_atts( [ 'columns' => '' ], $atts, 'mv-tile-grid' );
 	$col_class = $atts['columns'] ? ' mv-grid--' . absint( $atts['columns'] ) : '';
+	// wpautop runs before shortcodes and turns newlines between [mv-tile] lines
+	// into <br> / <p> tags that would become stray grid children. Strip them first.
+	$clean = preg_replace( '/<\/?p[^>]*>|<br\s*\/?>/', '', $content ?? '' );
 	return '<div class="mv-tile-grid mv-archive-grid mv-archive-grid--wide' . esc_attr( $col_class ) . '">'
-		. do_shortcode( $content )
+		. do_shortcode( $clean )
 		. '</div>';
 }
 add_shortcode( 'mv-tile-grid', 'mv_shortcode_tile_grid' );
