@@ -402,23 +402,27 @@ body.search-results .hentry.mv-tile--result {
   }
 }
 
-/* Solid blue band at the bottom of each tile covers both title and excerpt. */
+/* Body is transparent — blue appears only directly behind the text. */
 .mv-archive-grid--wide .mv-tile--overlay .mv-tile__body {
-  background: rgba(var(--mv-color-primary-rgb, 78, 116, 165), 0.82);
-  padding: 0.75rem 1rem;
+  background: transparent;
+  padding: 0;
 }
 
-/* Title has no individual background in the wide variant; body provides it. */
+/* Title and description share the same rgba value and flush padding so they
+   read as one continuous band with no visible seam between them. */
 .mv-archive-grid--wide .mv-tile--overlay .mv-tile__title {
-  margin-bottom: 0.35rem;
+  background: rgba(var(--mv-color-primary-rgb, 78, 116, 165), 0.82);
+  padding: 0.65rem 1rem 0.25rem;
+  margin-bottom: 0;
 }
 
-/* Clamp excerpt to 3 lines so very long excerpts don't overwhelm the tile. */
 .mv-archive-grid--wide .mv-tile--overlay .mv-tile__description {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
   overflow: hidden;
+  background: rgba(var(--mv-color-primary-rgb, 78, 116, 165), 0.82);
+  padding: 0.25rem 1rem 0.65rem;
 }
 
 /* ===== Travel finder context overrides ===== */
