@@ -41,28 +41,26 @@ get_header(); ?>
 					 */
 					do_action( 'generate_before_loop', 'archive' );
 
-					$output = '<ul class="wp-block-post-template archive-page">';
+					$output = '<div class="mv-tile-grid mv-archive-grid">';
 
 					while ( have_posts() ) :
-
 						the_post();
-						$thumbnail = has_post_thumbnail()
-							? '<a href="' . esc_url( get_permalink() ) . '">' . get_the_post_thumbnail( null, 'full' ) . '</a>'
-							: '';
-						$output .= '<li class="wp-block-post">
-<figure class="alignwide wp-block-post-featured-image">' . $thumbnail . '</figure>
-<a href="' . get_permalink() . '" target="_self" class="wp-card">
-<h2 class="alignwide wp-block-post-title has-x-large-font-size has-system-font-font-family" style="font-style: normal;font-weight: 200">' . get_the_title() . '</h2>
-<div class="wp-block-post-excerpt">
-<p>' . get_the_excerpt() . '</p>
-</div></a>
-</li>'; 
+						$thumb_url  = get_the_post_thumbnail_url( null, 'large' );
+						$tile_class = 'mv-tile mv-tile--overlay' . ( $thumb_url ? '' : ' mv-tile--no-media' );
 
-//						generate_do_template_part( 'archive' );
-
+						$output .= '<a class="' . esc_attr( $tile_class ) . '" href="' . esc_url( get_permalink() ) . '">';
+						if ( $thumb_url ) {
+							$output .= '<span class="mv-tile__media">'
+								. '<img class="mv-tile__img" src="' . esc_url( $thumb_url ) . '" alt="" loading="lazy" decoding="async">'
+								. '</span>';
+						}
+						$output .= '<span class="mv-tile__body">'
+							. '<span class="mv-tile__title">' . esc_html( get_the_title() ) . '</span>'
+							. '</span>';
+						$output .= '</a>';
 					endwhile;
 
-					$output .= '</ul><div style="clear:both;"></div>';
+					$output .= '</div><div style="clear:both;"></div>';
 					echo $output;
 
 					/**

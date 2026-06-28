@@ -376,6 +376,14 @@ body.search-results .hentry.mv-tile--result {
   border-bottom: 0;
 }
 
+/* ===== Archive / destination hub tile grid ===== */
+
+/* Give overlay tiles a 3:2 photo ratio in archive grids. */
+.mv-archive-grid .mv-tile--overlay {
+  aspect-ratio: 3 / 2;
+  min-height: unset;
+}
+
 /* ===== Travel finder context overrides ===== */
 
 /* Overlay tiles: maintain original 3:2 card ratio. */
