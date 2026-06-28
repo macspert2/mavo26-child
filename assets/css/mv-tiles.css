@@ -486,11 +486,55 @@ body.search-results .hentry.mv-tile--result {
 
 /* ===== Compatibility bridge — .mavo-toc plugin ===== */
 /* Aligns the TOC box to the tile shadow aesthetic without disrupting
-   its sticky/collapsible states (those override at higher specificity). */
+   its sticky/collapsible states (those override at higher specificity).
+   Wires --mavo-blue/brown to shared tokens so a future primary-color
+   change propagates into the TOC automatically. */
 
 .mavo-toc {
+  --mavo-blue: var(--mv-color-primary, #4e74a5);
+  --mavo-brown: var(--mv-color-warm, #886353);
   border-radius: var(--mv-tile-radius, 14px);
   box-shadow: var(--mv-tile-shadow, 0 8px 22px rgba(58, 58, 58, 0.08));
+}
+
+/* ===== In-article utility box variants ([mv-box] shortcode) ===== */
+
+/* Base utility box already styled above (.mv-tile--utility).
+   Variants add a left-border accent and optional tinted background. */
+
+.mv-tile--utility--info {
+  border-left: 4px solid var(--mv-color-primary, #4e74a5);
+  background: var(--mv-color-bg-blue-tint, #eef3f8);
+  box-shadow: none;
+}
+
+.mv-tile--utility--tip {
+  border-left: 4px solid var(--mv-color-warm, #886353);
+  background: var(--mv-color-bg-cream, #f7f4ef);
+  box-shadow: none;
+}
+
+.mv-tile--utility--related {
+  border-left: 4px solid var(--mv-color-primary, #4e74a5);
+}
+
+.mv-box__title {
+  display: block;
+  margin: 0 0 .45rem;
+  color: var(--mv-color-primary, #4e74a5);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.mv-tile--utility--tip .mv-box__title {
+  color: var(--mv-color-warm-dark, #5c3d2e);
+}
+
+.mv-tile--utility > :last-child,
+.mv-tile--utility--info > :last-child,
+.mv-tile--utility--tip > :last-child,
+.mv-tile--utility--related > :last-child {
+  margin-bottom: 0;
 }
 
 /* ===== Reduced motion ===== */

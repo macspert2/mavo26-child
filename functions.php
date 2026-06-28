@@ -352,6 +352,24 @@ function mv_shortcode_tile( $atts ) {
 }
 add_shortcode( 'mv-tile', 'mv_shortcode_tile' );
 
+/**
+ * [mv-box type="info|tip|related" title="..."]content[/mv-box]
+ * In-article callout box. Types: info (blue tint), tip (warm tint), related (white + border).
+ */
+function mv_shortcode_box( $atts, $content = null ) {
+	$atts  = shortcode_atts( [ 'type' => 'info', 'title' => '' ], $atts, 'mv-box' );
+	$type  = sanitize_html_class( $atts['type'] );
+	$class = 'mv-tile mv-tile--utility mv-tile--utility--' . $type;
+	$html  = '<div class="' . esc_attr( $class ) . '">';
+	if ( $atts['title'] ) {
+		$html .= '<strong class="mv-box__title">' . esc_html( $atts['title'] ) . '</strong>';
+	}
+	$html .= do_shortcode( $content );
+	$html .= '</div>';
+	return $html;
+}
+add_shortcode( 'mv-box', 'mv_shortcode_box' );
+
 function theme_shortcode_tagcards($atts, $content = null, $code = '') {
     $atts = shortcode_atts(
         [
