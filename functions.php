@@ -127,6 +127,12 @@ add_action( 'wp_enqueue_scripts', function () {
             wp_get_theme()->get( 'Version' )
         );
     }
+    wp_enqueue_style(
+        'mavo-tiles',
+        get_stylesheet_directory_uri() . '/assets/css/mv-tiles.css',
+        [],
+        filemtime( get_stylesheet_directory() . '/assets/css/mv-tiles.css' )
+    );
 } );
 
 /**

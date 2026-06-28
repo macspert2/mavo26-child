@@ -1,0 +1,396 @@
+/* Maman Voyage — unified tile component system (plan-tiles.md). */
+
+/* ===== Tokens ===== */
+
+:root {
+  /* Color tokens — also defined in mv-home.css; duplicated here so tiles
+     work globally on pages that don't load mv-home.css. */
+  --mv-color-text: #3a3a3a;
+  --mv-color-heading: #3a3a3a;
+  --mv-color-muted: #555555;
+  --mv-color-subtle: #757575;
+
+  --mv-color-primary: #4e74a5;
+  --mv-color-primary-rgb: 78, 116, 165;
+  --mv-color-warm: #886353;
+  --mv-color-warm-dark: #5c3d2e;
+  --mv-color-highlight: #a92d87;
+  --mv-color-focus: #4e74a5;
+
+  --mv-color-surface: #ffffff;
+  --mv-color-bg-soft: #f0eee9;
+  --mv-color-bg-cream: #f7f4ef;
+  --mv-color-bg-blue-tint: #eef3f8;
+  --mv-color-border: #e6e6e6;
+  --mv-color-divider: rgba(0, 0, 0, 0.08);
+
+  --mv-tile-radius: 14px;
+  --mv-tile-radius-sm: 10px;
+  --mv-tile-shadow: 0 8px 22px rgba(58, 58, 58, 0.08);
+  --mv-tile-shadow-hover: 0 12px 30px rgba(58, 58, 58, 0.12);
+  --mv-tile-shadow-pressed: 0 5px 16px rgba(58, 58, 58, 0.09);
+  --mv-tile-gap: clamp(1rem, 2.2vw, 1.5rem);
+  --mv-tile-pad: clamp(1rem, 2vw, 1.25rem);
+}
+
+/* ===== Base tile ===== */
+
+.mv-tile {
+  display: block;
+  position: relative;
+  min-width: 0;
+  background: var(--mv-color-surface, #fff);
+  border: 0;
+  border-radius: var(--mv-tile-radius, 14px);
+  box-shadow: var(--mv-tile-shadow, 0 8px 22px rgba(58, 58, 58, 0.08));
+  color: var(--mv-color-text, #3a3a3a);
+  text-decoration: none;
+  overflow-wrap: break-word;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.mv-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--mv-tile-shadow-hover, 0 12px 30px rgba(58, 58, 58, 0.12));
+}
+
+.mv-tile:active {
+  transform: translateY(-1px);
+  box-shadow: var(--mv-tile-shadow-pressed, 0 5px 16px rgba(58, 58, 58, 0.09));
+}
+
+.mv-tile:focus-visible,
+.mv-tile__link:focus-visible,
+.mv-tile__image-link:focus-visible {
+  outline: 3px solid var(--mv-color-focus, #4e74a5);
+  outline-offset: 3px;
+}
+
+/* ===== Element classes ===== */
+
+.mv-tile__body {
+  padding: var(--mv-tile-pad, 1.1rem);
+}
+
+.mv-tile__eyebrow,
+.mv-tile__meta,
+.mv-tile__badge {
+  display: inline-block;
+  margin: 0 0 .45rem;
+  color: var(--mv-color-warm, #886353);
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: .01em;
+}
+
+.mv-tile__title {
+  display: block;
+  margin: 0 0 .35rem;
+  color: var(--mv-color-primary, #4e74a5);
+  font-size: clamp(1.02rem, 1.4vw, 1.18rem);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.mv-tile__title a,
+.mv-tile__link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.mv-tile__title a:hover,
+.mv-tile__link:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .16em;
+}
+
+.mv-tile__description {
+  margin: 0;
+  color: var(--mv-color-muted, #555);
+  line-height: 1.45;
+}
+
+.mv-tile__count {
+  color: var(--mv-color-highlight, #a92d87);
+  font-weight: 700;
+}
+
+/* ===== Variant: Text / directory tile ===== */
+
+.mv-tile--text {
+  padding: var(--mv-tile-pad, 1.1rem);
+}
+
+.mv-tile--text::before {
+  content: "";
+  display: block;
+  width: 2.25rem;
+  height: 3px;
+  margin-bottom: .75rem;
+  border-radius: 999px;
+  background: var(--mv-color-warm, #886353);
+}
+
+.mv-tile--text .mv-tile__title {
+  margin-bottom: .35rem;
+}
+
+/* ===== Variant: Compact ===== */
+
+.mv-tile--compact {
+  border-radius: var(--mv-tile-radius-sm, 10px);
+}
+
+.mv-tile--compact.mv-tile--text,
+.mv-tile--compact .mv-tile__body {
+  padding: .85rem .95rem;
+}
+
+.mv-tile--compact .mv-tile__title {
+  font-size: 1rem;
+}
+
+.mv-tile--compact .mv-tile__description {
+  font-size: .93rem;
+}
+
+/* ===== Variant: Media tile ===== */
+
+.mv-tile--media {
+  padding: 0;
+  overflow: hidden;
+}
+
+.mv-tile__media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--mv-color-bg-soft, #f0eee9);
+}
+
+.mv-tile__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 220ms ease;
+}
+
+.mv-tile--media:hover .mv-tile__img,
+.mv-tile--overlay:hover .mv-tile__img {
+  transform: scale(1.025);
+}
+
+.mv-tile--no-media .mv-tile__media {
+  display: none;
+}
+
+/* ===== Variant: Overlay destination tile ===== */
+
+.mv-tile--overlay {
+  min-height: 180px;
+  padding: 0;
+  overflow: hidden;
+  color: #fff;
+  isolation: isolate;
+}
+
+.mv-tile--overlay .mv-tile__media {
+  position: absolute;
+  inset: 0;
+  aspect-ratio: auto;
+  z-index: -1;
+}
+
+.mv-tile--overlay .mv-tile__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to top,
+      rgba(var(--mv-color-primary-rgb, 78, 116, 165), .86),
+      rgba(var(--mv-color-primary-rgb, 78, 116, 165), .42) 58%,
+      rgba(0, 0, 0, .08)
+    );
+}
+
+.mv-tile--overlay .mv-tile__body {
+  min-height: inherit;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.15rem;
+}
+
+.mv-tile--overlay .mv-tile__eyebrow,
+.mv-tile--overlay .mv-tile__meta,
+.mv-tile--overlay .mv-tile__badge,
+.mv-tile--overlay .mv-tile__title,
+.mv-tile--overlay .mv-tile__description {
+  color: #fff;
+}
+
+.mv-tile--overlay .mv-tile__description {
+  opacity: .95;
+}
+
+/* ===== Variant: Horizontal result tile ===== */
+
+.mv-tile--result {
+  display: grid;
+  grid-template-columns: minmax(120px, 180px) minmax(0, 1fr);
+  gap: 1rem;
+  padding: .85rem;
+  align-items: center;
+}
+
+.mv-tile--result .mv-tile__media {
+  aspect-ratio: 4 / 3;
+  border-radius: calc(var(--mv-tile-radius, 14px) - 4px);
+}
+
+.mv-tile--result .mv-tile__body {
+  padding: 0;
+}
+
+.mv-tile--result.mv-tile--no-media {
+  grid-template-columns: 1fr;
+}
+
+@media (max-width: 640px) {
+  .mv-tile--result {
+    grid-template-columns: 1fr;
+  }
+
+  .mv-tile--result .mv-tile__media {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+/* ===== Variant: Utility / TOC tile ===== */
+
+.mv-tile--utility,
+.mv-toc-box {
+  background: var(--mv-color-surface, #fff);
+  border: 0;
+  border-radius: var(--mv-tile-radius, 14px);
+  box-shadow: var(--mv-tile-shadow, 0 8px 22px rgba(58, 58, 58, 0.08));
+  padding: 1rem 1.15rem;
+}
+
+.mv-toc-box {
+  border-left: 4px solid var(--mv-color-primary, #4e74a5);
+}
+
+.mv-tile--utility h2,
+.mv-tile--utility h3,
+.mv-toc-box h2,
+.mv-toc-box h3 {
+  margin-top: 0;
+}
+
+/* ===== Grid helpers ===== */
+
+.mv-tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  gap: var(--mv-tile-gap, 1.25rem);
+  margin-block: 1.25rem 2rem;
+}
+
+.mv-tile-grid--compact {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: .9rem;
+}
+
+.mv-tile-grid--featured {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+}
+
+.mv-tile-grid--results {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+/* ===== Filter chips ===== */
+
+.mv-chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+.mv-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--mv-color-bg-blue-tint, #eef3f8);
+  color: var(--mv-color-primary, #4e74a5);
+  padding: .42rem .75rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.mv-chip:hover,
+.mv-chip:focus-visible {
+  background: rgba(var(--mv-color-primary-rgb, 78, 116, 165), .14);
+}
+
+.mv-chip--active,
+.mv-chip[aria-pressed="true"] {
+  background: var(--mv-color-primary, #4e74a5);
+  color: #fff;
+}
+
+/* ===== Compatibility bridge — existing .mv-card system ===== */
+/* Lifts .mv-card cards into the new shadow/radius language without
+   requiring markup changes. Remove once generators migrate to .mv-tile. */
+
+.mv-card {
+  border: 0;
+  border-radius: var(--mv-tile-radius, 14px);
+  box-shadow: var(--mv-tile-shadow, 0 8px 22px rgba(58, 58, 58, 0.08));
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.mv-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--mv-tile-shadow-hover, 0 12px 30px rgba(58, 58, 58, 0.12));
+}
+
+.mv-card:active {
+  transform: translateY(-1px);
+  box-shadow: var(--mv-tile-shadow-pressed, 0 5px 16px rgba(58, 58, 58, 0.09));
+}
+
+/* ===== Compatibility bridge — .mavo-toc plugin ===== */
+/* Aligns the TOC box to the tile shadow aesthetic without disrupting
+   its sticky/collapsible states (those override at higher specificity). */
+
+.mavo-toc {
+  border-radius: var(--mv-tile-radius, 14px);
+  box-shadow: var(--mv-tile-shadow, 0 8px 22px rgba(58, 58, 58, 0.08));
+}
+
+/* ===== Reduced motion ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  .mv-tile,
+  .mv-tile__img,
+  .mv-card {
+    transition: none;
+  }
+
+  .mv-tile:hover,
+  .mv-tile:active,
+  .mv-card:hover,
+  .mv-card:active {
+    transform: none;
+  }
+}

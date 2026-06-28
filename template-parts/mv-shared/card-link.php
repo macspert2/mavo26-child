@@ -1,17 +1,18 @@
 <?php
 /**
- * Shared link card (used for pathway / destination style cards).
+ * Shared text/directory link tile — Pattern A (whole tile is one link).
  *
- * Single outer link only — no nested links inside the card markup.
+ * Use for destination, trip-type, season, age, duration, and budget
+ * navigation tiles. Images are intentionally omitted; these are editorial
+ * text tiles, not article recommendation cards.
  *
  * Usage:
  *   get_template_part( 'template-parts/mv-shared/card-link', null, [
  *       'url'         => '#',
  *       'title'       => 'France en famille',
  *       'description' => 'Itinéraires et conseils pour voyager en France avec des enfants.',
- *       'image'       => '', // optional image URL
- *       'badge'       => '', // optional small label, e.g. "Nouveau"
- *       'variant'     => '', // optional extra class, e.g. "pathway"
+ *       'badge'       => '',     // optional small label
+ *       'variant'     => '',     // 'compact' adds mv-tile--compact; others are ignored
  *   ] );
  */
 
@@ -22,7 +23,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 $url         = $args['url'] ?? '#';
 $title       = $args['title'] ?? '';
 $description = $args['description'] ?? '';
-$image       = $args['image'] ?? '';
 $badge       = $args['badge'] ?? '';
 $variant     = $args['variant'] ?? '';
 
@@ -30,24 +30,17 @@ if ( '' === $title ) {
 	return;
 }
 
-$classes = 'mv-card mv-card--link';
-if ( $variant ) {
-	$classes .= ' mv-card--' . sanitize_html_class( $variant );
+$classes = 'mv-tile mv-tile--text';
+if ( 'compact' === $variant ) {
+	$classes .= ' mv-tile--compact';
 }
 ?>
 <a class="<?php echo esc_attr( $classes ); ?>" href="<?php echo esc_url( $url ); ?>">
-	<?php if ( $image ) : ?>
-		<span class="mv-card__image">
-			<img src="<?php echo esc_url( $image ); ?>" alt="" loading="lazy">
-		</span>
+	<?php if ( $badge ) : ?>
+		<span class="mv-tile__badge"><?php echo esc_html( $badge ); ?></span>
 	<?php endif; ?>
-	<span class="mv-card__body">
-		<?php if ( $badge ) : ?>
-			<span class="mv-card__badge"><?php echo esc_html( $badge ); ?></span>
-		<?php endif; ?>
-		<span class="mv-card__title"><?php echo esc_html( $title ); ?></span>
-		<?php if ( $description ) : ?>
-			<span class="mv-card__description"><?php echo esc_html( $description ); ?></span>
-		<?php endif; ?>
-	</span>
+	<span class="mv-tile__title"><?php echo esc_html( $title ); ?></span>
+	<?php if ( $description ) : ?>
+		<span class="mv-tile__description"><?php echo esc_html( $description ); ?></span>
+	<?php endif; ?>
 </a>

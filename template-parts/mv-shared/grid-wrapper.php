@@ -22,7 +22,7 @@ if ( empty( $items ) ) {
 	return;
 }
 ?>
-<div class="mv-grid mv-grid--<?php echo esc_attr( $columns ); ?>">
+<div class="mv-tile-grid mv-grid mv-grid--<?php echo esc_attr( $columns ); ?>">
 	<?php foreach ( $items as $item_html ) : ?>
 		<?php echo $item_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-rendered/escaped by the card partial. ?>
 	<?php endforeach; ?>
