@@ -317,6 +317,15 @@
   gap: 1rem;
 }
 
+/* When mv-tile-grid is used alongside mv-grid--N (grid-wrapper.php),
+   honour the explicit column count rather than auto-fit. Higher
+   specificity (two classes) beats the base .mv-tile-grid rule. */
+@media (min-width: 700px) {
+  .mv-tile-grid.mv-grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mv-tile-grid.mv-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .mv-tile-grid.mv-grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
 /* ===== Filter chips ===== */
 
 .mv-chip-group {
