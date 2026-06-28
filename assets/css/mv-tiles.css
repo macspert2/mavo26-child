@@ -196,6 +196,8 @@
   overflow: hidden;
   color: #fff;
   isolation: isolate;
+  display: flex;
+  flex-direction: column;
 }
 
 .mv-tile--overlay .mv-tile__media {
@@ -212,14 +214,15 @@
   background:
     linear-gradient(
       to top,
-      rgba(var(--mv-color-primary-rgb, 78, 116, 165), .86),
-      rgba(var(--mv-color-primary-rgb, 78, 116, 165), .42) 58%,
-      rgba(0, 0, 0, .08)
+      rgba(var(--mv-color-primary-rgb, 78, 116, 165), .82) 0%,
+      rgba(var(--mv-color-primary-rgb, 78, 116, 165), .38) 42%,
+      rgba(0, 0, 0, .04) 68%,
+      transparent 100%
     );
 }
 
 .mv-tile--overlay .mv-tile__body {
-  min-height: inherit;
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -365,6 +368,21 @@
 .tvf-cards-grid .mv-tile--overlay {
   aspect-ratio: 3 / 2;
   min-height: unset;
+}
+
+/* Chip active state: specificity 0,3,0 beats .tvf-chip.is-on (0,2,0) in
+   frontend.css even though mv-tiles.css loads first in the cascade. */
+.tvf-wrap .tvf-chip.is-on {
+  background: var(--mv-color-primary, #4e74a5);
+  border-color: var(--mv-color-primary, #4e74a5);
+  color: #fff;
+  box-shadow: 0 3px 12px rgba(var(--mv-color-primary-rgb, 78, 116, 165), .28);
+}
+
+.tvf-wrap .tvf-chip.is-on:hover {
+  background: var(--mv-color-warm-dark, #5c3d2e);
+  border-color: var(--mv-color-warm-dark, #5c3d2e);
+  color: #fff;
 }
 
 /* ===== Compatibility bridge — existing .mv-card system ===== */
