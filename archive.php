@@ -41,12 +41,13 @@ get_header(); ?>
 					 */
 					do_action( 'generate_before_loop', 'archive' );
 
-					$output = '<div class="mv-tile-grid mv-archive-grid">';
+					$output = '<div class="mv-tile-grid mv-archive-grid mv-archive-grid--wide">';
 
 					while ( have_posts() ) :
 						the_post();
 						$thumb_url  = get_the_post_thumbnail_url( null, 'large' );
 						$tile_class = 'mv-tile mv-tile--overlay' . ( $thumb_url ? '' : ' mv-tile--no-media' );
+						$excerpt    = wp_trim_words( get_the_excerpt(), 22 );
 
 						$output .= '<a class="' . esc_attr( $tile_class ) . '" href="' . esc_url( get_permalink() ) . '">';
 						if ( $thumb_url ) {
@@ -56,6 +57,7 @@ get_header(); ?>
 						}
 						$output .= '<span class="mv-tile__body">'
 							. '<span class="mv-tile__title">' . esc_html( get_the_title() ) . '</span>'
+							. ( $excerpt ? '<span class="mv-tile__description">' . esc_html( $excerpt ) . '</span>' : '' )
 							. '</span>';
 						$output .= '</a>';
 					endwhile;

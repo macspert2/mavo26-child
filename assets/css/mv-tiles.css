@@ -384,19 +384,41 @@ body.search-results .hentry.mv-tile--result {
   min-height: unset;
 }
 
-/* Image fully visible; blue background only behind the title text. */
+/* Remove the full-card gradient — blue only appears via the body band below. */
 .mv-archive-grid .mv-tile--overlay .mv-tile__media::after {
   display: none;
 }
 
-.mv-archive-grid .mv-tile--overlay .mv-tile__body {
-  background: transparent;
-  padding: 0;
+/* --- Wide (2-column) variant: title + excerpt, blue band covers both. --- */
+
+/* 1 column on mobile, 2 on desktop. */
+.mv-archive-grid--wide {
+  grid-template-columns: 1fr;
 }
 
-.mv-archive-grid .mv-tile--overlay .mv-tile__title {
+@media (min-width: 700px) {
+  .mv-archive-grid--wide {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Solid blue band at the bottom of each tile covers both title and excerpt. */
+.mv-archive-grid--wide .mv-tile--overlay .mv-tile__body {
   background: rgba(var(--mv-color-primary-rgb, 78, 116, 165), 0.82);
-  padding: 0.6rem 1rem;
+  padding: 0.75rem 1rem;
+}
+
+/* Title has no individual background in the wide variant; body provides it. */
+.mv-archive-grid--wide .mv-tile--overlay .mv-tile__title {
+  margin-bottom: 0.35rem;
+}
+
+/* Clamp excerpt to 3 lines so very long excerpts don't overwhelm the tile. */
+.mv-archive-grid--wide .mv-tile--overlay .mv-tile__description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
 }
 
 /* ===== Travel finder context overrides ===== */
