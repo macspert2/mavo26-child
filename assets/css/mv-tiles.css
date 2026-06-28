@@ -362,6 +362,13 @@
   color: #fff;
 }
 
+/* ===== Search results context ===== */
+
+/* Result tiles stack vertically in the GP content area. */
+.search-results .mv-tile--result {
+  margin-bottom: var(--mv-tile-gap, 1.25rem);
+}
+
 /* ===== Travel finder context overrides ===== */
 
 /* Overlay tiles: maintain original 3:2 card ratio. */

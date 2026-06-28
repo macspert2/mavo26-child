@@ -6,9 +6,32 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+	exit;
 }
-?>
+
+if ( is_search() ) :
+	// Search results: Pattern B horizontal result tile (image left, body right).
+	$thumb_url = get_the_post_thumbnail_url( get_the_ID(), 'medium_large' );
+	$tile_class = 'mv-tile mv-tile--result' . ( $thumb_url ? '' : ' mv-tile--no-media' );
+	?>
+	<article id="post-<?php the_ID(); ?>" <?php post_class( $tile_class ); ?>>
+		<?php if ( $thumb_url ) : ?>
+			<a class="mv-tile__image-link" href="<?php the_permalink(); ?>" tabindex="-1" aria-hidden="true">
+				<div class="mv-tile__media">
+					<img class="mv-tile__img" src="<?php echo esc_url( $thumb_url ); ?>" alt="" loading="lazy" decoding="async">
+				</div>
+			</a>
+		<?php endif; ?>
+		<div class="mv-tile__body">
+			<h2 class="mv-tile__title">
+				<a class="mv-tile__link" href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+			</h2>
+			<p class="mv-tile__description"><?php echo esc_html( wp_strip_all_tags( get_the_excerpt() ) ); ?></p>
+		</div>
+	</article>
+
+<?php else : ?>
+
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?> <?php generate_do_microdata( 'article' ); ?>>
 	<div class="inside-article">
 		<?php
@@ -114,3 +137,5 @@ if (($wp_query->current_post + 1) < ($wp_query->post_count)) {
 		?>
 	</div>
 </article>
+
+<?php endif; ?>

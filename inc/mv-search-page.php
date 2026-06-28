@@ -87,7 +87,7 @@ function mv_render_search_page_header(): void {
 		?>
 
 		<?php if ( mv_section_enabled( 'search_orientation_box' ) ) : ?>
-		<div class="mv-search-header__orientation">
+		<div class="mv-search-header__orientation mv-tile mv-tile--utility">
 			<h2 class="mv-search-header__orientation-title"><?php echo esc_html( $t['orientation_title'] ); ?></h2>
 			<p><?php echo esc_html( $t['orientation_text'] ); ?></p>
 			<div class="mv-search-header__orientation-buttons">
