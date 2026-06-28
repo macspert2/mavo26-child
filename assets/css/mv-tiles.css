@@ -359,6 +359,14 @@
   color: #fff;
 }
 
+/* ===== Travel finder context overrides ===== */
+
+/* Overlay tiles inside the TVF grid maintain the original 3:2 card ratio. */
+.tvf-cards-grid .mv-tile--overlay {
+  aspect-ratio: 3 / 2;
+  min-height: unset;
+}
+
 /* ===== Compatibility bridge — existing .mv-card system ===== */
 /* Lifts .mv-card cards into the new shadow/radius language without
    requiring markup changes. Remove once generators migrate to .mv-tile. */
