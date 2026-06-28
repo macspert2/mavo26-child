@@ -370,14 +370,19 @@
   min-height: unset;
 }
 
-/* Replace the full-card gradient with a solid bottom band —
-   matches the original .tvf-card-overlay sharp-background look. */
+/* Image fully visible; blue background only tight around the title text. */
 .tvf-cards-grid .mv-tile--overlay .mv-tile__media::after {
   display: none;
 }
 
 .tvf-cards-grid .mv-tile--overlay .mv-tile__body {
+  background: transparent;
+  padding: 0;
+}
+
+.tvf-cards-grid .mv-tile--overlay .mv-tile__title {
   background: rgba(var(--mv-color-primary-rgb, 78, 116, 165), 0.82);
+  padding: 0.6rem 1rem;
 }
 
 /* Chip active state: specificity 0,3,0 beats .tvf-chip.is-on (0,2,0) in
