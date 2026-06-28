@@ -463,26 +463,6 @@ body.search-results .hentry.mv-tile--result {
   color: #fff;
 }
 
-/* ===== Compatibility bridge — existing .mv-card system ===== */
-/* Lifts .mv-card cards into the new shadow/radius language without
-   requiring markup changes. Remove once generators migrate to .mv-tile. */
-
-.mv-card {
-  border: 0;
-  border-radius: var(--mv-tile-radius, 14px);
-  box-shadow: var(--mv-tile-shadow, 0 8px 22px rgba(58, 58, 58, 0.08));
-  transition: transform 160ms ease, box-shadow 160ms ease;
-}
-
-.mv-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--mv-tile-shadow-hover, 0 12px 30px rgba(58, 58, 58, 0.12));
-}
-
-.mv-card:active {
-  transform: translateY(-1px);
-  box-shadow: var(--mv-tile-shadow-pressed, 0 5px 16px rgba(58, 58, 58, 0.09));
-}
 
 /* ===== Compatibility bridge — .mavo-toc plugin ===== */
 /* Aligns the TOC box to the tile shadow aesthetic without disrupting
@@ -541,15 +521,12 @@ body.search-results .hentry.mv-tile--result {
 
 @media (prefers-reduced-motion: reduce) {
   .mv-tile,
-  .mv-tile__img,
-  .mv-card {
+  .mv-tile__img {
     transition: none;
   }
 
   .mv-tile:hover,
-  .mv-tile:active,
-  .mv-card:hover,
-  .mv-card:active {
+  .mv-tile:active {
     transform: none;
   }
 }

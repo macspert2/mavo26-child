@@ -116,7 +116,8 @@ add_filter('tiny_mce_before_init', function ($init) {
 } );
 
 /**
- * Hidden homepage prototype: component CSS, only on that page template.
+ * Page-specific component CSS: homepage variants, explorer, and search results.
+ * Not loaded on post/archive pages where none of these components appear.
  */
 add_action( 'wp_enqueue_scripts', function () {
     if ( is_page( [ 'accueil', 'explorer', 'home', 'startseite' ] ) || is_front_page() || is_search() ) {
@@ -266,17 +267,6 @@ return '';
 }
 add_shortcode('blockquote', 'theme_shortcode_blockquote');
 
-function theme_shortcode_detailcard($atts, $content = null, $code = '') {
-  $output = '<li class="wp-block-post">
-<figure class="alignwide wp-block-post-featured-image"><a href="https://www.mamanvoyage.com/' . $atts['link'] . '" target="_self"><img src="https://www.mamanvoyage.com/wp-content/uploads/' . $atts['image'] . '" alt="' . $atts['title'] . '" /></a></figure>
-<a href="https://www.mamanvoyage.com/' . $atts['link'] . '" target="_self" class="wp-card"><h2 class="alignwide wp-block-post-title has-x-large-font-size has-system-font-font-family" style="font-style: normal;font-weight: 200">' . $atts['title'] . '</h2>
-<div class="wp-block-post-excerpt">
-<p>' . $atts['description'] . '</p>
-</div></a>
-</li>';
-return $output;
-}
-add_shortcode('dcard-inside-ul', 'theme_shortcode_detailcard'); // legacy — migrate to [mv-tile] inside [mv-tile-grid]
 
 /**
  * [mv-tile-grid] … [/mv-tile-grid]
