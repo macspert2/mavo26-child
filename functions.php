@@ -276,7 +276,78 @@ function theme_shortcode_detailcard($atts, $content = null, $code = '') {
 </li>';
 return $output;
 }
-add_shortcode('dcard-inside-ul', 'theme_shortcode_detailcard');
+add_shortcode('dcard-inside-ul', 'theme_shortcode_detailcard'); // legacy — migrate to [mv-tile] inside [mv-tile-grid]
+
+/**
+ * [mv-tile-grid] … [/mv-tile-grid]
+ * Enclosing shortcode: wraps inner [mv-tile] shortcodes in a responsive
+ * overlay tile grid (2-col desktop, 1-col mobile). Matches archive page style.
+ *
+ * Optional: columns="3" forces an explicit column count via mv-grid--N.
+ */
+function mv_shortcode_tile_grid( $atts, $content = null ) {
+	$atts      = shortcode_atts( [ 'columns' => '' ], $atts, 'mv-tile-grid' );
+	$col_class = $atts['columns'] ? ' mv-grid--' . absint( $atts['columns'] ) : '';
+	return '<div class="mv-tile-grid mv-archive-grid mv-archive-grid--wide' . esc_attr( $col_class ) . '">'
+		. do_shortcode( $content )
+		. '</div>';
+}
+add_shortcode( 'mv-tile-grid', 'mv_shortcode_tile_grid' );
+
+/**
+ * [mv-tile title="…" url="…" image="…" description="…"]
+ * A single overlay tile. Intended for use inside [mv-tile-grid].
+ *
+ * url:   full URL, absolute path, or slug relative to home (e.g. "tag/berlin/")
+ * image: full URL, or path relative to /wp-content/uploads/ (e.g. "2020/07/photo.jpeg")
+ */
+function mv_shortcode_tile( $atts ) {
+	$atts = shortcode_atts(
+		[
+			'title'       => '',
+			'url'         => '',
+			'link'        => '', // legacy alias for url
+			'image'       => '',
+			'description' => '',
+		],
+		$atts,
+		'mv-tile'
+	);
+
+	$title       = sanitize_text_field( $atts['title'] );
+	$description = sanitize_text_field( $atts['description'] );
+
+	if ( '' === $title ) {
+		return '';
+	}
+
+	$raw_url = $atts['url'] ?: $atts['link'];
+	$url     = ( str_starts_with( $raw_url, 'http' ) || str_starts_with( $raw_url, '/' ) )
+		? $raw_url
+		: home_url( '/' . ltrim( $raw_url, '/' ) );
+
+	$raw_img = $atts['image'];
+	if ( $raw_img && ! str_starts_with( $raw_img, 'http' ) && ! str_starts_with( $raw_img, '/' ) ) {
+		$raw_img = content_url( 'uploads/' . $raw_img );
+	}
+
+	$tile_class = 'mv-tile mv-tile--overlay' . ( $raw_img ? '' : ' mv-tile--no-media' );
+
+	$output  = '<a class="' . esc_attr( $tile_class ) . '" href="' . esc_url( $url ) . '">';
+	if ( $raw_img ) {
+		$output .= '<span class="mv-tile__media">'
+			. '<img class="mv-tile__img" src="' . esc_url( $raw_img ) . '" alt="" loading="lazy" decoding="async">'
+			. '</span>';
+	}
+	$output .= '<span class="mv-tile__body">'
+		. '<span class="mv-tile__title">' . esc_html( $title ) . '</span>'
+		. ( $description ? '<span class="mv-tile__description">' . esc_html( $description ) . '</span>' : '' )
+		. '</span>';
+	$output .= '</a>';
+
+	return $output;
+}
+add_shortcode( 'mv-tile', 'mv_shortcode_tile' );
 
 function theme_shortcode_tagcards($atts, $content = null, $code = '') {
     $atts = shortcode_atts(
@@ -310,30 +381,34 @@ function theme_shortcode_tagcards($atts, $content = null, $code = '') {
         return '';
     }
 
-    $output = '<ul class="wp-block-post-template archive-page">';
+    $output = '<div class="mv-tile-grid mv-archive-grid mv-archive-grid--wide">';
 
     while ( $query->have_posts() ) {
         $query->the_post();
-	if(!((get_the_id()*1)==$excl) && ($count > 1)) {
-	$count = $count - 1;
-        $thumbnail = has_post_thumbnail()
-            ? '<a href="' . esc_url( get_permalink() ) . '">' . get_the_post_thumbnail( null, 'full' ) . '</a>'
-            : '';
-$output .= '<li class="wp-block-post">
-<figure class="alignwide wp-block-post-featured-image">' . $thumbnail . '</figure>
-<a href="' . get_permalink() . '" target="_self" class="wp-card">
-<h2 class="alignwide wp-block-post-title has-x-large-font-size has-system-font-font-family" style="font-style: normal;font-weight: 200">' . get_the_title() . '</h2>
-<div class="wp-block-post-excerpt">
-<p>' . get_the_excerpt() . '</p>
-</div></a>
-</li>';
-    }
+        if ( ( get_the_id() * 1 ) !== $excl && $count > 1 ) {
+            $count--;
+            $thumb_url  = get_the_post_thumbnail_url( null, 'large' );
+            $tile_class = 'mv-tile mv-tile--overlay' . ( $thumb_url ? '' : ' mv-tile--no-media' );
+            $excerpt    = wp_trim_words( get_the_excerpt(), 22 );
+
+            $output .= '<a class="' . esc_attr( $tile_class ) . '" href="' . esc_url( get_permalink() ) . '">';
+            if ( $thumb_url ) {
+                $output .= '<span class="mv-tile__media">'
+                    . '<img class="mv-tile__img" src="' . esc_url( $thumb_url ) . '" alt="" loading="lazy" decoding="async">'
+                    . '</span>';
+            }
+            $output .= '<span class="mv-tile__body">'
+                . '<span class="mv-tile__title">' . esc_html( get_the_title() ) . '</span>'
+                . ( $excerpt ? '<span class="mv-tile__description">' . esc_html( $excerpt ) . '</span>' : '' )
+                . '</span>';
+            $output .= '</a>';
+        }
     }
 
     wp_reset_postdata();
 
-    $output .= '</ul>';
-return $output;
+    $output .= '</div>';
+    return $output;
 }
 add_shortcode('tagcards-inc-ul', 'theme_shortcode_tagcards');
 
@@ -369,29 +444,33 @@ function theme_shortcode_catcards($atts, $content = null, $code = '') {
         return '0';
     }
 
-    $output = '<ul class="wp-block-post-template archive-page">';
+    $output = '<div class="mv-tile-grid mv-archive-grid mv-archive-grid--wide">';
 
     while ( $query->have_posts() ) {
         $query->the_post();
-        if(!((get_the_id()*1)==$excl)) {
-        $thumbnail = has_post_thumbnail()
-            ? '<a href="' . esc_url( get_permalink() ) . '">' . get_the_post_thumbnail( null, 'full' ) . '</a>'
-            : '';
-$output .= '<li class="wp-block-post">
-<figure class="alignwide wp-block-post-featured-image">' . $thumbnail . '</figure>
-<a href="' . get_permalink() . '" target="_self" class="wp-card">
-<h2 class="alignwide wp-block-post-title has-x-large-font-size has-system-font-font-family" style="font-style: normal;font-weight: 200">' . get_the_title() . '</h2>
-<div class="wp-block-post-excerpt">
-<p>' . trim(get_the_excerpt()) . '</p>
-</div></a>
-</li>';
-    }
+        if ( ( get_the_id() * 1 ) !== $excl ) {
+            $thumb_url  = get_the_post_thumbnail_url( null, 'large' );
+            $tile_class = 'mv-tile mv-tile--overlay' . ( $thumb_url ? '' : ' mv-tile--no-media' );
+            $excerpt    = wp_trim_words( get_the_excerpt(), 22 );
+
+            $output .= '<a class="' . esc_attr( $tile_class ) . '" href="' . esc_url( get_permalink() ) . '">';
+            if ( $thumb_url ) {
+                $output .= '<span class="mv-tile__media">'
+                    . '<img class="mv-tile__img" src="' . esc_url( $thumb_url ) . '" alt="" loading="lazy" decoding="async">'
+                    . '</span>';
+            }
+            $output .= '<span class="mv-tile__body">'
+                . '<span class="mv-tile__title">' . esc_html( get_the_title() ) . '</span>'
+                . ( $excerpt ? '<span class="mv-tile__description">' . esc_html( $excerpt ) . '</span>' : '' )
+                . '</span>';
+            $output .= '</a>';
+        }
     }
 
     wp_reset_postdata();
 
-    $output .= '</ul>';
-return $output;
+    $output .= '</div>';
+    return $output;
 }
 add_shortcode('catcards-inc-ul', 'theme_shortcode_catcards');
 
