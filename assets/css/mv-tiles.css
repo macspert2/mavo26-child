@@ -384,6 +384,21 @@ body.search-results .hentry.mv-tile--result {
   min-height: unset;
 }
 
+/* Image fully visible; blue background only behind the title text. */
+.mv-archive-grid .mv-tile--overlay .mv-tile__media::after {
+  display: none;
+}
+
+.mv-archive-grid .mv-tile--overlay .mv-tile__body {
+  background: transparent;
+  padding: 0;
+}
+
+.mv-archive-grid .mv-tile--overlay .mv-tile__title {
+  background: rgba(var(--mv-color-primary-rgb, 78, 116, 165), 0.82);
+  padding: 0.6rem 1rem;
+}
+
 /* ===== Travel finder context overrides ===== */
 
 /* Overlay tiles: maintain original 3:2 card ratio. */
