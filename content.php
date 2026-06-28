@@ -26,7 +26,7 @@ if ( is_search() ) :
 			<h2 class="mv-tile__title">
 				<a class="mv-tile__link" href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
 			</h2>
-			<p class="mv-tile__description"><?php echo esc_html( wp_strip_all_tags( get_the_excerpt() ) ); ?></p>
+			<p class="mv-tile__description"><?php echo wp_kses_post( get_the_excerpt() ); ?></p>
 		</div>
 	</article>
 

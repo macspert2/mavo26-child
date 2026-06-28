@@ -369,6 +369,13 @@
   margin-bottom: var(--mv-tile-gap, 1.25rem);
 }
 
+/* mv-home.css sets .hentry { padding: 1.25rem 0; border-bottom: ... }
+   at specificity 0,2,1. Override with a three-class selector (0,3,1). */
+body.search-results .hentry.mv-tile--result {
+  padding: .85rem;
+  border-bottom: 0;
+}
+
 /* ===== Travel finder context overrides ===== */
 
 /* Overlay tiles: maintain original 3:2 card ratio. */
