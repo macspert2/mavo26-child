@@ -474,6 +474,11 @@ body.search-results .hentry.mv-tile--result {
   padding: 0;
 }
 
+.mv-archive-grid--wide .mv-tile--overlay .mv-tile__badges {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
 /* Title and description share the same rgba value and flush padding so they
    read as one continuous band with no visible seam between them. */
 .mv-archive-grid--wide .mv-tile--overlay .mv-tile__title {
