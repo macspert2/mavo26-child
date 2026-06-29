@@ -87,6 +87,18 @@
   letter-spacing: .01em;
 }
 
+/* ===== Stretched-link pattern =====
+   Tile body is a <div>; the article link lives inside .mv-tile__title as
+   <a class="mv-tile__link">. Its ::after covers the whole card so the full
+   tile remains clickable. Badges sit at z-index 1 above the overlay.   */
+
+.mv-tile__link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
 /* ===== Badge system ===== */
 
 .mv-tile__badges {
@@ -94,6 +106,8 @@
   flex-wrap: wrap;
   gap: .35rem;
   margin-bottom: .55rem;
+  position: relative; /* lift above the stretched-link ::after */
+  z-index: 1;
 }
 
 .mv-badge {
@@ -106,6 +120,16 @@
   font-weight: 700;
   line-height: 1.2;
   white-space: nowrap;
+  text-decoration: none; /* reset when rendered as <a> */
+}
+
+a.mv-badge:hover {
+  opacity: .85;
+}
+
+a.mv-badge:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }
 
 .mv-badge--primary {

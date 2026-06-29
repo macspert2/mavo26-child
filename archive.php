@@ -55,7 +55,7 @@ get_header(); ?>
 						$tile_class = 'mv-tile mv-tile--overlay' . ( $thumb_url ? '' : ' mv-tile--no-media' );
 						$excerpt    = wp_trim_words( get_the_excerpt(), 22 );
 
-						$output .= '<a class="' . esc_attr( $tile_class ) . '" href="' . esc_url( get_permalink() ) . '">';
+						$output .= '<div class="' . esc_attr( $tile_class ) . '">';
 						if ( $thumb_url ) {
 							$output .= '<span class="mv-tile__media">'
 								. '<img class="mv-tile__img" src="' . esc_url( $thumb_url ) . '" alt="" loading="lazy" decoding="async">'
@@ -63,17 +63,19 @@ get_header(); ?>
 						}
 						$output .= '<span class="mv-tile__body">';
 						if ( function_exists( 'mv_tile_badges' ) ) {
-							$badge_args = [ 'context' => 'geo_hub', 'limit' => 2 ];
+							$badge_args = [ 'context' => 'geo_hub', 'limit' => 2, 'link_badges' => true ];
 							if ( $current_geo ) {
 								$badge_args['current_geo'] = $current_geo;
 							}
 							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							$output .= mv_tile_badges( get_the_ID(), $badge_args );
 						}
-						$output .= '<span class="mv-tile__title">' . esc_html( get_the_title() ) . '</span>'
+						$output .= '<span class="mv-tile__title">'
+							. '<a class="mv-tile__link" href="' . esc_url( get_permalink() ) . '">' . esc_html( get_the_title() ) . '</a>'
+							. '</span>'
 							. ( $excerpt ? '<span class="mv-tile__description">' . esc_html( $excerpt ) . '</span>' : '' )
 							. '</span>';
-						$output .= '</a>';
+						$output .= '</div>';
 					endwhile;
 
 					$output .= '</div><div style="clear:both;"></div>';

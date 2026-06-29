@@ -44,6 +44,7 @@ function mv_get_tile_badges( int $post_id, array $args = [] ): array {
 		'active_filters' => [],
 		'query'          => '',
 		'allow_groups'   => [ 'geo', 'trip_type', 'age', 'season', 'duration', 'budget', 'editorial' ],
+		'link_badges'    => false, // render badges as <a> links (only when tile is a <div>, not <a>)
 	];
 
 	$args    = wp_parse_args( $args, $defaults );
@@ -70,7 +71,10 @@ function mv_get_tile_badges( int $post_id, array $args = [] ): array {
 		return array_slice( $manual, 0, absint( $args['limit'] ) );
 	}
 
-	$cache_key = md5( $post_id . '|' . wp_json_encode( $args ) );
+	// link_badges only affects rendering, not badge selection — exclude from cache key.
+	$cache_args = $args;
+	unset( $cache_args['link_badges'] );
+	$cache_key = md5( $post_id . '|' . wp_json_encode( $cache_args ) );
 	if ( isset( $cache[ $cache_key ] ) ) {
 		return $cache[ $cache_key ];
 	}
@@ -97,7 +101,8 @@ function mv_render_tile_badges( array $badges, array $args = [] ): string {
 		return '';
 	}
 
-	$classes = 'mv-tile__badges';
+	$link_badges = ! empty( $args['link_badges'] );
+	$classes     = 'mv-tile__badges';
 	if ( ! empty( $args['class'] ) ) {
 		$classes .= ' ' . sanitize_html_class( $args['class'] );
 	}
@@ -110,9 +115,18 @@ function mv_render_tile_badges( array $badges, array $args = [] ): string {
 		}
 		$style = ! empty( $badge['style'] ) ? sanitize_html_class( $badge['style'] ) : 'neutral';
 		$group = ! empty( $badge['group'] ) ? sanitize_html_class( $badge['group'] ) : 'other';
-		$html .= '<span class="mv-badge mv-badge--' . esc_attr( $style ) . ' mv-badge--group-' . esc_attr( $group ) . '">'
-			. esc_html( $badge['label'] )
-			. '</span>';
+		$cls   = 'mv-badge mv-badge--' . esc_attr( $style ) . ' mv-badge--group-' . esc_attr( $group );
+		$url   = ( $link_badges && ! empty( $badge['url'] ) ) ? (string) $badge['url'] : '';
+
+		if ( $url ) {
+			$html .= '<a class="' . $cls . '" href="' . esc_url( $url ) . '">'
+				. esc_html( $badge['label'] )
+				. '</a>';
+		} else {
+			$html .= '<span class="' . $cls . '">'
+				. esc_html( $badge['label'] )
+				. '</span>';
+		}
 	}
 
 	$html .= '</div>';
@@ -216,6 +230,14 @@ function mv_get_geo_badge_candidates( int $post_id, array $args = [] ): array {
 			$priority += 5;
 		}
 
+		$term_id_col = 'term_id_' . $lang;
+		$term_id     = (int) ( $by_level[ $level ]->$term_id_col ?? 0 );
+		$geo_url     = '';
+		if ( $term_id ) {
+			$term_link = get_term_link( $term_id, 'post_tag' );
+			$geo_url   = is_wp_error( $term_link ) ? '' : (string) $term_link;
+		}
+
 		return [ [
 			'key'      => 'geo_' . $level . '_' . sanitize_title( $label ),
 			'label'    => $label,
@@ -224,6 +246,7 @@ function mv_get_geo_badge_candidates( int $post_id, array $args = [] ): array {
 			'priority' => $priority,
 			'source'   => 'geo',
 			'value'    => $level,
+			'url'      => $geo_url,
 		] ];
 	}
 
@@ -274,6 +297,7 @@ function mv_get_finder_badge_candidates( int $post_id, array $args = [] ): array
 				'priority' => $priority,
 				'source'   => 'finder',
 				'value'    => $slug,
+				'url'      => _mv_finder_url( $lang, $slug ),
 			];
 		}
 	}
@@ -502,6 +526,20 @@ function mv_normalize_geo_label( string $name ): string {
 // ---------------------------------------------------------------------------
 // Internal helpers
 // ---------------------------------------------------------------------------
+
+/**
+ * Language-aware finder URL for a TVF filter slug.
+ * FR/EN/DE finder page slugs must match Polylang's translated page slugs exactly.
+ */
+function _mv_finder_url( string $lang, string $slug ): string {
+	static $bases = [
+		'fr' => 'https://www.mamanvoyage.com/nos-idees-de-voyage/',
+		'en' => 'https://www.mamanvoyage.com/en/our-travel-ideas/',
+		'de' => 'https://www.mamanvoyage.com/de/unsere-reiseideen/',
+	];
+	$base = $bases[ $lang ] ?? $bases['fr'];
+	return $base . '?f=' . rawurlencode( $slug );
+}
 
 /**
  * Resolve the post's language (Polylang-aware, falls back to 'fr').
