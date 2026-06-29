@@ -234,8 +234,13 @@ function mv_get_geo_badge_candidates( int $post_id, array $args = [] ): array {
 		$term_id     = (int) ( $by_level[ $level ]->$term_id_col ?? 0 );
 		$geo_url     = '';
 		if ( $term_id ) {
-			$term_link = get_term_link( $term_id, 'post_tag' );
-			$geo_url   = is_wp_error( $term_link ) ? '' : (string) $term_link;
+			$hub_page_id = (int) get_term_meta( $term_id, '_mv_hub_page_id', true );
+			if ( $hub_page_id ) {
+				$geo_url = (string) get_permalink( $hub_page_id );
+			} else {
+				$term_link = get_term_link( $term_id, 'post_tag' );
+				$geo_url   = is_wp_error( $term_link ) ? '' : (string) $term_link;
+			}
 		}
 
 		return [ [
@@ -577,4 +582,56 @@ function mv_current_geo_from_term( \WP_Term $term ): ?array {
 		'type' => $level,
 		'slug' => sanitize_title( $label ),
 	];
+}
+
+/**
+ * Returns the current_geo context for the queried page when that page is
+ * configured as a geo hub (has _mv_geo_term_id post meta pointing to a tag).
+ * Used by tile shortcodes so badges suppress the hub's own level automatically.
+ */
+function mv_page_current_geo(): ?array {
+	static $cache = [];
+
+	$page_id = (int) get_queried_object_id();
+	if ( ! $page_id ) {
+		return null;
+	}
+
+	if ( array_key_exists( $page_id, $cache ) ) {
+		return $cache[ $page_id ];
+	}
+
+	$term_id = (int) get_post_meta( $page_id, '_mv_geo_term_id', true );
+	if ( ! $term_id ) {
+		$cache[ $page_id ] = null;
+		return null;
+	}
+
+	if ( ! class_exists( '\GeoTagger\PlaceRepository' ) ) {
+		$cache[ $page_id ] = null;
+		return null;
+	}
+
+	static $repo = null;
+	if ( null === $repo ) {
+		$repo = new \GeoTagger\PlaceRepository();
+	}
+
+	$place = $repo->get_place_by_term_id( $term_id );
+	if ( ! $place ) {
+		$cache[ $page_id ] = null;
+		return null;
+	}
+
+	$level = $place->level ?? null;
+	if ( ! in_array( $level, [ 'country', 'region', 'city' ], true ) ) {
+		$cache[ $page_id ] = null;
+		return null;
+	}
+
+	$name              = (string) ( $place->name_fr ?? $place->name_en ?? '' );
+	$label             = mv_normalize_geo_label( $name );
+	$result            = [ 'type' => $level, 'slug' => sanitize_title( $label ) ];
+	$cache[ $page_id ] = $result;
+	return $result;
 }

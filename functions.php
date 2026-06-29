@@ -8,6 +8,10 @@ require_once get_stylesheet_directory() . '/inc/mv-settings.php';
 require_once get_stylesheet_directory() . '/inc/mv-landing-footer.php';
 require_once get_stylesheet_directory() . '/inc/mv-search-page.php';
 require_once get_stylesheet_directory() . '/inc/mv-badges.php';
+if ( is_admin() ) {
+	require_once get_stylesheet_directory() . '/inc/mv-badges-admin.php';
+	require_once get_stylesheet_directory() . '/inc/mv-geo-hub-admin.php';
+}
 
 add_theme_support('post-thumbnails');
 add_image_size('medium-responsive', 640, 0, false);
@@ -336,8 +340,13 @@ function mv_shortcode_tile( $atts ) {
 	}
 	$output .= '<span class="mv-tile__body">';
 	if ( $post_id > 0 && function_exists( 'mv_tile_badges' ) ) {
+		$badge_args = [ 'context' => 'geo_hub', 'limit' => 2, 'link_badges' => true ];
+		$page_geo   = function_exists( 'mv_page_current_geo' ) ? mv_page_current_geo() : null;
+		if ( $page_geo ) {
+			$badge_args['current_geo'] = $page_geo;
+		}
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		$output .= mv_tile_badges( $post_id, [ 'context' => 'geo_hub', 'limit' => 2, 'link_badges' => true ] );
+		$output .= mv_tile_badges( $post_id, $badge_args );
 	}
 	$output .= '<span class="mv-tile__title">'
 		. '<a class="mv-tile__link" href="' . esc_url( $url ) . '">' . esc_html( $title ) . '</a>'
@@ -498,8 +507,13 @@ function theme_shortcode_catcards($atts, $content = null, $code = '') {
             }
             $output .= '<span class="mv-tile__body">';
             if ( function_exists( 'mv_tile_badges' ) ) {
+                $badge_args = [ 'context' => 'geo_hub', 'limit' => 2, 'link_badges' => true ];
+                $page_geo   = function_exists( 'mv_page_current_geo' ) ? mv_page_current_geo() : null;
+                if ( $page_geo ) {
+                    $badge_args['current_geo'] = $page_geo;
+                }
                 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                $output .= mv_tile_badges( get_the_ID(), [ 'context' => 'geo_hub', 'limit' => 2, 'link_badges' => true ] );
+                $output .= mv_tile_badges( get_the_ID(), $badge_args );
             }
             $output .= '<span class="mv-tile__title">'
                 . '<a class="mv-tile__link" href="' . esc_url( get_permalink() ) . '">' . esc_html( get_the_title() ) . '</a>'
