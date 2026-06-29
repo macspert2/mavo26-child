@@ -153,6 +153,14 @@ a.mv-badge:focus-visible {
   background: var(--mv-color-bg-soft, #f0eee9);
 }
 
+/* Theme rules like .inside-article a have specificity (0,1,1) which beats the
+   .mv-badge--* rules above. Repeat colours with an element selector to reach
+   (0,2,1) and win back control when badges are rendered as <a> links. */
+a.mv-badge--primary   { color: #fff; }
+a.mv-badge--warm      { color: var(--mv-color-warm, #886353); }
+a.mv-badge--highlight { color: #fff; }
+a.mv-badge--neutral   { color: var(--mv-color-text, #3a3a3a); }
+
 .mv-tile--compact .mv-badge,
 .mv-tile--result .mv-badge {
   min-height: 1.4rem;
@@ -321,7 +329,8 @@ a.mv-badge:focus-visible {
   margin-bottom: .4rem;
 }
 
-.mv-tile--overlay .mv-badge {
+.mv-tile--overlay .mv-badge,
+.mv-tile--overlay a.mv-badge {
   color: var(--mv-color-primary, #4e74a5);
   background: rgba(255, 255, 255, .92);
   border: 0;
