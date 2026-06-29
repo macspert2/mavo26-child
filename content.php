@@ -26,9 +26,10 @@ if ( is_search() ) :
 			<?php if ( function_exists( 'mv_tile_badges' ) ) : ?>
 				<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				<?php echo mv_tile_badges( get_the_ID(), [
-					'context' => 'search_result',
-					'limit'   => 2,
-					'query'   => get_search_query(),
+					'context'     => 'search_result',
+					'limit'       => 2,
+					'query'       => get_search_query(),
+					'link_badges' => true,
 				] ); ?>
 			<?php endif; ?>
 			<h2 class="mv-tile__title">
