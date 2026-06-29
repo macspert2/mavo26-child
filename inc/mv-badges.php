@@ -512,3 +512,31 @@ function _mv_badge_lang( int $post_id ): string {
 		: 'fr';
 	return in_array( $lang, [ 'fr', 'en', 'de' ], true ) ? $lang : 'fr';
 }
+
+/**
+ * Build the current_geo context array from a WP_Term (for geo hub archive pages).
+ * Returns ['type' => 'country', 'slug' => 'france'] or null if not resolvable.
+ */
+function mv_current_geo_from_term( \WP_Term $term ): ?array {
+	if ( ! class_exists( '\GeoTagger\PlaceRepository' ) ) {
+		return null;
+	}
+	static $repo = null;
+	if ( null === $repo ) {
+		$repo = new \GeoTagger\PlaceRepository();
+	}
+	$place = $repo->get_place_by_term_id( $term->term_id );
+	if ( ! $place ) {
+		return null;
+	}
+	$level = $place->level ?? null;
+	if ( ! in_array( $level, [ 'country', 'region', 'city' ], true ) ) {
+		return null;
+	}
+	$name  = (string) ( $place->name_fr ?? $place->name_en ?? '' );
+	$label = mv_normalize_geo_label( $name );
+	return [
+		'type' => $level,
+		'slug' => sanitize_title( $label ),
+	];
+}

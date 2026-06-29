@@ -41,6 +41,12 @@ get_header(); ?>
 					 */
 					do_action( 'generate_before_loop', 'archive' );
 
+					$current_geo = null;
+					$queried_obj = get_queried_object();
+					if ( $queried_obj instanceof \WP_Term && function_exists( 'mv_current_geo_from_term' ) ) {
+						$current_geo = mv_current_geo_from_term( $queried_obj );
+					}
+
 					$output = '<div class="mv-tile-grid mv-archive-grid mv-archive-grid--wide">';
 
 					while ( have_posts() ) :
@@ -55,8 +61,16 @@ get_header(); ?>
 								. '<img class="mv-tile__img" src="' . esc_url( $thumb_url ) . '" alt="" loading="lazy" decoding="async">'
 								. '</span>';
 						}
-						$output .= '<span class="mv-tile__body">'
-							. '<span class="mv-tile__title">' . esc_html( get_the_title() ) . '</span>'
+						$output .= '<span class="mv-tile__body">';
+						if ( function_exists( 'mv_tile_badges' ) ) {
+							$badge_args = [ 'context' => 'geo_hub', 'limit' => 2 ];
+							if ( $current_geo ) {
+								$badge_args['current_geo'] = $current_geo;
+							}
+							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							$output .= mv_tile_badges( get_the_ID(), $badge_args );
+						}
+						$output .= '<span class="mv-tile__title">' . esc_html( get_the_title() ) . '</span>'
 							. ( $excerpt ? '<span class="mv-tile__description">' . esc_html( $excerpt ) . '</span>' : '' )
 							. '</span>';
 						$output .= '</a>';
