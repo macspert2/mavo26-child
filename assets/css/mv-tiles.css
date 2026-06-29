@@ -153,13 +153,12 @@ a.mv-badge:focus-visible {
   background: var(--mv-color-bg-soft, #f0eee9);
 }
 
-/* Theme rules like .inside-article a have specificity (0,1,1) which beats the
-   .mv-badge--* rules above. Repeat colours with an element selector to reach
-   (0,2,1) and win back control when badges are rendered as <a> links. */
-a.mv-badge--primary   { color: #fff; }
-a.mv-badge--warm      { color: var(--mv-color-warm, #886353); }
-a.mv-badge--highlight { color: #fff; }
-a.mv-badge--neutral   { color: var(--mv-color-text, #3a3a3a); }
+/* .inside-article a has specificity (0,1,1). Use two classes + element to
+   reach (0,2,1) and win the cascade for linked badges. */
+a.mv-badge.mv-badge--primary   { color: #fff; }
+a.mv-badge.mv-badge--warm      { color: var(--mv-color-warm, #886353); }
+a.mv-badge.mv-badge--highlight { color: #fff; }
+a.mv-badge.mv-badge--neutral   { color: var(--mv-color-text, #3a3a3a); }
 
 .mv-tile--compact .mv-badge,
 .mv-tile--result .mv-badge {
@@ -330,7 +329,10 @@ a.mv-badge--neutral   { color: var(--mv-color-text, #3a3a3a); }
 }
 
 .mv-tile--overlay .mv-badge,
-.mv-tile--overlay a.mv-badge {
+.mv-tile--overlay a.mv-badge.mv-badge--primary,
+.mv-tile--overlay a.mv-badge.mv-badge--warm,
+.mv-tile--overlay a.mv-badge.mv-badge--highlight,
+.mv-tile--overlay a.mv-badge.mv-badge--neutral {
   color: var(--mv-color-primary, #4e74a5);
   background: rgba(255, 255, 255, .92);
   border: 0;
