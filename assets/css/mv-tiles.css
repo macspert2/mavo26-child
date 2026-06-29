@@ -182,6 +182,14 @@ a.mv-badge.mv-badge--neutral   { color: var(--mv-color-text, #3a3a3a); }
   text-decoration: none;
 }
 
+/* Overlay tiles sit inside .page-header on archive pages. .page-header a has
+   specificity (0,1,1) which ties with .mv-tile__title a and wins by source
+   order, breaking the inherit chain. Override explicitly at (0,2,0). */
+.mv-tile--overlay .mv-tile__link,
+.mv-tile--overlay .mv-tile__title a {
+  color: #fff;
+}
+
 .mv-tile__title a:hover,
 .mv-tile__link:hover {
   text-decoration: underline;
