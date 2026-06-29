@@ -23,6 +23,14 @@ if ( is_search() ) :
 			</a>
 		<?php endif; ?>
 		<div class="mv-tile__body">
+			<?php if ( function_exists( 'mv_tile_badges' ) ) : ?>
+				<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<?php echo mv_tile_badges( get_the_ID(), [
+					'context' => 'search_result',
+					'limit'   => 2,
+					'query'   => get_search_query(),
+				] ); ?>
+			<?php endif; ?>
 			<h2 class="mv-tile__title">
 				<a class="mv-tile__link" href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
 			</h2>
