@@ -17,7 +17,23 @@ defined( 'ABSPATH' ) || exit;
  * Resolve and render badges in one call (convenience wrapper).
  */
 function mv_tile_badges( int $post_id, array $args = [] ): string {
-	return mv_render_tile_badges( mv_get_tile_badges( $post_id, $args ), $args );
+	$badges = mv_get_tile_badges( $post_id, $args );
+	$html   = mv_render_tile_badges( $badges, $args );
+
+	// Debug output for admins: append ?debug_badges=1 to any page.
+	if (
+		! empty( $_GET['debug_badges'] ) &&
+		current_user_can( 'manage_options' ) &&
+		( $args['context'] ?? '' ) === 'search_result'
+	) {
+		$query    = $args['query'] ?? '';
+		$tokens   = '' !== $query ? _mv_search_tokens( $query ) : [];
+		$html    .= '<pre class="mv-badge-debug" style="font-size:.7em;background:#f5f5f5;border:1px solid #ccc;padding:.5em;margin:.25em 0;white-space:pre-wrap;">'
+			. esc_html( 'post:' . $post_id . ' query:' . $query . "\ntokens: " . implode( ', ', $tokens ) . "\nbadges: " . wp_json_encode( $badges, JSON_PRETTY_PRINT ) )
+			. '</pre>';
+	}
+
+	return $html;
 }
 
 /**
@@ -86,7 +102,7 @@ function mv_get_tile_badges( int $post_id, array $args = [] ): array {
 
 	$candidates          = mv_filter_badge_candidates( $candidates, $args );
 	$candidates          = mv_dedupe_badge_candidates( $candidates );
-	$candidates          = mv_score_badge_candidates( $candidates, $args );
+	$candidates          = mv_score_badge_candidates( $candidates, $args, $post_id );
 	$badges              = mv_pick_badges( $candidates, $args );
 	$cache[ $cache_key ] = $badges;
 
@@ -353,7 +369,7 @@ function mv_dedupe_badge_candidates( array $candidates ): array {
 	return $out;
 }
 
-function mv_score_badge_candidates( array $candidates, array $args = [] ): array {
+function mv_score_badge_candidates( array $candidates, array $args = [], int $post_id = 0 ): array {
 	$context = $args['context'] ?? 'default';
 
 	// Overlay tiles: geo only, one badge.
@@ -369,6 +385,70 @@ function mv_score_badge_candidates( array $candidates, array $args = [] ): array
 			}
 		}
 		unset( $c );
+	}
+
+	// search_result: query-aware scoring.
+	if ( 'search_result' === $context && apply_filters( 'mv_badges_search_context_enabled', true ) ) {
+		$raw_query = trim( (string) ( $args['query'] ?? '' ) );
+
+		if ( '' !== $raw_query ) {
+			$tokens = _mv_search_tokens( $raw_query );
+
+			// Detect which geo level the query matches among this post's candidates.
+			$query_geo_type = null;
+			foreach ( $candidates as $c ) {
+				if ( ( $c['group'] ?? '' ) === 'geo' && _mv_candidate_in_tokens( $c, $tokens ) ) {
+					$query_geo_type = $c['value'] ?? null; // country / region / city
+					break;
+				}
+			}
+
+			// Normalized post title for redundancy check (city already in title → less useful as badge).
+			$title_norm = $post_id ? _mv_normalize_search_text( get_the_title( $post_id ) ) : '';
+
+			foreach ( $candidates as &$c ) {
+				$group = $c['group'] ?? 'other';
+				$level = $c['value'] ?? null;
+
+				if ( 'geo' !== $group ) {
+					// Boost any trip-type / age / etc. that the query explicitly names.
+					if ( _mv_candidate_in_tokens( $c, $tokens ) ) {
+						$c['priority'] += 40;
+					}
+					continue;
+				}
+
+				// Geo candidates.
+				$label_norm    = _mv_normalize_search_text( $c['label'] ?? '' );
+				$title_has_geo = '' !== $label_norm && false !== strpos( $title_norm, $label_norm );
+				$geo_matched   = _mv_candidate_in_tokens( $c, $tokens );
+
+				if ( 'country' === $query_geo_type && 'country' === $level && $geo_matched ) {
+					// Searching "france" → France badge is redundant on every result.
+					$c['priority'] -= 25;
+				}
+
+				if ( 'region' === $query_geo_type ) {
+					if ( 'region' === $level && $geo_matched ) {
+						$c['priority'] += 20;
+					} elseif ( 'country' === $level ) {
+						$c['priority'] -= 10;
+					}
+				}
+
+				if ( 'city' === $query_geo_type ) {
+					if ( 'city' === $level && $geo_matched ) {
+						// City already in result title → prefer showing region instead.
+						$c['priority'] += $title_has_geo ? -15 : 20;
+					} elseif ( 'region' === $level ) {
+						$c['priority'] += 15;
+					} elseif ( 'country' === $level ) {
+						$c['priority'] -= 15;
+					}
+				}
+			}
+			unset( $c );
+		}
 	}
 
 	return array_values( $candidates );
@@ -453,6 +533,98 @@ function mv_get_manual_badge_override( int $post_id ): array {
 	}
 
 	return $badges;
+}
+
+// ---------------------------------------------------------------------------
+// Search query parsing helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Normalize text for query matching: strip tags, lowercase, remove accents,
+ * remove punctuation, collapse whitespace.
+ */
+function _mv_normalize_search_text( string $value ): string {
+	$value = html_entity_decode( wp_strip_all_tags( $value ), ENT_QUOTES, 'UTF-8' );
+	$value = strtolower( $value );
+	$value = remove_accents( $value );
+	$value = preg_replace( '/[^a-z0-9\s]+/', ' ', $value );
+	return trim( (string) preg_replace( '/\s+/', ' ', $value ) );
+}
+
+/**
+ * Normalized query aliases: common variants → canonical normalized form that
+ * matches a badge label when normalized. Keep small; do not over-engineer.
+ */
+function _mv_search_aliases(): array {
+	static $map = null;
+	if ( null !== $map ) {
+		return $map;
+	}
+	$map = [
+		'roadtrip'   => 'road trip',
+		'citytrip'   => 'city trip',
+		'rando'      => 'nature rando',
+		'randonnee'  => 'nature rando',
+		'nature'     => 'nature rando',
+		'bebe'       => 'avec bebe',
+		'bebes'      => 'avec bebe',
+		'ado'        => 'avec ados',
+		'london'     => 'londres',
+		'londre'     => 'londres',
+		'marseilles' => 'marseille',
+		'cote azur'  => 'provence',
+		'paca'       => 'provence',
+		'uk'         => 'royaume-uni',
+		// 'angleterre' deliberately NOT aliased to 'royaume-uni' —
+		// the geo hierarchy distinguishes England from UK.
+	];
+	return $map;
+}
+
+/**
+ * Parse a raw search query into a set of normalized tokens (unigrams + bigrams)
+ * with aliases applied. Cached statically — parsed once per request per query.
+ */
+function _mv_search_tokens( string $raw ): array {
+	static $cache = [];
+	if ( isset( $cache[ $raw ] ) ) {
+		return $cache[ $raw ];
+	}
+
+	$normalized = _mv_normalize_search_text( $raw );
+	$aliases    = _mv_search_aliases();
+	$stopwords  = [ 'a', 'au', 'aux', 'de', 'des', 'du', 'en', 'et', 'la', 'le', 'les', 'pour', 'avec', 'un', 'une', 'sur', 'par' ];
+
+	$words  = preg_split( '/\s+/', $normalized, -1, PREG_SPLIT_NO_EMPTY );
+	$tokens = [];
+
+	foreach ( $words as $w ) {
+		if ( ! in_array( $w, $stopwords, true ) ) {
+			$tokens[] = $w;
+		}
+		if ( isset( $aliases[ $w ] ) ) {
+			$tokens[] = $aliases[ $w ];
+		}
+	}
+
+	for ( $i = 0, $n = count( $words ); $i < $n - 1; $i++ ) {
+		$bg       = $words[ $i ] . ' ' . $words[ $i + 1 ];
+		$tokens[] = $bg;
+		if ( isset( $aliases[ $bg ] ) ) {
+			$tokens[] = $aliases[ $bg ];
+		}
+	}
+
+	$cache[ $raw ] = array_values( array_unique( $tokens ) );
+	return $cache[ $raw ];
+}
+
+/**
+ * Whether a candidate's normalized label appears in the token set.
+ */
+function _mv_candidate_in_tokens( array $c, array $tokens ): bool {
+	$label = _mv_normalize_search_text( $c['label'] ?? '' );
+	return '' !== $label && in_array( $label, $tokens, true );
 }
 
 // ---------------------------------------------------------------------------
