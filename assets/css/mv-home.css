@@ -83,67 +83,6 @@
    into the same rules rather than duplicating the values. Blog
    pagination is deliberately left as standard GeneratePress, not
    unified here. */
-.mv-button,
-#mv-search-again .search-submit,
-.mv-search-header .search-submit {
-	display: inline-block;
-	box-sizing: border-box;
-	padding: 10px 20px;
-	border: none;
-	border-radius: 999px;
-	text-decoration: none;
-	font-weight: 600;
-	font-family: inherit;
-	font-size: inherit;
-	cursor: pointer;
-	transition: transform 160ms ease, box-shadow 160ms ease;
-}
-
-.mv-button:hover,
-#mv-search-again .search-submit:hover,
-.mv-search-header .search-submit:hover {
-	transform: translateY(-2px);
-	box-shadow: var(--mv-tile-shadow-hover, 0 12px 30px rgba(58, 58, 58, 0.12));
-}
-
-.mv-button:active,
-#mv-search-again .search-submit:active,
-.mv-search-header .search-submit:active {
-	transform: translateY(-1px);
-	box-shadow: var(--mv-tile-shadow, 0 8px 22px rgba(58, 58, 58, 0.08));
-}
-
-.mv-button:focus-visible,
-#mv-search-again .search-submit:focus-visible,
-.mv-search-header .search-submit:focus-visible {
-	outline: 3px solid var(--mv-color-focus);
-	outline-offset: 3px;
-}
-
-.mv-button--primary {
-  background-color: var(--mv-color-primary);
-  color: var(--mv-color-surface);
-}
-
-.mv-button--secondary,
-#mv-search-again .search-submit,
-.mv-search-header .search-submit {
-  background-color: var(--mv-color-bg-soft);
-  color: var(--mv-color-primary-contrast);
-}
-
-/* Hero CTAs: same look for all 3, scoped here only. Specificity is kept
-   equal to .mv-button--primary/--secondary via :where() (zero added
-   specificity) on purpose — a plain ".mv-hero__cta-row .mv-button"
-   two-class selector previously outranked the site's global
-   a:hover{color:var(--hover)} rule, which is what made hover stop
-   turning brown. With equal specificity, source order decides again,
-   same as every other .mv-button, and hover works correctly. */
-:where(.mv-hero__cta-row) .mv-button {
-  background-color: var(--mv-color-bg-soft);
-  color: var(--mv-color-primary-contrast);
-}
-
 /* Trust bar */
 
 .mv-trust-bar {
