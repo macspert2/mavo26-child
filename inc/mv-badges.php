@@ -318,6 +318,7 @@ function mv_get_finder_badge_candidates( int $post_id, array $args = [] ): array
 				'priority' => $priority,
 				'source'   => 'finder',
 				'value'    => $slug,
+				'grade'    => $weight,
 				'url'      => _mv_finder_url( $lang, $slug ),
 			];
 		}
@@ -403,6 +404,17 @@ function mv_score_badge_candidates( array $candidates, array $args = [], int $po
 				}
 			}
 
+			// Fall back to DB-driven geo type map when no candidate matched the query.
+			if ( null === $query_geo_type ) {
+				$geo_type_map = _mv_search_geo_type_map();
+				foreach ( $tokens as $token ) {
+					if ( isset( $geo_type_map[ $token ] ) ) {
+						$query_geo_type = $geo_type_map[ $token ];
+						break;
+					}
+				}
+			}
+
 			// Normalized post title for redundancy check (city already in title → less useful as badge).
 			$title_norm = $post_id ? _mv_normalize_search_text( get_the_title( $post_id ) ) : '';
 
@@ -411,9 +423,10 @@ function mv_score_badge_candidates( array $candidates, array $args = [], int $po
 				$level = $c['value'] ?? null;
 
 				if ( 'geo' !== $group ) {
-					// Boost any trip-type / age / etc. that the query explicitly names.
 					if ( _mv_candidate_in_tokens( $c, $tokens ) ) {
-						$c['priority'] += 40;
+						$c['priority'] += 40; // Query explicitly names this trip-type/age/etc.
+					} elseif ( 'search_result' === $context && ( $c['grade'] ?? 2 ) < 2 ) {
+						$c['priority'] -= 20; // Grade-1 finder badges are fallback-only; hide unless query matches.
 					}
 					continue;
 				}
@@ -424,26 +437,25 @@ function mv_score_badge_candidates( array $candidates, array $args = [], int $po
 				$geo_matched   = _mv_candidate_in_tokens( $c, $tokens );
 
 				if ( 'country' === $query_geo_type && 'country' === $level && $geo_matched ) {
-					// Searching "france" → France badge is redundant on every result.
-					$c['priority'] -= 25;
+					$c['priority'] -= 25; // Searching a country: country badge is redundant on every result.
 				}
 
 				if ( 'region' === $query_geo_type ) {
 					if ( 'region' === $level && $geo_matched ) {
 						$c['priority'] += 20;
 					} elseif ( 'country' === $level ) {
-						$c['priority'] -= 10;
+						$c['priority'] -= 15;
 					}
 				}
 
 				if ( 'city' === $query_geo_type ) {
 					if ( 'city' === $level && $geo_matched ) {
-						// City already in result title → prefer showing region instead.
 						$c['priority'] += $title_has_geo ? -15 : 20;
 					} elseif ( 'region' === $level ) {
 						$c['priority'] += 15;
 					} elseif ( 'country' === $level ) {
-						$c['priority'] -= 15;
+						// City query → country badge is too generic; stronger suppression.
+						$c['priority'] -= 30;
 					}
 				}
 			}
@@ -479,6 +491,10 @@ function mv_pick_badges( array $candidates, array $args = [] ): array {
 			continue; // No two badges from the same group
 		}
 		if ( mv_is_forbidden_badge_label( $c['label'] ) ) {
+			continue;
+		}
+		// Don't force a weak second badge — one strong badge is better than two weak ones.
+		if ( ! empty( $selected ) && ( (int) ( $c['priority'] ?? 0 ) ) < 30 ) {
 			continue;
 		}
 		$selected[]            = $c;
@@ -579,6 +595,54 @@ function _mv_search_aliases(): array {
 		// the geo hierarchy distinguishes England from UK.
 	];
 	return $map;
+}
+
+/**
+ * Build a map of normalized place name → geo level (country/region/city) from
+ * the geo_tagger_places table. Cached as a transient for 24 h so search scoring
+ * can detect query geo type even when a post isn't tagged at that level.
+ */
+function _mv_search_geo_type_map(): array {
+	static $local = null;
+	if ( null !== $local ) {
+		return $local;
+	}
+
+	$cached = get_transient( '_mv_geo_type_map' );
+	if ( false !== $cached && is_array( $cached ) ) {
+		$local = $cached;
+		return $local;
+	}
+
+	global $wpdb;
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+	$rows = $wpdb->get_results(
+		"SELECT name_fr, name_en, name_de, level FROM {$wpdb->prefix}geo_tagger_places WHERE level IN ('country','region','city')"
+	);
+
+	$local = [];
+	foreach ( (array) $rows as $row ) {
+		$level = $row->level ?? '';
+		foreach ( [ $row->name_fr ?? '', $row->name_en ?? '', $row->name_de ?? '' ] as $raw ) {
+			if ( '' === $raw ) {
+				continue;
+			}
+			$key = _mv_normalize_search_text( $raw );
+			if ( '' !== $key && ! isset( $local[ $key ] ) ) {
+				$local[ $key ] = $level;
+			}
+			$display = mv_normalize_geo_label( $raw );
+			if ( $display !== $raw ) {
+				$key2 = _mv_normalize_search_text( $display );
+				if ( '' !== $key2 && ! isset( $local[ $key2 ] ) ) {
+					$local[ $key2 ] = $level;
+				}
+			}
+		}
+	}
+
+	set_transient( '_mv_geo_type_map', $local, DAY_IN_SECONDS );
+	return $local;
 }
 
 /**
