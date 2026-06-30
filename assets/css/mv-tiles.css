@@ -805,19 +805,20 @@ body.search-results .hentry.mv-tile--result {
   text-decoration: underline;
 }
 
-/* Nested replies — indent + lighter shadow + left accent */
-.comments-area .children {
+/* Nested replies — threading line left of the group, lighter shadow on cards */
+.comments-area .comment-list .children {
   list-style: none;
-  padding: 0;
-  margin: .875rem 0 0 2.5rem;
+  /* Override GP's negative margin-top that was compensating for old comment padding */
+  margin: .875rem 0 0 1.25rem;
+  padding: 0 0 0 1.25rem;
   display: flex;
   flex-direction: column;
   gap: .75rem;
+  border-left: 3px solid var(--mv-color-bg-blue-tint, #eef3f8);
 }
 
 .comments-area .depth-2 > .comment-body,
 .comments-area .depth-3 > .comment-body {
-  border-left: 3px solid var(--mv-color-bg-blue-tint, #eef3f8);
   box-shadow: 0 4px 14px rgba(58,58,58,.06);
 }
 
@@ -899,8 +900,9 @@ body.search-results .hentry.mv-tile--result {
     padding: 1rem 1rem;
   }
 
-  .comments-area .children {
-    margin-left: 1rem;
+  .comments-area .comment-list .children {
+    margin-left: .5rem;
+    padding-left: .75rem;
   }
 
   .comments-area .comment-respond {
