@@ -10,21 +10,24 @@
  *       'post'         => $post, // WP_Post or post ID
  *       'show_excerpt' => true,  // optional, defaults to true
  *   ] );
+ *
+ * NOTE: intentionally uses $mv_card_post instead of $post to avoid
+ * overwriting the global $post (load_template() runs in a scope where
+ * $post is the global, so any assignment to $post here would clobber it).
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$post = $args['post'] ?? null;
-$post = get_post( $post );
+$mv_card_post = get_post( $args['post'] ?? null );
 
-if ( ! $post ) {
+if ( ! $mv_card_post ) {
 	return;
 }
 
 $show_excerpt = $args['show_excerpt'] ?? true;
-$image_url    = get_the_post_thumbnail_url( $post, 'medium_large' );
+$image_url    = get_the_post_thumbnail_url( $mv_card_post, 'medium_large' );
 $classes      = 'mv-tile mv-tile--media' . ( $image_url ? '' : ' mv-tile--no-media' );
 ?>
 <div class="<?php echo esc_attr( $classes ); ?>">
@@ -36,13 +39,13 @@ $classes      = 'mv-tile mv-tile--media' . ( $image_url ? '' : ' mv-tile--no-med
 	<span class="mv-tile__body">
 		<?php if ( function_exists( 'mv_tile_badges' ) ) : ?>
 			<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-			<?php echo mv_tile_badges( $post->ID, array_merge( [ 'context' => 'homepage_media', 'limit' => 2 ], $args['badge_args'] ?? [] ) ); ?>
+			<?php echo mv_tile_badges( $mv_card_post->ID, array_merge( [ 'context' => 'homepage_media', 'limit' => 2 ], $args['badge_args'] ?? [] ) ); ?>
 		<?php endif; ?>
 		<span class="mv-tile__title">
-			<a class="mv-tile__link" href="<?php echo esc_url( get_permalink( $post ) ); ?>"><?php echo esc_html( get_the_title( $post ) ); ?></a>
+			<a class="mv-tile__link" href="<?php echo esc_url( get_permalink( $mv_card_post ) ); ?>"><?php echo esc_html( get_the_title( $mv_card_post ) ); ?></a>
 		</span>
 		<?php if ( $show_excerpt ) : ?>
-			<span class="mv-tile__description"><?php echo esc_html( wp_strip_all_tags( get_the_excerpt( $post ) ) ); ?></span>
+			<span class="mv-tile__description"><?php echo esc_html( wp_strip_all_tags( get_the_excerpt( $mv_card_post ) ) ); ?></span>
 		<?php endif; ?>
 	</span>
 </div>
