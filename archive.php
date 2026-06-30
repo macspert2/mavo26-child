@@ -63,7 +63,7 @@ get_header(); ?>
 						}
 						$output .= '<span class="mv-tile__body">';
 						if ( function_exists( 'mv_tile_badges' ) ) {
-							$badge_args = [ 'context' => 'geo_hub', 'limit' => 2, 'link_badges' => true ];
+							$badge_args = [ 'context' => 'geo_hub', 'limit' => 2 ];
 							if ( $current_geo ) {
 								$badge_args['current_geo'] = $current_geo;
 							}

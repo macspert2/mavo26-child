@@ -340,7 +340,7 @@ function mv_shortcode_tile( $atts ) {
 	}
 	$output .= '<span class="mv-tile__body">';
 	if ( $post_id > 0 && function_exists( 'mv_tile_badges' ) ) {
-		$badge_args = [ 'context' => 'geo_hub', 'limit' => 2, 'link_badges' => true ];
+		$badge_args = [ 'context' => 'geo_hub', 'limit' => 2 ];
 		$page_geo   = function_exists( 'mv_page_current_geo' ) ? mv_page_current_geo() : null;
 		if ( $page_geo ) {
 			$badge_args['current_geo'] = $page_geo;
@@ -435,7 +435,7 @@ function theme_shortcode_tagcards($atts, $content = null, $code = '') {
             }
             $output .= '<span class="mv-tile__body">';
             if ( function_exists( 'mv_tile_badges' ) ) {
-                $badge_args = [ 'context' => 'geo_hub', 'limit' => 2, 'link_badges' => true ];
+                $badge_args = [ 'context' => 'geo_hub', 'limit' => 2 ];
                 if ( $current_geo ) {
                     $badge_args['current_geo'] = $current_geo;
                 }
@@ -507,7 +507,7 @@ function theme_shortcode_catcards($atts, $content = null, $code = '') {
             }
             $output .= '<span class="mv-tile__body">';
             if ( function_exists( 'mv_tile_badges' ) ) {
-                $badge_args = [ 'context' => 'geo_hub', 'limit' => 2, 'link_badges' => true ];
+                $badge_args = [ 'context' => 'geo_hub', 'limit' => 2 ];
                 $page_geo   = function_exists( 'mv_page_current_geo' ) ? mv_page_current_geo() : null;
                 if ( $page_geo ) {
                     $badge_args['current_geo'] = $page_geo;

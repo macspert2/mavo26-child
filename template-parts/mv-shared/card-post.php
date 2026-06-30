@@ -36,7 +36,7 @@ $classes      = 'mv-tile mv-tile--media' . ( $image_url ? '' : ' mv-tile--no-med
 	<span class="mv-tile__body">
 		<?php if ( function_exists( 'mv_tile_badges' ) ) : ?>
 			<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-			<?php echo mv_tile_badges( $post->ID, [ 'context' => 'homepage_media', 'limit' => 2, 'link_badges' => true ] ); ?>
+			<?php echo mv_tile_badges( $post->ID, [ 'context' => 'homepage_media', 'limit' => 2 ] ); ?>
 		<?php endif; ?>
 		<span class="mv-tile__title">
 			<a class="mv-tile__link" href="<?php echo esc_url( get_permalink( $post ) ); ?>"><?php echo esc_html( get_the_title( $post ) ); ?></a>

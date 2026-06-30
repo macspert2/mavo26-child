@@ -16,11 +16,9 @@ if ( is_search() ) :
 	?>
 	<article id="post-<?php the_ID(); ?>" <?php post_class( $tile_class ); ?>>
 		<?php if ( $thumb_url ) : ?>
-			<a class="mv-tile__image-link" href="<?php the_permalink(); ?>" tabindex="-1" aria-hidden="true">
-				<div class="mv-tile__media">
-					<img class="mv-tile__img" src="<?php echo esc_url( $thumb_url ); ?>" alt="" loading="lazy" decoding="async">
-				</div>
-			</a>
+			<div class="mv-tile__media">
+				<img class="mv-tile__img" src="<?php echo esc_url( $thumb_url ); ?>" alt="" loading="lazy" decoding="async">
+			</div>
 		<?php endif; ?>
 		<div class="mv-tile__body">
 			<?php if ( function_exists( 'mv_tile_badges' ) ) : ?>
@@ -29,7 +27,6 @@ if ( is_search() ) :
 					'context'     => 'search_result',
 					'limit'       => 2,
 					'query'       => get_search_query(),
-					'link_badges' => true,
 				] ); ?>
 			<?php endif; ?>
 			<h2 class="mv-tile__title">
