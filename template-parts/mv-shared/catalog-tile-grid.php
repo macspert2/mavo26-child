@@ -77,12 +77,23 @@ foreach ( $keys as $key ) {
 		continue; // no matching posts yet — skip rather than show an empty promise.
 	}
 
+	// When a geo filter is active, prefer images from posts matching both the
+	// category and the geo (e.g. French beaches, not just any beach). Falls
+	// back to the unfiltered pool when no geo-filtered posts have photos.
+	$image_candidates = $posts;
+	if ( $geo_key && class_exists( 'TVF_Store' ) ) {
+		$geo_filtered = TVF_Store::resolve_posts_for_slugs( $lang, array_merge( $meta['slugs'], [ $geo_key ] ), $posts_per_key );
+		if ( ! empty( $geo_filtered ) ) {
+			$image_candidates = $geo_filtered;
+		}
+	}
+
 	// Prefer the top post's image, but if it was already used earlier in
 	// this section (the same post ranks #1 for more than one tile), fall
 	// through to the next-ranked post that has an unused image instead.
 	$image          = null;
 	$is_placeholder = false;
-	foreach ( $posts as $candidate ) {
+	foreach ( $image_candidates as $candidate ) {
 		$candidate_image = get_the_post_thumbnail_url( $candidate, 'medium_large' );
 		if ( $candidate_image && ! in_array( $candidate_image, $used_images, true ) ) {
 			$image = $candidate_image;
@@ -90,7 +101,7 @@ foreach ( $keys as $key ) {
 		}
 	}
 	if ( ! $image ) {
-		$image = get_the_post_thumbnail_url( $posts[0], 'medium_large' );
+		$image = get_the_post_thumbnail_url( $image_candidates[0], 'medium_large' );
 		if ( ! $image ) {
 			$image          = $placeholder_image;
 			$is_placeholder = true;

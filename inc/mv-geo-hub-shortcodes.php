@@ -97,10 +97,19 @@ function mv_shortcode_geo_posts( array $atts ): string {
 		return '';
 	}
 
+	$badge_args = [ 'context' => 'geo_hub', 'limit' => 2 ];
+	$current_geo = function_exists( 'mv_page_current_geo' ) ? mv_page_current_geo() : null;
+	if ( $current_geo ) {
+		$badge_args['current_geo'] = $current_geo;
+	}
+
 	$items = [];
 	foreach ( $posts as $post ) {
 		ob_start();
-		get_template_part( 'template-parts/mv-shared/card-post', null, [ 'post' => $post ] );
+		get_template_part( 'template-parts/mv-shared/card-post', null, [
+			'post'       => $post,
+			'badge_args' => $badge_args,
+		] );
 		$items[] = ob_get_clean();
 	}
 
