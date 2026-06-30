@@ -670,12 +670,12 @@ body.search-results .hentry.mv-tile--result {
 	outline-offset: 3px;
 }
 
-.mv-button--primary {
+.mv-button.mv-button--primary {
 	background-color: var(--mv-color-primary);
 	color: var(--mv-color-surface);
 }
 
-.mv-button--secondary,
+.mv-button.mv-button--secondary,
 #mv-search-again .search-submit,
 .mv-search-header .search-submit {
 	background-color: var(--mv-color-bg-soft);
