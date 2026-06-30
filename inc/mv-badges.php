@@ -18,22 +18,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function mv_tile_badges( int $post_id, array $args = [] ): string {
 	$badges = mv_get_tile_badges( $post_id, $args );
-	$html   = mv_render_tile_badges( $badges, $args );
-
-	// Debug output for admins: append ?debug_badges=1 to any page.
-	if (
-		! empty( $_GET['debug_badges'] ) &&
-		current_user_can( 'manage_options' ) &&
-		( $args['context'] ?? '' ) === 'search_result'
-	) {
-		$query    = $args['query'] ?? '';
-		$tokens   = '' !== $query ? _mv_search_tokens( $query ) : [];
-		$html    .= '<pre class="mv-badge-debug" style="font-size:.7em;background:#f5f5f5;border:1px solid #ccc;padding:.5em;margin:.25em 0;white-space:pre-wrap;">'
-			. esc_html( 'post:' . $post_id . ' query:' . $query . "\ntokens: " . implode( ', ', $tokens ) . "\nbadges: " . wp_json_encode( $badges, JSON_PRETTY_PRINT ) )
-			. '</pre>';
-	}
-
-	return $html;
+	return mv_render_tile_badges( $badges, $args );
 }
 
 /**

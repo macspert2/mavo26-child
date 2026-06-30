@@ -39,6 +39,7 @@ $posts_per_key = (int) ( $args['posts_per_key'] ?? 6 );
 $link_to       = $args['link_to'] ?? 'focus';
 $url_overrides = $args['url_overrides'] ?? [];
 $background    = $args['background'] ?? '';
+$geo_key       = $args['geo_key'] ?? ''; // optional: appends this filter slug to every tile URL
 
 if ( empty( $keys ) ) {
 	return;
@@ -104,7 +105,8 @@ foreach ( $keys as $key ) {
 		$used_images[] = $image;
 	}
 
-	$url = $url_overrides[ $key ] ?? add_query_arg( 'f', implode( ',', $meta['slugs'] ), $link_base );
+	$link_slugs = $geo_key ? array_merge( $meta['slugs'], [ $geo_key ] ) : $meta['slugs'];
+	$url        = $url_overrides[ $key ] ?? add_query_arg( 'f', implode( ',', $link_slugs ), $link_base );
 
 	ob_start();
 	get_template_part( 'template-parts/mv-shared/card-link', null, [

@@ -8,6 +8,7 @@ require_once get_stylesheet_directory() . '/inc/mv-settings.php';
 require_once get_stylesheet_directory() . '/inc/mv-landing-footer.php';
 require_once get_stylesheet_directory() . '/inc/mv-search-page.php';
 require_once get_stylesheet_directory() . '/inc/mv-badges.php';
+require_once get_stylesheet_directory() . '/inc/mv-geo-hub-shortcodes.php';
 if ( is_admin() ) {
 	require_once get_stylesheet_directory() . '/inc/mv-badges-admin.php';
 	require_once get_stylesheet_directory() . '/inc/mv-geo-hub-admin.php';
