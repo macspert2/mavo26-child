@@ -1,26 +1,5 @@
 /* Maman Voyage — homepage prototype components (plan-mid.md Phase 6). */
 
-:root {
-  --mv-color-text: #3a3a3a;
-  --mv-color-heading: #3a3a3a;
-  --mv-color-muted: #555555;
-  --mv-color-subtle: #757575;
-
-  --mv-color-primary: #4e74a5;
-  --mv-color-primary-contrast: rgb(71, 108, 153);
-  --mv-color-warm: #886353;
-  --mv-color-warm-dark: #5c3d2e;
-  --mv-color-focus: #4e74a5;
-  --mv-color-highlight: #a92d87;
-
-  --mv-color-surface: #ffffff;
-  --mv-color-bg-soft: #f0eee9;
-  --mv-color-bg-cream: #f7f4ef;
-  --mv-color-bg-blue-tint: #eef3f8;
-
-  --mv-color-border: #e6e6e6;
-  --mv-color-divider: rgba(0, 0, 0, 0.08);
-}
 
 .mv-section {
 	padding-top: clamp(32px, 6vw, 72px);
