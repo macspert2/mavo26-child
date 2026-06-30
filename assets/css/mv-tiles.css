@@ -748,22 +748,22 @@ body.search-results .hentry.mv-tile--result {
   min-width: 0;
 }
 
-/* Author name — override GP's .comments-area a accent color */
+/* Author name — primary blue */
 .comments-area .comment-author .fn,
 .comments-area .comment-author .fn a {
   font-style: normal;
   font-weight: 600;
   font-size: .95rem;
-  color: var(--mv-color-heading, #3a3a3a);
+  color: var(--mv-color-primary, #4e74a5);
   text-decoration: none;
 }
 
 .comments-area .comment-author .fn a:hover {
-  color: var(--mv-color-heading, #3a3a3a);
+  color: var(--mv-color-primary, #4e74a5);
   text-decoration: underline;
 }
 
-/* Date — override GP's .comments-area a accent color */
+/* Date — muted, with primary link */
 .comments-area .comment-metadata,
 .comments-area .comment-metadata a {
   font-size: .8rem;
@@ -773,8 +773,12 @@ body.search-results .hentry.mv-tile--result {
   display: block;
 }
 
+.comments-area .comment-metadata a {
+  color: var(--mv-color-primary, #4e74a5);
+}
+
 .comments-area .comment-metadata a:hover {
-  color: var(--mv-color-muted, #555555);
+  color: var(--mv-color-primary, #4e74a5);
   text-decoration: underline;
 }
 
@@ -825,7 +829,7 @@ body.search-results .hentry.mv-tile--result {
 /* Comments section title */
 .comments-area .comments-title {
   font-weight: 600;
-  color: var(--mv-color-heading, #3a3a3a);
+  color: var(--mavo-brown, #886353);
   margin-top: 0;
   margin-bottom: 1.5rem;
 }
@@ -854,7 +858,8 @@ body.search-results .hentry.mv-tile--result {
 .comments-area .comment-form input[type="url"] {
   border: 1px solid var(--mv-color-border, #e6e6e6);
   border-radius: 8px;
-  background-color: var(--mv-color-bg-soft, #f0eee9);
+  background-color: #fff;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.07);
   padding: 10px 14px;
   width: 100%;
   box-sizing: border-box;
@@ -869,9 +874,8 @@ body.search-results .hentry.mv-tile--result {
 .comments-area .comment-form input[type="email"]:focus,
 .comments-area .comment-form input[type="url"]:focus {
   border-color: var(--mv-color-focus, #4e74a5);
-  background-color: #fff;
   outline: none;
-  box-shadow: 0 0 0 3px rgba(78,116,165,.15);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.04), 0 0 0 3px rgba(78,116,165,.15);
 }
 
 /* Submit button — primary pill style */
