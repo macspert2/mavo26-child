@@ -418,6 +418,15 @@ function mv_score_badge_candidates( array $candidates, array $args = [], int $po
 			// Normalized post title for redundancy check (city already in title → less useful as badge).
 			$title_norm = $post_id ? _mv_normalize_search_text( get_the_title( $post_id ) ) : '';
 
+			// Pre-check: does this post have any geo candidate finer than country?
+			$has_finer_geo = false;
+			foreach ( $candidates as $c ) {
+				if ( ( $c['group'] ?? '' ) === 'geo' && in_array( $c['value'] ?? '', [ 'city', 'region' ], true ) ) {
+					$has_finer_geo = true;
+					break;
+				}
+			}
+
 			foreach ( $candidates as &$c ) {
 				$group = $c['group'] ?? 'other';
 				$level = $c['value'] ?? null;
@@ -425,8 +434,8 @@ function mv_score_badge_candidates( array $candidates, array $args = [], int $po
 				if ( 'geo' !== $group ) {
 					if ( _mv_candidate_in_tokens( $c, $tokens ) ) {
 						$c['priority'] += 40; // Query explicitly names this trip-type/age/etc.
-					} elseif ( 'search_result' === $context && ( $c['grade'] ?? 2 ) < 2 ) {
-						$c['priority'] -= 20; // Grade-1 finder badges are fallback-only; hide unless query matches.
+					} elseif ( ( $c['grade'] ?? 2 ) < 2 ) {
+						$c['priority'] -= 20; // Grade-1: fallback only; hide unless query matches.
 					}
 					continue;
 				}
@@ -437,7 +446,7 @@ function mv_score_badge_candidates( array $candidates, array $args = [], int $po
 				$geo_matched   = _mv_candidate_in_tokens( $c, $tokens );
 
 				if ( 'country' === $query_geo_type && 'country' === $level && $geo_matched ) {
-					$c['priority'] -= 25; // Searching a country: country badge is redundant on every result.
+					$c['priority'] -= 25; // Country search: country badge is redundant on every result.
 				}
 
 				if ( 'region' === $query_geo_type ) {
@@ -454,8 +463,13 @@ function mv_score_badge_candidates( array $candidates, array $args = [], int $po
 					} elseif ( 'region' === $level ) {
 						$c['priority'] += 15;
 					} elseif ( 'country' === $level ) {
-						// City query → country badge is too generic; stronger suppression.
-						$c['priority'] -= 30;
+						if ( $has_finer_geo ) {
+							// A city or region badge exists — country is redundant, suppress it.
+							$c['suppress'] = true;
+						} else {
+							// Country is the only geo data; keep as fallback but downweight.
+							$c['priority'] -= 30;
+						}
 					}
 				}
 			}
@@ -489,6 +503,9 @@ function mv_pick_badges( array $candidates, array $args = [] ): array {
 		$group = $c['group'] ?? 'other';
 		if ( isset( $used_groups[ $group ] ) ) {
 			continue; // No two badges from the same group
+		}
+		if ( ! empty( $c['suppress'] ) ) {
+			continue;
 		}
 		if ( mv_is_forbidden_badge_label( $c['label'] ) ) {
 			continue;
