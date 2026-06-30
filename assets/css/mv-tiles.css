@@ -190,6 +190,12 @@ a.mv-badge.mv-badge--neutral   { color: var(--mv-color-text, #3a3a3a); }
   color: #fff;
 }
 
+.mv-tile--overlay .mv-tile__link:hover,
+.mv-tile--overlay .mv-tile__title a:hover {
+  color: #fff;
+  text-decoration-color: #fff;
+}
+
 .mv-tile__title a:hover,
 .mv-tile__link:hover {
   text-decoration: underline;
@@ -654,6 +660,14 @@ body.search-results .hentry.mv-tile--result {
 .mv-search-header .search-submit:hover {
 	transform: translateY(-2px);
 	box-shadow: var(--mv-tile-shadow-hover, 0 12px 30px rgba(58, 58, 58, 0.12));
+}
+
+.mv-button.mv-button--primary:hover {
+	color: #fff;
+	text-decoration: underline;
+	text-decoration-color: #fff;
+	text-decoration-thickness: 1px;
+	text-underline-offset: .16em;
 }
 
 .mv-button:active,
