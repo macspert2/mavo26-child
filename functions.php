@@ -795,12 +795,8 @@ Made Easy - Statcounter" href="https://statcounter.com/" target="_blank" rel="no
 add_action('wp_footer', 'add_externalcounters'); */
 
 // Tag archive H1: "Tous les articles France" instead of bare term name.
-add_filter( 'get_the_archive_title', static function ( string $title ): string {
-	if ( ! is_tag() ) {
-		return $title;
-	}
-	$term = get_queried_object();
-	$name = $term instanceof \WP_Term ? $term->name : $title;
+// GP calls single_term_title() directly, so we hook single_tag_title, not get_the_archive_title.
+add_filter( 'single_tag_title', static function ( string $name ): string {
 	$lang = function_exists( 'pll_current_language' ) ? (string) pll_current_language( 'slug' ) : 'fr';
 	$prefix = match ( $lang ) {
 		'en'    => 'All articles: ',
