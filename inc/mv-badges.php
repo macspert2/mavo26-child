@@ -89,6 +89,15 @@ function mv_get_tile_badges( int $post_id, array $args = [] ): array {
 	$candidates          = mv_dedupe_badge_candidates( $candidates );
 	$candidates          = mv_score_badge_candidates( $candidates, $args, $post_id );
 	$badges              = mv_pick_badges( $candidates, $args );
+
+	// Recolor finder badges by final priority score (geo keeps 'primary').
+	foreach ( $badges as &$badge ) {
+		if ( ( $badge['source'] ?? '' ) === 'finder' ) {
+			$badge['style'] = _mv_finder_style_by_priority( (int) ( $badge['priority'] ?? 0 ) );
+		}
+	}
+	unset( $badge );
+
 	$cache[ $cache_key ] = $badges;
 
 	return $badges;
@@ -460,8 +469,6 @@ function mv_score_badge_candidates( array $candidates, array $args = [], int $po
 				if ( 'geo' !== $group ) {
 					if ( _mv_candidate_in_tokens( $c, $tokens ) ) {
 						$c['priority'] += 40; // Query explicitly names this trip-type/age/etc.
-					} elseif ( ( $c['grade'] ?? 2 ) < 2 ) {
-						$c['priority'] -= 20; // Grade-1: fallback only; hide unless query matches.
 					}
 					continue;
 				}
@@ -810,6 +817,25 @@ function mv_normalize_geo_label( string $name ): string {
 // ---------------------------------------------------------------------------
 // Internal helpers
 // ---------------------------------------------------------------------------
+
+/**
+ * Map a finder badge's final priority score to a visual style.
+ * Geo badges always use 'primary' and never pass through here.
+ *
+ * Thresholds to tune:
+ *   ≥ 60  → highlight  (strong signal — query match or high-weight tag)
+ *   ≥ 40  → warm       (normal relevance)
+ *   < 40  → neutral    (weak signal, close to the show-cutoff of 30)
+ */
+function _mv_finder_style_by_priority( int $priority ): string {
+	if ( $priority >= 60 ) {
+		return 'highlight';
+	}
+	if ( $priority >= 40 ) {
+		return 'warm';
+	}
+	return 'neutral';
+}
 
 /**
  * Language-aware finder URL for a TVF filter slug.
