@@ -73,6 +73,7 @@ function mv_shortcode_geo_posts( array $atts ): string {
 		}
 		$q     = new WP_Query( $q_args );
 		$posts = $q->posts;
+		wp_reset_postdata();
 	} elseif ( $geo && class_exists( 'TVF_Homepage' ) ) {
 		$posts = TVF_Homepage::get_card_posts( $geo, $lang, $limit );
 	}
@@ -91,6 +92,7 @@ function mv_shortcode_geo_posts( array $atts ): string {
 		}
 		$q     = new WP_Query( $q_args );
 		$posts = $q->posts;
+		wp_reset_postdata();
 	}
 
 	if ( empty( $posts ) ) {
