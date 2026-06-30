@@ -183,6 +183,47 @@ function mv_get_geo_badge_candidates( int $post_id, array $args = [] ): array {
 		return [];
 	}
 
+	// search_result context: expose every geo level so the scorer can pick the
+	// one most relevant to the query (e.g. "Marseille" should show Marseille or
+	// Provence, not France). All other contexts still get a single preferred-level
+	// candidate via the existing logic below.
+	if ( 'search_result' === $context ) {
+		$out = [];
+		foreach ( [ 'city', 'region', 'country' ] as $level ) {
+			if ( ! isset( $by_level[ $level ] ) ) {
+				continue;
+			}
+			$raw_name = $by_level[ $level ]->$name_col ?? null;
+			if ( ! $raw_name ) {
+				continue;
+			}
+			$label       = mv_normalize_geo_label( $raw_name );
+			$term_id_col = 'term_id_' . $lang;
+			$term_id     = (int) ( $by_level[ $level ]->$term_id_col ?? 0 );
+			$geo_url     = '';
+			if ( $term_id ) {
+				$hub_page_id = (int) get_term_meta( $term_id, '_mv_hub_page_id', true );
+				if ( $hub_page_id ) {
+					$geo_url = (string) get_permalink( $hub_page_id );
+				} else {
+					$term_link = get_term_link( $term_id, 'post_tag' );
+					$geo_url   = is_wp_error( $term_link ) ? '' : (string) $term_link;
+				}
+			}
+			$out[] = [
+				'key'      => 'geo_' . $level . '_' . sanitize_title( $label ),
+				'label'    => $label,
+				'group'    => 'geo',
+				'style'    => 'primary',
+				'priority' => match ( $level ) { 'city' => 85, 'region' => 82, default => 78 },
+				'source'   => 'geo',
+				'value'    => $level,
+				'url'      => $geo_url,
+			];
+		}
+		return $out;
+	}
+
 	// Determine preferred geo level.
 	if ( $context === 'overlay' ) {
 		$preferred = 'country';
