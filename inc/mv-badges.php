@@ -913,7 +913,7 @@ function mv_normalize_geo_label( string $name ): string {
  *   < 40  → neutral    (weak signal, close to the show-cutoff of 30)
  */
 function _mv_finder_style_by_priority( int $priority ): string {
-	if ( $priority >= 60 ) {
+	if ( $priority >= 65 ) {
 		return 'highlight';
 	}
 	if ( $priority >= 40 ) {
