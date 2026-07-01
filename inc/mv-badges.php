@@ -627,20 +627,24 @@ function _mv_search_aliases(): array {
 		return $map;
 	}
 	$map = [
-		'roadtrip'   => 'road trip',
-		'citytrip'   => 'city trip',
-		'rando'      => 'nature rando',
-		'randonnee'  => 'nature rando',
-		'nature'     => 'nature rando',
-		'bebe'       => 'avec bebe',
-		'bebes'      => 'avec bebe',
-		'ado'        => 'avec ados',
-		'london'     => 'londres',
-		'londre'     => 'londres',
-		'marseilles' => 'marseille',
-		'cote azur'  => 'provence',
-		'paca'       => 'provence',
-		'uk'         => 'royaume-uni',
+		'roadtrip'    => 'road trip',
+		'citytrip'    => 'city trip',
+		'rando'       => 'nature rando',
+		'randonnee'   => 'nature rando',
+		'nature'      => 'nature rando',
+		'bebe'        => 'avec bebe',
+		'bebes'       => 'avec bebe',
+		'ado'         => 'avec ados',
+		'camping car' => 'campervan',  // "camping-car" normalises to "camping car"
+		'van'         => 'campervan',
+		'vanlife'     => 'campervan',
+		'station ski' => 'ski',
+		'london'      => 'londres',
+		'londre'      => 'londres',
+		'marseilles'  => 'marseille',
+		'cote azur'   => 'provence',
+		'paca'        => 'provence',
+		'uk'          => 'royaume-uni',
 		// 'angleterre' deliberately NOT aliased to 'royaume-uni' —
 		// the geo hierarchy distinguishes England from UK.
 	];
@@ -755,6 +759,7 @@ function mv_get_badge_value_map(): array {
 	return [
 		'trip_type' => [
 			'roadtrip'          => [ 'label' => 'Road trip',         'style' => 'warm',      'priority' => 70 ],
+			'citytrip'          => [ 'label' => 'City trip',         'style' => 'warm',      'priority' => 68 ],
 			'nature_rando'      => [ 'label' => 'Nature & rando',    'style' => 'warm',      'priority' => 65 ],
 			'plage_cote'        => [ 'label' => 'Plage',             'style' => 'warm',      'priority' => 62 ],
 			'culture_histoire'  => [ 'label' => 'Culture',           'style' => 'warm',      'priority' => 60 ],
@@ -763,6 +768,8 @@ function mv_get_badge_value_map(): array {
 			'detente'           => [ 'label' => 'Détente',           'style' => 'warm',      'priority' => 56 ],
 			'velo'              => [ 'label' => 'Vélo',              'style' => 'warm',      'priority' => 54 ],
 			'voile'             => [ 'label' => 'Voile',             'style' => 'warm',      'priority' => 54 ],
+			'campervan'         => [ 'label' => 'Campervan',         'style' => 'warm',      'priority' => 54 ],
+			'ski'               => [ 'label' => 'Ski',               'style' => 'warm',      'priority' => 54 ],
 			'shopping'          => [ 'label' => 'Shopping',          'style' => 'neutral',   'priority' => 50 ],
 		],
 		'age' => [

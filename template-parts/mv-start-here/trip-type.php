@@ -23,10 +23,13 @@ get_template_part( 'template-parts/mv-shared/catalog-tile-grid', null, [
 		'culture_histoire',
 		'velo',
 		'voile',
+		'campervan',
+		'ski',
 		'activites_famille',
 		'detente',
 		'shopping',
 		'roadtrip',
+		'citytrip',
 	],
 	'columns'       => 4,
 ] );
