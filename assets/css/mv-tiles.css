@@ -826,6 +826,62 @@ body.search-results .hentry.mv-tile--result {
   box-shadow: 0 4px 14px rgba(58,58,58,.06);
 }
 
+/* Pingbacks / trackbacks — full-width strip, distinct from real comments */
+.comments-area li.pingback .comment-body,
+.comments-area li.trackback .comment-body {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .65rem 1rem;
+  background: var(--mv-color-bg-soft, #f0eee9);
+  border: 1px solid var(--mv-color-divider, rgba(0,0,0,.08));
+  border-radius: 8px;
+  box-shadow: none;
+  font-size: .84rem;
+  color: var(--mv-color-muted, #555);
+}
+
+/* Link icon before the text */
+.comments-area li.pingback .comment-body::before,
+.comments-area li.trackback .comment-body::before {
+  content: '';
+  display: inline-block;
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71'/%3E%3Cpath d='M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71'/%3E%3Cpath d='M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71'/%3E%3C/svg%3E") center/contain no-repeat;
+  opacity: .6;
+}
+
+/* Hide the raw "Pingback:" / "Trackback:" text prefix injected by WP */
+.comments-area li.pingback .comment-body,
+.comments-area li.trackback .comment-body {
+  font-size: 0; /* collapse all text nodes */
+}
+.comments-area li.pingback .comment-body a,
+.comments-area li.trackback .comment-body a {
+  font-size: .84rem; /* restore only the linked title */
+  color: var(--mv-color-primary, #4e74a5);
+  text-decoration: none;
+}
+.comments-area li.pingback .comment-body a:hover,
+.comments-area li.trackback .comment-body a:hover {
+  text-decoration: underline;
+}
+/* Keep edit-link readable for admins */
+.comments-area li.pingback .comment-body .edit-link,
+.comments-area li.trackback .comment-body .edit-link {
+  font-size: .78rem;
+  margin-left: auto;
+}
+.comments-area li.pingback .comment-body .edit-link a,
+.comments-area li.trackback .comment-body .edit-link a {
+  color: var(--mv-color-muted, #555);
+  font-size: .78rem;
+}
+
 /* Comments section title */
 .comments-area .comments-title {
   font-weight: 600;
