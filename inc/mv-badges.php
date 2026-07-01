@@ -36,16 +36,21 @@ function mv_tile_badges( int $post_id, array $args = [] ): string {
  * @return array[] Badge arrays with keys: key, label, group, style, priority, source.
  */
 function mv_get_tile_badges( int $post_id, array $args = [] ): array {
-	static $cache = [];
+	// Two caches: candidate_cache avoids re-running DB queries when seen_labels
+	// varies across a grid loop; result_cache is the fast path when no grid context.
+	static $result_cache    = [];
+	static $candidate_cache = [];
 
 	$defaults = [
-		'context'        => 'default',
-		'limit'          => 2,
-		'current_geo'    => null,
-		'active_filters' => [],
-		'query'          => '',
-		'allow_groups'   => [ 'geo', 'trip_type', 'age', 'season', 'duration', 'budget', 'editorial' ],
-		'link_badges'    => false, // render badges as <a> links (only when tile is a <div>, not <a>)
+		'context'          => 'default',
+		'limit'            => 2,
+		'current_geo'      => null,
+		'active_filters'   => [],
+		'query'            => '',
+		'allow_groups'     => [ 'geo', 'trip_type', 'age', 'season', 'duration', 'budget', 'editorial' ],
+		'link_badges'      => false,  // render badges as <a> links (only when tile is a <div>, not <a>)
+		'seen_labels'      => [],     // grid-level deduplication: [ 'france' => 2, 'plage' => 1, … ]
+		'grid_saturation'  => 2,      // suppress a label once it has appeared this many times in the grid
 	];
 
 	$args    = wp_parse_args( $args, $defaults );
@@ -72,23 +77,32 @@ function mv_get_tile_badges( int $post_id, array $args = [] ): array {
 		return array_slice( $manual, 0, absint( $args['limit'] ) );
 	}
 
-	// link_badges only affects rendering, not badge selection — exclude from cache key.
-	$cache_args = $args;
-	unset( $cache_args['link_badges'] );
-	$cache_key = md5( $post_id . '|' . wp_json_encode( $cache_args ) );
-	if ( isset( $cache[ $cache_key ] ) ) {
-		return $cache[ $cache_key ];
+	// Stable key: excludes args that don't affect candidate scoring.
+	$stable_args = $args;
+	unset( $stable_args['link_badges'], $stable_args['seen_labels'], $stable_args['grid_saturation'] );
+	$stable_key = md5( $post_id . '|' . wp_json_encode( $stable_args ) );
+
+	$seen_labels = (array) $args['seen_labels'];
+
+	// Fast path: no grid context → use full result cache.
+	if ( empty( $seen_labels ) && isset( $result_cache[ $stable_key ] ) ) {
+		return $result_cache[ $stable_key ];
 	}
 
-	$candidates = array_merge(
-		mv_get_geo_badge_candidates( $post_id, $args ),
-		mv_get_finder_badge_candidates( $post_id, $args )
-	);
+	// Scored candidates are cached independently to avoid repeated DB queries
+	// across a grid loop where seen_labels grows on every iteration.
+	if ( ! isset( $candidate_cache[ $stable_key ] ) ) {
+		$candidates = array_merge(
+			mv_get_geo_badge_candidates( $post_id, $args ),
+			mv_get_finder_badge_candidates( $post_id, $args )
+		);
+		$candidates                       = mv_filter_badge_candidates( $candidates, $args );
+		$candidates                       = mv_dedupe_badge_candidates( $candidates );
+		$candidates                       = mv_score_badge_candidates( $candidates, $args, $post_id );
+		$candidate_cache[ $stable_key ]   = $candidates;
+	}
 
-	$candidates          = mv_filter_badge_candidates( $candidates, $args );
-	$candidates          = mv_dedupe_badge_candidates( $candidates );
-	$candidates          = mv_score_badge_candidates( $candidates, $args, $post_id );
-	$badges              = mv_pick_badges( $candidates, $args );
+	$badges = mv_pick_badges( $candidate_cache[ $stable_key ], $args );
 
 	// Recolor finder badges by final priority score (geo keeps 'primary').
 	foreach ( $badges as &$badge ) {
@@ -98,9 +112,25 @@ function mv_get_tile_badges( int $post_id, array $args = [] ): array {
 	}
 	unset( $badge );
 
-	$cache[ $cache_key ] = $badges;
+	// Only populate result_cache for non-grid calls (stable output).
+	if ( empty( $seen_labels ) ) {
+		$result_cache[ $stable_key ] = $badges;
+	}
 
 	return $badges;
+}
+
+/**
+ * Accumulate resolved badge labels into a seen_labels map for grid deduplication.
+ * Call after mv_get_tile_badges(), pass $seen_labels by reference.
+ */
+function mv_badges_update_seen( array &$seen_labels, array $badges ): void {
+	foreach ( $badges as $b ) {
+		$label = mb_strtolower( (string) ( $b['label'] ?? '' ) );
+		if ( $label !== '' ) {
+			$seen_labels[ $label ] = ( $seen_labels[ $label ] ?? 0 ) + 1;
+		}
+	}
 }
 
 /**
@@ -514,7 +544,10 @@ function mv_score_badge_candidates( array $candidates, array $args = [], int $po
 }
 
 function mv_pick_badges( array $candidates, array $args = [] ): array {
-	$limit = max( 0, absint( $args['limit'] ?? 2 ) );
+	$limit           = max( 0, absint( $args['limit'] ?? 2 ) );
+	$seen_labels     = (array) ( $args['seen_labels'] ?? [] );
+	$grid_saturation = absint( $args['grid_saturation'] ?? 2 );
+
 	if ( $limit < 1 || empty( $candidates ) ) {
 		return [];
 	}
@@ -546,6 +579,13 @@ function mv_pick_badges( array $candidates, array $args = [] ): array {
 		// Don't force a weak second badge — one strong badge is better than two weak ones.
 		if ( ! empty( $selected ) && ( (int) ( $c['priority'] ?? 0 ) ) < 30 ) {
 			continue;
+		}
+		// Grid deduplication: skip if this label already saturated the grid.
+		if ( $grid_saturation > 0 && ! empty( $seen_labels ) ) {
+			$label_lower = mb_strtolower( $c['label'] );
+			if ( ( $seen_labels[ $label_lower ] ?? 0 ) >= $grid_saturation ) {
+				continue;
+			}
 		}
 		$selected[]            = $c;
 		$used_groups[ $group ] = true;
