@@ -855,14 +855,9 @@ body.search-results .hentry.mv-tile--result {
   opacity: .6;
 }
 
-/* Hide the raw "Pingback:" / "Trackback:" text prefix injected by WP */
-.comments-area li.pingback .comment-body,
-.comments-area li.trackback .comment-body {
-  font-size: 0; /* collapse all text nodes */
-}
+/* Links inside pingback body */
 .comments-area li.pingback .comment-body a,
 .comments-area li.trackback .comment-body a {
-  font-size: .84rem; /* restore only the linked title */
   color: var(--mv-color-primary, #4e74a5);
   text-decoration: none;
 }
@@ -873,8 +868,8 @@ body.search-results .hentry.mv-tile--result {
 /* Keep edit-link readable for admins */
 .comments-area li.pingback .comment-body .edit-link,
 .comments-area li.trackback .comment-body .edit-link {
-  font-size: .78rem;
   margin-left: auto;
+  flex-shrink: 0;
 }
 .comments-area li.pingback .comment-body .edit-link a,
 .comments-area li.trackback .comment-body .edit-link a {

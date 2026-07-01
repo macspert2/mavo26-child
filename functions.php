@@ -794,6 +794,15 @@ Made Easy - Statcounter" href="https://statcounter.com/" target="_blank" rel="no
 }
 add_action('wp_footer', 'add_externalcounters'); */
 
+// Strip "Pingback: " / "Trackback: " prefix from pingback/trackback comment text.
+// WP injects this prefix into comment_content; the chip layout + link icon replace it visually.
+add_filter( 'comment_text', static function ( string $text, ?\WP_Comment $comment = null ): string {
+	if ( $comment && in_array( $comment->comment_type, [ 'pingback', 'trackback' ], true ) ) {
+		$text = preg_replace( '/^\s*(Ping|Track)back:\s*/iu', '', $text );
+	}
+	return $text;
+}, 10, 2 );
+
 // Tag archive H1: "Tous les articles France" instead of bare term name.
 // GP calls single_term_title() directly, so we hook single_tag_title, not get_the_archive_title.
 add_filter( 'single_tag_title', static function ( string $name ): string {
