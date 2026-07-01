@@ -560,9 +560,9 @@ function mv_pick_badges( array $candidates, array $args = [] ): array {
 		return ( (int) ( $b['priority'] ?? 0 ) ) <=> ( (int) ( $a['priority'] ?? 0 ) );
 	} );
 
-	$selected           = [];
-	$used_groups        = [];
-	$best_skipped_score = []; // highest priority skipped due to saturation, keyed by slot index
+	$selected   = [];
+	$used_groups = [];
+	$cycle_pool  = []; // saturated candidates, ordered by priority, for cycling fallback
 
 	foreach ( $candidates as $c ) {
 		if ( count( $selected ) >= $limit ) {
@@ -586,32 +586,47 @@ function mv_pick_badges( array $candidates, array $args = [] ): array {
 			continue;
 		}
 
-		// Grid deduplication with quality gate.
+		// Grid deduplication with quality gate + cycle fallback.
 		if ( $grid_saturation > 0 && ! empty( $seen_labels ) ) {
 			$label_lower = mb_strtolower( $c['label'] );
-			$slot        = count( $selected );
 
 			if ( ( $seen_labels[ $label_lower ] ?? 0 ) >= $grid_saturation ) {
-				// Record the best priority skipped for this slot (first skip wins).
-				if ( ! isset( $best_skipped_score[ $slot ] ) ) {
-					$best_skipped_score[ $slot ] = (int) ( $c['priority'] ?? 0 );
-				}
+				$cycle_pool[] = $c; // save for cycling pass below
 				continue;
 			}
 
-			// Candidate is a potential substitute — enforce quality gate.
-			if ( isset( $best_skipped_score[ $slot ] ) ) {
-				$priority = (int) ( $c['priority'] ?? 0 );
-				$gap      = $best_skipped_score[ $slot ] - $priority;
-				if ( $gap > $max_swap_gap || $priority < $min_sub_score ) {
-					// Substitute too weak; candidates only get weaker from here — stop.
-					break;
+			// Unsaturated candidate — quality gate: only substitute if it's close
+			// enough to the best saturated badge. If too weak, skip it (continue) and
+			// let the cycling pass fill the slot with the saturated badge instead.
+			if ( ! empty( $cycle_pool ) ) {
+				$priority     = (int) ( $c['priority'] ?? 0 );
+				$best_skipped = (int) ( $cycle_pool[0]['priority'] ?? 0 ); // first = highest (sorted)
+				if ( $best_skipped - $priority > $max_swap_gap || $priority < $min_sub_score ) {
+					continue; // Too weak to substitute — let cycle_pool handle this slot.
 				}
 			}
 		}
 
 		$selected[]            = $c;
 		$used_groups[ $group ] = true;
+	}
+
+	// Cycling pass: fill any remaining slots with saturated badges (start over from top).
+	if ( count( $selected ) < $limit && ! empty( $cycle_pool ) ) {
+		foreach ( $cycle_pool as $c ) {
+			if ( count( $selected ) >= $limit ) {
+				break;
+			}
+			$group = $c['group'] ?? 'other';
+			if ( isset( $used_groups[ $group ] ) ) {
+				continue;
+			}
+			if ( ! empty( $selected ) && ( (int) ( $c['priority'] ?? 0 ) ) < 30 ) {
+				continue;
+			}
+			$selected[]            = $c;
+			$used_groups[ $group ] = true;
+		}
 	}
 
 	return $selected;
