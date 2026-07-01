@@ -51,6 +51,8 @@ function mv_get_tile_badges( int $post_id, array $args = [] ): array {
 		'link_badges'      => false,  // render badges as <a> links (only when tile is a <div>, not <a>)
 		'seen_labels'      => [],     // grid-level deduplication: [ 'france' => 2, 'plage' => 1, … ]
 		'grid_saturation'  => 2,      // suppress a label once it has appeared this many times in the grid
+		'max_swap_gap'     => 40,     // max priority drop allowed when substituting a saturated badge
+		'min_sub_score'    => 38,     // absolute floor: never substitute below this priority
 	];
 
 	$args    = wp_parse_args( $args, $defaults );
@@ -547,6 +549,8 @@ function mv_pick_badges( array $candidates, array $args = [] ): array {
 	$limit           = max( 0, absint( $args['limit'] ?? 2 ) );
 	$seen_labels     = (array) ( $args['seen_labels'] ?? [] );
 	$grid_saturation = absint( $args['grid_saturation'] ?? 2 );
+	$max_swap_gap    = absint( $args['max_swap_gap'] ?? 40 );
+	$min_sub_score   = absint( $args['min_sub_score'] ?? 38 );
 
 	if ( $limit < 1 || empty( $candidates ) ) {
 		return [];
@@ -556,8 +560,9 @@ function mv_pick_badges( array $candidates, array $args = [] ): array {
 		return ( (int) ( $b['priority'] ?? 0 ) ) <=> ( (int) ( $a['priority'] ?? 0 ) );
 	} );
 
-	$selected    = [];
-	$used_groups = [];
+	$selected           = [];
+	$used_groups        = [];
+	$best_skipped_score = []; // highest priority skipped due to saturation, keyed by slot index
 
 	foreach ( $candidates as $c ) {
 		if ( count( $selected ) >= $limit ) {
@@ -580,13 +585,31 @@ function mv_pick_badges( array $candidates, array $args = [] ): array {
 		if ( ! empty( $selected ) && ( (int) ( $c['priority'] ?? 0 ) ) < 30 ) {
 			continue;
 		}
-		// Grid deduplication: skip if this label already saturated the grid.
+
+		// Grid deduplication with quality gate.
 		if ( $grid_saturation > 0 && ! empty( $seen_labels ) ) {
 			$label_lower = mb_strtolower( $c['label'] );
+			$slot        = count( $selected );
+
 			if ( ( $seen_labels[ $label_lower ] ?? 0 ) >= $grid_saturation ) {
+				// Record the best priority skipped for this slot (first skip wins).
+				if ( ! isset( $best_skipped_score[ $slot ] ) ) {
+					$best_skipped_score[ $slot ] = (int) ( $c['priority'] ?? 0 );
+				}
 				continue;
 			}
+
+			// Candidate is a potential substitute — enforce quality gate.
+			if ( isset( $best_skipped_score[ $slot ] ) ) {
+				$priority = (int) ( $c['priority'] ?? 0 );
+				$gap      = $best_skipped_score[ $slot ] - $priority;
+				if ( $gap > $max_swap_gap || $priority < $min_sub_score ) {
+					// Substitute too weak; candidates only get weaker from here — stop.
+					break;
+				}
+			}
 		}
+
 		$selected[]            = $c;
 		$used_groups[ $group ] = true;
 	}
