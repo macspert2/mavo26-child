@@ -95,6 +95,8 @@ function mv_shortcode_geo_posts( array $atts ): string {
 		wp_reset_postdata();
 	}
 
+	$posts = array_values( array_filter( $posts, static fn( $p ) => 'post' === get_post_type( $p ) ) );
+
 	if ( empty( $posts ) ) {
 		return '';
 	}
