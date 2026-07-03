@@ -106,10 +106,12 @@ function mv_get_tile_badges( int $post_id, array $args = [] ): array {
 
 	$badges = mv_pick_badges( $candidate_cache[ $stable_key ], $args );
 
-	// Recolor finder badges by final priority score (geo keeps 'primary').
+	// Recolor finder badges by raw TVF weight: grade 2 → highlight, grade 1 → warm.
+	// Geo badges keep 'primary'. To revert to priority-based coloring, replace the
+	// assignment below with: _mv_finder_style_by_priority( (int) ( $badge['priority'] ?? 0 ) )
 	foreach ( $badges as &$badge ) {
 		if ( ( $badge['source'] ?? '' ) === 'finder' ) {
-			$badge['style'] = _mv_finder_style_by_priority( (int) ( $badge['priority'] ?? 0 ) );
+			$badge['style'] = 2 === (int) ( $badge['grade'] ?? 0 ) ? 'highlight' : 'warm';
 		}
 	}
 	unset( $badge );
