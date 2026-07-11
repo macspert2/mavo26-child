@@ -14,12 +14,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $destinations = [
-	[
+/*	[
 		'title'       => __( 'France', 'mavo' ),
 		'description' => __( 'Week-ends, vacances, nature, plages, culture, vélo, van-life sans partir trop loin.', 'mavo' ),
 		'url'         => 'https://www.mamanvoyage.com/france/',
 		'image'       => 'https://www.mamanvoyage.com/wp-content/uploads/2018/01/IMG_0745.jpg',
-	],
+	], */
 	[
 		'title'       => __( 'Angleterre', 'mavo' ),
 		'description' => __( "Londres, sud de l’Angleterre et autres comtés en famille.", 'mavo' ),
@@ -38,6 +38,12 @@ $destinations = [
 		'url'         => 'https://www.mamanvoyage.com/espagne/',
 		'image'       => 'https://www.mamanvoyage.com/wp-content/uploads/2019/10/P9031799.jpeg',
 	],
+        [
+                'title'       => __( 'Grèce', 'mavo' ),
+                'description' => __( 'Les Îles (Cyclades, Ioniennes, Crète), Péloponnèse et nord de la Grèce', 'mavo' ),
+                'url'         => 'https://www.mamanvoyage.com/tag/grece/',
+                'image'       => 'https://www.mamanvoyage.com/wp-content/uploads/2023/03/sifnos.jpeg',
+        ],
 ];
 
 $items = [];
