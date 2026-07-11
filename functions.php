@@ -121,6 +121,12 @@ add_filter('tiny_mce_before_init', function ($init) {
     return $init;
 } );
 
+function allow_svg_uploads( $mimes ) {
+    $mimes['svg'] = 'image/svg+xml';
+    return $mimes;
+}
+add_filter( 'upload_mimes', 'allow_svg_uploads' );
+
 /**
  * Page-specific component CSS: homepage variants, explorer, and search results.
  * Not loaded on post/archive pages where none of these components appear.
