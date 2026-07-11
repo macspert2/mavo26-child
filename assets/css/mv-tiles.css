@@ -1084,6 +1084,7 @@ body.search-results .hentry.mv-tile--result {
   color: #3a3a3a;
   font-size: .96rem;
   line-height: 1.55;
+  flex-grow: 1;
 }
 
 .mv-decision-option__button {
