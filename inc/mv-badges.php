@@ -351,11 +351,22 @@ function mv_get_finder_badge_candidates( int $post_id, array $args = [] ): array
 		return [];
 	}
 
-	$lang    = _mv_badge_lang( $post_id );
+	$lang    = _mv_badge_lang( $post_id ); // post language — used for TVF_Store weight lookup
 	$weights = TVF_Store::get_weights( $post_id, $lang );
 	if ( empty( $weights ) ) {
 		return [];
 	}
+
+	// Badge labels and links use the current page language, not the post language.
+	// Visitors reading in English should see English badge text even when the
+	// underlying post is a French article.
+	$display_lang = function_exists( 'pll_current_language' )
+		? (string) pll_current_language()
+		: $lang;
+	if ( ! in_array( $display_lang, [ 'fr', 'en', 'de' ], true ) ) {
+		$display_lang = $lang;
+	}
+	$i18n_labels = _mv_badge_labels( $display_lang );
 
 	$map            = mv_get_badge_value_map();
 	$context        = $args['context'] ?? 'default';
@@ -381,14 +392,14 @@ function mv_get_finder_badge_candidates( int $post_id, array $args = [] ): array
 
 			$candidates[] = [
 				'key'      => $group . '_' . $slug,
-				'label'    => $config['label'],
+				'label'    => $i18n_labels[ $slug ] ?? $config['label'],
 				'group'    => $group,
 				'style'    => $config['style'],
 				'priority' => $priority,
 				'source'   => 'finder',
 				'value'    => $slug,
 				'grade'    => $weight,
-				'url'      => _mv_finder_url( $lang, $slug ),
+				'url'      => _mv_finder_url( $display_lang, $slug ),
 			];
 		}
 	}
@@ -872,6 +883,67 @@ function mv_get_badge_value_map(): array {
 			'automne'   => [ 'label' => 'Automne',    'style' => 'neutral', 'priority' => 44 ],
 		],
 	];
+}
+
+/**
+ * Finder badge labels by language. Returns a flat slug→label map for EN and DE.
+ * FR is intentionally absent — callers fall through to the French label already
+ * stored in mv_get_badge_value_map() to avoid duplication.
+ */
+function _mv_badge_labels( string $lang ): array {
+	static $all = [
+		'en' => [
+			'roadtrip'          => 'Road trip',
+			'citytrip'          => 'City trip',
+			'nature_rando'      => 'Nature & hiking',
+			'plage_cote'        => 'Beach',
+			'culture_histoire'  => 'Culture',
+			'gastronomie'       => 'Food & drink',
+			'activites_famille' => 'Family activities',
+			'detente'           => 'Relaxation',
+			'velo'              => 'Cycling',
+			'voile'             => 'Sailing',
+			'campervan'         => 'Campervan',
+			'ski'               => 'Ski',
+			'shopping'          => 'Shopping',
+			'bebes'             => 'With baby',
+			'ados'              => 'With teens',
+			'2_3_jours'         => '2–4 days',
+			'semaine'           => '1 week',
+			'plus'              => '1+ weeks',
+			'economique'        => 'Budget',
+			'hiver'             => 'Winter',
+			'ete'               => 'Summer',
+			'printemps'         => 'Spring',
+			'automne'           => 'Autumn',
+		],
+		'de' => [
+			'roadtrip'          => 'Road Trip',
+			'citytrip'          => 'City Trip',
+			'nature_rando'      => 'Natur & Wandern',
+			'plage_cote'        => 'Strand',
+			'culture_histoire'  => 'Kultur',
+			'gastronomie'       => 'Gastronomie',
+			'activites_famille' => 'Familienaktivitäten',
+			'detente'           => 'Entspannung',
+			'velo'              => 'Radfahren',
+			'voile'             => 'Segeln',
+			'campervan'         => 'Campervan',
+			'ski'               => 'Ski',
+			'shopping'          => 'Shopping',
+			'bebes'             => 'Mit Baby',
+			'ados'              => 'Mit Teenagern',
+			'2_3_jours'         => '2–4 Tage',
+			'semaine'           => '1 Woche',
+			'plus'              => '1+ Wochen',
+			'economique'        => 'Kleines Budget',
+			'hiver'             => 'Winter',
+			'ete'               => 'Sommer',
+			'printemps'         => 'Frühling',
+			'automne'           => 'Herbst',
+		],
+	];
+	return $all[ $lang ] ?? [];
 }
 
 function mv_forbidden_badge_labels(): array {
