@@ -102,7 +102,7 @@ add_filter('tiny_mce_before_init', function ($init) {
     $style_formats = array(
         // Each array child is a format with it's own settings - add as many as you want
         array(
-            'title'    => 'purple h2', 
+            'title'    => 'purple h2',
             'block' => 'h2', // Element to target in editor
             'classes'  => 'mv-highlight' // Class name used for CSS
         ),
@@ -262,7 +262,7 @@ function tu_custom_copyright() {
 }
 add_filter( 'generate_font_display', function() {
     // You can change 'swap' to 'optional' if preferred
-    return 'swap'; 
+    return 'swap';
 } );
 function wpjp_dequeue_script() {
     wp_dequeue_script( 'wp-polyfill' );
@@ -601,10 +601,14 @@ function jetpackme_exclude_posts_subscriptions( $categories ) {
 add_filter( 'jetpack_subscriptions_exclude_these_categories', 'jetpackme_exclude_posts_subscriptions' );
 
 function exclude_category($query) {
-    if ( $query->is_feed ) {
-        $query->set('cat', '-8467');
+    if ( $query->is_feed() ) {
+        $feed = $query->get('feed');
+        // Only the real RSS/Atom feeds — NOT the plugin's sitemap feeds
+        if ( in_array( $feed, array('feed','rdf','rss','rss2','atom'), true ) ) {
+            $query->set('cat', '-8467');
+        }
     }
-return $query;
+    return $query;
 }
 add_filter('pre_get_posts', 'exclude_category');
 
@@ -616,7 +620,7 @@ add_filter('pre_get_posts', 'exclude_category');
  */
 function s9_remove_post_custom_fields_metabox() {
      foreach ( get_post_types( '', 'names' ) as $post_type ) {
-         remove_meta_box( 'postcustom' , $post_type , 'normal' );   
+         remove_meta_box( 'postcustom' , $post_type , 'normal' );
      }
 }
 add_action( 'admin_menu' , 's9_remove_post_custom_fields_metabox' );
@@ -636,11 +640,11 @@ add_shortcode('menu', 'print_menu_shortcode');
 function skip_lazy_class_first_featured_image($attr) {
   global $wp_query;
   if ( 0 == $wp_query->current_post ) {
-      $attr['class'] .= ' skip-lazy';  
+      $attr['class'] .= ' skip-lazy';
   }
   return $attr;
 }
-add_filter('wp_get_attachment_image_attributes', 'skip_lazy_class_first_featured_image' ); 
+add_filter('wp_get_attachment_image_attributes', 'skip_lazy_class_first_featured_image' );
 
 function bl_shortcode(){
 $sco ='';
@@ -653,7 +657,7 @@ while ($the_query->have_posts())
     $_post_id = get_the_id();
     $pdate = get_the_date();
     $_post_content = get_post_field( 'post_content', $_post_id);
-    $regex = '/https?\:\/\/[^\" ]+/i'; 
+    $regex = '/https?\:\/\/[^\" ]+/i';
 /*    $regex = '/<a?.+?>/i'; */
     preg_match_all($regex, $_post_content, $matches);
     $urls = $matches[0];
@@ -741,16 +745,66 @@ add_action( 'add_meta_boxes', [ 'mavo_maj_box', 'add' ] );
 add_action( 'save_post', [ 'mavo_maj_box', 'save' ] );
 
 function bpul_script() {
-	global $wp_query;
-	$post_id = $wp_query->get_queried_object_id();
-	if(!($post_id==0)) {
-		$bpul = htmlspecialchars_decode(get_post_meta( $post_id, '_mavo_bpul_key', true ));
-		if (!is_user_logged_in() && !($bpul=="")) {
-			wp_enqueue_script('bpul_script', get_stylesheet_directory_uri() .'/js/bpul.js', array(), '1.0', true);
-			$script  = 'const BPU_URL = atob("'.base64_encode($bpul).'"); ';
-			wp_add_inline_script('bpul_script', $script, 'before'); 
-		} 
-	}
+    global $wp_query;
+    $post_id = $wp_query->get_queried_object_id();
+    if ( ! $post_id || is_user_logged_in() ) {
+        return;
+    }
+
+if ( has_category( [ 'expatriation-angleterre', 'accessoires-voyage' ], $post_id ) ) {
+    return;
+}
+
+// Skip if the post isn't at least 60 hours (2.5 days) old.
+    $published = get_post_timestamp( $post_id ); // GMT-based, avoids timezone drift
+    if ( ! $published || ( time() - $published ) < 60 * HOUR_IN_SECONDS ) {
+        return;
+    }
+
+    $lang = function_exists( 'pll_current_language' ) ? pll_current_language() : 'fr';
+
+    if ( 'fr' === $lang ) {
+    wp_enqueue_script( 'stay22', 'https://scripts.stay22.com/letmeallez.js', [], null, true );
+    wp_add_inline_script(
+        'stay22',
+        'window.Stay22 = window.Stay22 || {}; window.Stay22.params = { lmaID: "6a5a38d601f5c92f4b373772" };',
+        'before'
+    );
+    } else {
+        // EN/DE: only load when a $bpul URL is set for this po
+        $bpul = htmlspecialchars_decode( get_post_meta( $post_id, '_mavo_bpul_key', true ) );
+        if ( $bpul === '' ) {
+            return;
+        }
+/**
+ * Add Booking affiliate label dynamically.
+ *
+ * Label format:
+ *   sanitized post slug + "_o"
+ *
+ * Example:
+ *   wo-uebernachten-in-london-7-ideen-fuer-stadtviertel
+ * becomes:
+ *   wouebernachteninlondon7ideenfuerstadtviertel_o
+ */
+$post_slug = get_post_field( 'post_name', $post_id );
+$label_base = strtolower( preg_replace( '/[^A-Za-z0-9]/', '', $post_slug ) );
+$bpul_label = $label_base . '_o';
+
+if (
+    strpos( $bpul, 'aid=903703' ) !== false
+    && strpos( $bpul, 'label=' ) === false
+) {
+    $bpul = str_replace(
+        'aid=903703',
+        'aid=903703&label=' . rawurlencode( $bpul_label ),
+        $bpul
+    );
+}
+        wp_enqueue_script( 'bpul_script', get_stylesheet_directory_uri() . '/js/bpul.js', [], '1.0', true );
+        $script = 'const BPU_URL = atob("' . base64_encode( $bpul).'"); ';
+        wp_add_inline_script( 'bpul_script', $script, 'before' );
+    }
 }
 add_action('wp_enqueue_scripts', 'bpul_script');
 
