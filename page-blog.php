@@ -115,12 +115,19 @@ if ( $paged > 1 ) {
 	// A page number past the end (/blog/page/9999/) still returns 200 with
 	// an empty loop rather than a 404. Self-canonicalising those would turn
 	// an unbounded range of near-empty pages into indexable duplicates, so
-	// probe first and noindex instead. Cheapest possible probe: one ID, no
-	// COUNT — this only runs on page 2+, never on the common page-1 request.
+	// probe first and noindex instead. This only runs on page 2+, never on
+	// the common page-1 request.
+	//
+	// The probe must keep $query_args' own posts_per_page: LIMIT/OFFSET is
+	// derived from paged * posts_per_page, so lowering it here would ask
+	// about a different offset than the page actually renders (with
+	// posts_per_page=1, /page/9/ probes offset 8 rather than 80, and every
+	// real boundary reads as in-range). Only the two things that don't
+	// affect *which* rows come back are trimmed: IDs instead of full post
+	// objects, and no SQL_CALC_FOUND_ROWS.
 	$mv_probe = new WP_Query( array_merge( $query_args, [
-		'posts_per_page' => 1,
-		'fields'         => 'ids',
-		'no_found_rows'  => true,
+		'fields'        => 'ids',
+		'no_found_rows' => true,
 	] ) );
 
 	if ( ! $mv_probe->have_posts() ) {
