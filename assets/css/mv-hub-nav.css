@@ -1,0 +1,111 @@
+/**
+ * Hub navigation strip on single posts — see inc/mv-hub-nav.php.
+ * Every rule is scoped to .mv-hub-nav; no parent GeneratePress selector is touched.
+ */
+
+.mv-hub-nav {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .75rem 1rem;
+    margin-block: 1.5rem;
+    padding: 1rem;
+    background: #faf7f1;
+    border: 1px solid #e5ddd2;
+    border-radius: .75rem;
+    color: #453f38;
+}
+
+.mv-hub-nav__label {
+    font-size: .8125rem;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.mv-hub-nav .mv-hub-nav__links {
+    display: flex;
+    flex: 1 1 18rem;
+    flex-wrap: wrap;
+    gap: .5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+}
+
+.mv-hub-nav__item {
+    margin: 0;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.mv-hub-nav .mv-hub-nav__hub {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    max-width: 100%;
+    box-sizing: border-box;
+    min-height: 2.75rem;
+    padding: .5rem .75rem;
+    border: 1px solid #dfd7cd;
+    border-inline-start: 3px solid var(--mv-hub-accent);
+    border-radius: .5rem;
+    background: #fffdf9;
+    color: #453f38;
+    line-height: 1.4;
+    text-decoration: none;
+}
+
+.mv-hub-nav__hub--geo { --mv-hub-accent: #4e74a5; }
+.mv-hub-nav__hub--theme { --mv-hub-accent: #886353; }
+
+.mv-hub-nav__icon {
+    display: inline-flex;
+    flex: 0 0 1.125rem;
+    color: var(--mv-hub-accent);
+}
+
+.mv-hub-nav__icon svg {
+    width: 1.125rem;
+    height: 1.125rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.mv-hub-nav__text {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.mv-hub-nav .mv-hub-nav__hub:hover,
+.mv-hub-nav .mv-hub-nav__hub:focus {
+    color: #453f38;
+    background: #f4efe6;
+    text-decoration: underline;
+}
+
+.mv-hub-nav .mv-hub-nav__hub:focus-visible {
+    outline: 2px solid #453f38;
+    outline-offset: 3px;
+    text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+    .mv-hub-nav {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .mv-hub-nav .mv-hub-nav__links {
+        flex: 0 1 auto;
+        flex-direction: column;
+    }
+
+    .mv-hub-nav .mv-hub-nav__hub {
+        display: flex;
+        width: 100%;
+    }
+}
