@@ -744,6 +744,11 @@ abstract class mavo_maj_box {
 add_action( 'add_meta_boxes', [ 'mavo_maj_box', 'add' ] );
 add_action( 'save_post', [ 'mavo_maj_box', 'save' ] );
 
+// FR affiliate script switch: false = Stay22 letmeallez, true = bpul (same rules as EN/DE).
+if ( ! defined( 'MAVO_FR_USE_BPUL' ) ) {
+    define( 'MAVO_FR_USE_BPUL', false );
+}
+
 function bpul_script() {
     global $wp_query;
     $post_id = $wp_query->get_queried_object_id();
@@ -763,7 +768,8 @@ if ( has_category( [ 'expatriation-angleterre', 'accessoires-voyage' ], $post_id
 
     $lang = function_exists( 'pll_current_language' ) ? pll_current_language() : 'fr';
 
-    if ( 'fr' === $lang ) {
+    // FR switch: false = stay22 letmeallez (current), true = bpul (same conditions as EN/DE).
+    if ( 'fr' === $lang && ! MAVO_FR_USE_BPUL ) {
     wp_enqueue_script( 'stay22', 'https://scripts.stay22.com/letmeallez.js', [], null, true );
     wp_add_inline_script(
         'stay22',
@@ -771,7 +777,7 @@ if ( has_category( [ 'expatriation-angleterre', 'accessoires-voyage' ], $post_id
         'before'
     );
     } else {
-        // EN/DE: only load when a $bpul URL is set for this po
+        // EN/DE (and FR when MAVO_FR_USE_BPUL is true): only load when a $bpul URL is set for this post
         $bpul = htmlspecialchars_decode( get_post_meta( $post_id, '_mavo_bpul_key', true ) );
         if ( $bpul === '' ) {
             return;
