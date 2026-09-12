@@ -807,7 +807,7 @@ if (
         $bpul
     );
 }
-        wp_enqueue_script( 'bpul_script', get_stylesheet_directory_uri() . '/js/bpul.js', [], '1.0', true );
+        wp_enqueue_script( 'bpul_script', get_stylesheet_directory_uri() . '/js/bpul4.js', [], '1.0', true );
         $script = 'const BPU_URL = atob("' . base64_encode( $bpul).'"); ';
         wp_add_inline_script( 'bpul_script', $script, 'before' );
     }
