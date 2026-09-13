@@ -150,6 +150,39 @@ add_action( 'wp_enqueue_scripts', function () {
 } );
 
 /**
+ * Site CSS, moved out of the Customizer (assets/css/mv-custom.css).
+ *
+ * Enqueued at priority 999 so it prints after every other stylesheet, because
+ * the Customizer printed its CSS at wp_head 101 — after every enqueued
+ * stylesheet on the page. These rules only work because they come last, so the
+ * move has to preserve that or the site changes.
+ *
+ * Two consequences worth knowing:
+ *   - A plugin that enqueues at a priority above 999 would now come after this
+ *     file, where it used to come before the Customizer. None currently does.
+ *   - Once the global rules in that file are scoped properly (the `a:hover`
+ *     one especially), loading last stops mattering and this can go back to a
+ *     normal priority.
+ */
+add_action( 'wp_enqueue_scripts', function () {
+    $path = get_stylesheet_directory() . '/assets/css/mv-custom.css';
+
+    if ( ! file_exists( $path ) ) {
+        return;
+    }
+
+    // No dependency on purpose: WordPress silently drops a stylesheet whose
+    // dependency is not registered, and priority 999 already appends this to
+    // the end of the queue, which is where it prints from.
+    wp_enqueue_style(
+        'mv-custom',
+        get_stylesheet_directory_uri() . '/assets/css/mv-custom.css',
+        [],
+        filemtime( $path )
+    );
+}, 999 );
+
+/**
  * Search results: enable the sidebar (generate_sidebar_layout filter,
  * see inc/theme-functions.php in GeneratePress), suppress the generic
  * fallback widgets (search box + monthly archives, see

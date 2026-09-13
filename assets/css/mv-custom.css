@@ -1,0 +1,283 @@
+/**
+ * Site CSS — moved verbatim out of Appearance → Customise → Additional CSS.
+ *
+ * Nothing here has been changed. The point of the move is only that this file
+ * is now in version control: the Customizer stores its CSS in the database,
+ * where it has no history, no diff, no review and no rollback — and it was the
+ * highest-priority stylesheet on the site.
+ *
+ * It is enqueued last (see functions.php) so it keeps winning exactly the
+ * cascade fights it won before. Tidying it up — tokens, scoping the global
+ * link rules, splitting it by concern — is deliberately a separate step.
+ *
+ * Do not add new rules to the Customizer. Add them here.
+ */
+
+div.mavo-sticky {
+    display: flex;
+  position: fixed;
+  justify-content: space-between;
+    align-items: center;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: #fff;
+  box-shadow: 0 1px 15px rgba(0, 0, 0, 0.05);
+}
+div.mavo-nav {
+    position: absolute;
+    top: 32px;
+  right: 0;
+}
+body {
+    padding-top: 100px;
+    overflow-x: hidden;
+    text-decoration-skip: ink;
+}
+.inside-article h2, .mv-highlight {
+    color: #a92d87;
+}
+/* content */
+body.home h2.entry-title {
+    font-size: 40px;
+}
+.featured-image {
+    text-align: center;
+}
+.page-header-image {
+    margin-top: 40px;
+}
+h2.entry-title {
+    margin-top: 1em;
+}
+strong {
+    font-weight: bolder;
+}
+a[href^="https://www.booking.com"] {
+  color: rgb(0, 108, 228);
+}
+a:hover {
+    color: #886353;
+    text-decoration: underline;
+}
+.inside-article a {
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, currentColor, transparent 75%);
+}
+.post-info {
+  margin-top: 0px;
+    color: #757575;
+    font-style: italic;
+}
+.hotelblock {
+    font-style: italic;
+  color: #757575;
+  text-align: center;
+}
+/* h2 — section title */
+.entry-content h2 {
+  font-size: 30px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  margin-top: 2.5rem;
+  margin-bottom: 0.625rem;
+  line-height: 1.25;
+}
+/* h3 — sub-section */
+.entry-content h3 {
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.35;
+}
+/* h4 — treated as a compact uppercase label */
+.entry-content h4 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #5c3d2e;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 1.5rem;
+  margin-bottom: 0.25rem;
+  line-height: 1.5;
+}
+.title-main {
+    margin-bottom: 0px;
+}
+.title-sub, .wp-block-column p {
+    margin-top: 0px;
+}
+figure.wp-picture-figure {
+    text-align: center;
+    font-style: italic;
+}
+figure.wp-picture-figure figcaption {
+    margin-top: -20px;
+}
+.mavo-img-tag {
+    margin-bottom: 20px;
+}
+img.alignright { padding: 4px; margin: 0 0 2px 7px; display: inline; }
+img.alignleft { padding: 4px; margin: 0 7px 2px 0; display: inline; }
+.alignright { float: right; }
+.alignleft { float: left; }
+ul.wp-block-social-links {
+    display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  color: currentcolor;
+  fill: currentcolor;
+}
+.wp-social-link-pinterest a svg {
+    color: #e60122;
+}
+.wp-social-link-facebook a svg {
+    color: #0866ff;
+}
+.wp-social-link-twitter a svg {
+    color: #1da1f2;
+}
+.wp-social-link-flickr a svg {
+    color: #0461dd;
+}
+.wp-social-link-instagram a svg {
+    color: #f00075;
+}
+.post-item-divider
+{
+    position: relative;
+    margin-top: 90px;
+    height: 1px;
+}
+.post-item-divider:after
+{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 5%;
+    right: 5%;
+    width: 90%;
+    height: 1px;
+    background-image: linear-gradient(to right, transparent, rgb(35, 82, 124), transparent);
+}
+@media (max-width: 480px) {
+  /* Reduce from 30px → 16px (saves 28px of total horizontal space) */
+  .one-container .site-content,
+  .separate-containers .inside-article,
+  .separate-containers .comments-area,
+  .separate-containers .page-header,
+  .separate-containers .paging-navigation,
+  .inside-page-header {
+    padding: 16px;
+  }
+  /* Fix footer inconsistency — currently stuck at 40px on mobile */
+  .site.footer-widgets {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+    /* Keep alignwide/alignfull bleed in sync with the new 16px padding */
+.entry-content .alignwide,
+body:not(.no-sidebar) .entry-content .alignfull {
+  margin-left: -16px;
+  width: calc(100% + 32px);
+  max-width: calc(100% + 32px);
+}
+    body.home h2 {
+    font-size: 32px;
+    padding-top: 30px;
+}
+      .entry-content h2 { font-size: 22px; margin-top: 2rem; }
+  .entry-content h3 { font-size: 18px; margin-top: 1.5rem; }
+  .entry-content h4 { font-size: 11px; margin-top: 1.25rem; }
+}
+/* cards */
+ul.archive-page {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0px 20px;
+  list-style: none;
+  margin: 0 0 1.5em 0;
+  padding: 0;
+}
+
+ul.archive-page li.wp-block-post {
+  display: flex;           /* replaces inline-block */
+  flex-direction: column;
+  flex: 1 1 40%;
+  max-width: 470px;
+    min-width: 220px;
+  min-height: 350px;
+  padding: 20px;
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+  z-index: 1;
+  margin: 0;
+  vertical-align: unset;   /* no longer needed with flex, but harmless */
+}
+.archive-page li.wp-block-post a h2 {
+    width: fit-content;
+    margin-left: 0;
+    margin-top: 20px;
+    overflow: hidden;
+}
+.archive-page li.wp-block-post a img {
+  width: 100%;
+    max-width: 490px;
+  height: 100%;
+  object-fit: cover;           /* fills card without distortion */
+  display: block;
+}
+.archive-page .wp-block-post-featured-image {
+  position: absolute;
+ /* shorthand for top/right/bottom/left: 0 */
+  z-index: -1;
+  overflow: hidden;            /* li overflow:hidden is enough, but kept for safety */
+}
+.archive-page .wp-block-post-excerpt, .archive-page a h2, .archive-page h2 a, .archive-page .wp-block-post-excerpt a {
+    background: RGBA(78,116,165,0.7);
+    color: #ffffff;
+    padding-left: 20px;
+    text-decoration: none;
+    max-height: 124px;
+    overflow: hidden;
+}
+.wp-block-post-excerpt p a {
+    text-decoration: none;
+}
+a.wp-card {
+    text-decoration: none;
+}
+ul.archive-page li.wp-block-post a div p {
+    margin: 10px 20px 10px 0px;
+  font-weight: 200;
+}
+/* postIt */
+.post-it-note {
+   padding: 2em;
+   background: rgb(185,215,227);
+   position: relative;
+     max-width: 320px;
+   min-height: 10em;
+   transform: rotate(-5deg);
+    margin-right: 48px;
+    margin-top: 48px;
+      box-shadow: 5px 5px 7px rgba(0,0,0,.7);
+}
+.post-it-note h3 {
+   color: #705243;
+    margin-top:0px;
+}
+.post-it-note p {
+   color: #23527c;
+}
+/* other */
+#jetpack-subscribe-label {
+    display: none;
+}
+#jetpack_subscription_widget form {
+    display: block;
+}
