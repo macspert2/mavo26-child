@@ -1,3 +1,22 @@
+/*
+ * Unreferenced classes, audited 2026-09-14.
+ *
+ * These appear nowhere in any PHP, JS or HTML across the theme and every
+ * mavo-* plugin, including the markup mavo-for-you builds at runtime:
+ *
+ *     .mv-tile-grid--compact   .mv-tile-grid--featured   .mv-tile-grid--results
+ *     .mv-tile__count          .mv-tile__image-link      .mv-tile__meta
+ *     .mv-toc-box
+ *
+ * Left in place deliberately. Most are single declarations interleaved with
+ * live selectors — .mv-toc-box shares two rules with .mv-tile--utility, which
+ * is very much alive — so removing them means editing selector lists that
+ * carry working rules, for about a kilobyte. The risk outsizes the prize.
+ *
+ * A class can also be typed straight into post content, which no grep of the
+ * codebase can see. Search post content before acting on this list.
+ */
+
 /* Maman Voyage — unified tile component system (plan-tiles.md). */
 
 /* ===== Tokens ===== */

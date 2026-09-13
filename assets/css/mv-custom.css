@@ -39,10 +39,12 @@ div.mavo-nav {
 body {
     padding-top: 100px;
     overflow-x: hidden;
-    text-decoration-skip: ink;
+    /* `text-decoration-skip: ink` removed 2026-09-14: the property is deprecated,
+       its modern replacement is text-decoration-skip-ink, and `auto` — skipping
+       descenders — is already the browser default. No visual change. */
 }
 .inside-article h2, .mv-highlight {
-    color: #a92d87;
+    color: var(--mv-color-highlight, #a92d87);
 }
 /* ── Content: typography, links, figures ──────────────────────────────── */
 /* content */
@@ -78,7 +80,7 @@ strong {
  * .entry-content — keep exactly the hover they had.
  */
 a:not([class]):hover {
-    color: #886353;
+    color: var(--mv-color-warm, #886353);
     text-decoration: underline;
 }
 .inside-article a {
@@ -87,12 +89,12 @@ a:not([class]):hover {
 }
 .post-info {
   margin-top: 0px;
-    color: #757575;
+    color: var(--mv-color-subtle, #757575);
     font-style: italic;
 }
 .hotelblock {
     font-style: italic;
-  color: #757575;
+  color: var(--mv-color-subtle, #757575);
   text-align: center;
 }
 /* h2 — section title */
@@ -117,7 +119,7 @@ a:not([class]):hover {
 .entry-content h4 {
   font-size: 17px;
   font-weight: 700;
-  color: #5c3d2e;
+  color: var(--mv-color-warm-dark, #5c3d2e);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-top: 1.5rem;
@@ -503,13 +505,44 @@ summary:focus-visible,
 .mv-stamp--press:hover  { transform: translateY(-2px); }
 .mv-stamp--press:active { transform: translateY(0) scale(.98); }
 
+/*
+ * The two buttons the site stretches to full width, which cannot use the class
+ * because they are styled by selector: mv-home.css gives both `width: 100%`.
+ * At 1.2° their corners travel about six pixels and the tilt reads as a
+ * rendering fault rather than a stamp, so they press instead.
+ */
+.inside-right-sidebar .mv-button:hover,
+#mv-search-newsletter button[type="submit"]:hover {
+  transform: translateY(-2px);
+}
+
+.inside-right-sidebar .mv-button:active,
+#mv-search-newsletter button[type="submit"]:active {
+  transform: translateY(0) scale(.995);
+}
+
+/*
+ * Reduced motion has to name everything the rules above move — not just the
+ * elements wearing the class. .mv-button and the search submits take their
+ * motion from this file now, and mv-home.css only covers them on the handful
+ * of pages it loads on.
+ */
 @media (prefers-reduced-motion: reduce) {
   .mv-stamp,
-  .mv-stamp--press {
+  .mv-stamp--press,
+  .mv-button,
+  #mv-search-again .search-submit,
+  .mv-search-header .search-submit {
     transition: filter .2s ease, box-shadow .2s ease, background-color .2s ease;
   }
   .mv-stamp:hover, .mv-stamp:active,
-  .mv-stamp--press:hover, .mv-stamp--press:active {
+  .mv-stamp--press:hover, .mv-stamp--press:active,
+  .mv-button:hover, .mv-button:active,
+  #mv-search-again .search-submit:hover, #mv-search-again .search-submit:active,
+  .mv-search-header .search-submit:hover, .mv-search-header .search-submit:active,
+  .inside-right-sidebar .mv-button:hover, .inside-right-sidebar .mv-button:active,
+  #mv-search-newsletter button[type="submit"]:hover,
+  #mv-search-newsletter button[type="submit"]:active {
     transform: none;
   }
 }
@@ -546,9 +579,6 @@ summary:focus-visible,
 .mavo-ptppg__copy-btn {
   border-radius: 4px;
 }
-
-/* Theirs is !important, so this has to be too. */
-#mv-search-newsletter button[type="submit"] { border-radius: 4px !important; }
 
 /* ── The notch, primary tier only ─────────────────────────────────────────── */
 

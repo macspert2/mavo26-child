@@ -56,8 +56,8 @@
     text-decoration: none;
 }
 
-.mv-hub-nav__hub--geo { --mv-hub-accent: #4e74a5; }
-.mv-hub-nav__hub--theme { --mv-hub-accent: #886353; }
+.mv-hub-nav__hub--geo { --mv-hub-accent: var(--mv-color-primary, #4e74a5); }
+.mv-hub-nav__hub--theme { --mv-hub-accent: var(--mv-color-warm, #886353); }
 
 .mv-hub-nav__icon {
     display: inline-flex;

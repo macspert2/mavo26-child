@@ -243,7 +243,7 @@
 	background-color: var(--mv-color-primary) !important;
 	color: var(--mv-color-surface) !important;
 	border: none !important;
-	border-radius: 999px !important;
+	border-radius: 4px !important;
 	padding: 10px 20px !important;
 	font-weight: 600 !important;
 }
@@ -273,7 +273,7 @@
 }
 
 .mv-start-here-intro__jumplinks a {
-	color: #4e74a5;
+	color: var(--mv-color-primary, #4e74a5);
 }
 
 /* Simplified landing-page footer (plan2.md §5) */
@@ -381,7 +381,7 @@ body.search-results .page-title span::after {
 	margin-top: 24px;
 	padding: 20px;
 	border-radius: 16px;
-	background: #f0eee9;
+	background: var(--mv-color-bg-soft, #f0eee9);
 }
 
 .mv-search-header__orientation-title {
