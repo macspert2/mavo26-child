@@ -405,9 +405,45 @@ summary:focus-visible,
               box-shadow .2s ease, background-color .2s ease;
 }
 
-.mv-stamp:hover  { transform: translateY(-2px) rotate(-1.2deg); filter: brightness(.96); }
-.mv-stamp:active { transform: translateY(0) rotate(.4deg) scale(.98); filter: brightness(.92); }
+/*
+ * No translateY here, deliberately.
+ *
+ * transform-origin is already the centre, and rotate(-1.2deg) already drops the
+ * left edge and raises the right. But a 2px lift on top of it more than cancels
+ * the left edge's ~1.6px descent (on a 150px button), so both edges end up
+ * rising and only the right one visibly — which reads as a pivot around the
+ * left edge rather than a tilt about the centre.
+ *
+ * The raised feeling comes from the component's box-shadow instead, which is
+ * where it belongs: shadow says "off the page", rotation says "stamped".
+ */
+.mv-stamp:hover  { transform: rotate(-1.2deg); filter: brightness(.96); }
 
+/*
+ * The press: a dark edge, as if the ink caught the rim of the stamp.
+ *
+ * `outline` rather than `border` or `box-shadow`, for three reasons. A border
+ * would widen the button by 4px on click, because its width is auto. A
+ * box-shadow would lose to the component's own hover shadow, which is set at
+ * (0,5,1) and still applies while the button is being pressed. An outline is
+ * subject to neither: it never affects layout, and nothing else here uses it.
+ *
+ * Translucent black, so it darkens whatever colour the button happens to be —
+ * the point of this utility is that it never needs to know. Inset by 2px so it
+ * hugs the inside of the rim, which modern browsers curve to match
+ * border-radius.
+ *
+ * Deliberately not in the transition list: a stamp lands, it does not fade.
+ */
+.mv-stamp:active {
+  transform: rotate(.4deg) scale(.98);
+  filter: brightness(.92);
+  outline: 2px solid rgba(0, 0, 0, .28);
+  outline-offset: -2px;
+}
+
+/* For full-width buttons, where rotation reads as breakage. Use both classes:
+   class="mv-stamp mv-stamp--press" — the press ring comes from .mv-stamp. */
 .mv-stamp--press:hover  { transform: translateY(-2px); }
 .mv-stamp--press:active { transform: translateY(0) scale(.98); }
 
