@@ -385,6 +385,7 @@ function mv_shortcode_box( $atts, $content = null ) {
 }
 add_shortcode( 'mv-box', 'mv_shortcode_box' );
 
+/* tagcards not used anymore
 function theme_shortcode_tagcards($atts, $content = null, $code = '') {
     $atts = shortcode_atts(
         [
@@ -467,8 +468,9 @@ function theme_shortcode_tagcards($atts, $content = null, $code = '') {
     $output .= '</div>';
     return $output;
 }
-add_shortcode('tagcards-inc-ul', 'theme_shortcode_tagcards');
+add_shortcode('tagcards-inc-ul', 'theme_shortcode_tagcards'); */
 
+/* catcards still used in one post */
 function theme_shortcode_catcards($atts, $content = null, $code = '') {
     $atts = shortcode_atts(
         [
