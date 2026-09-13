@@ -64,7 +64,20 @@ strong {
 /* The booking.com link colour was removed here: #006ce4 is not in the palette,
    and a colour alone cannot tell a reader that a link is commercial. If those
    links should be marked, mark them — a disclosure, not a hue. */
-a:hover {
+/*
+ * Narrowed from a bare `a:hover` on 2026-09-13.
+ *
+ * The old rule applied to every link on the site, so every component had to
+ * out-specify it to keep its own hover — nav, tiles, chips and buttons all do,
+ * which is why nothing looked broken. The cost was that any *new* component
+ * silently inherited brown underlined text until someone noticed.
+ *
+ * `a:not([class])` fixes that by target rather than by weight: anything with a
+ * class is exempt automatically, and there is no list of exceptions to keep up
+ * to date. Unclassed links — widgets, footers, plain prose outside
+ * .entry-content — keep exactly the hover they had.
+ */
+a:not([class]):hover {
     color: #886353;
     text-decoration: underline;
 }
@@ -349,6 +362,9 @@ ul.archive-page li.wp-block-post a div p {
 .comment-content a:not([class]):hover {
   color: var(--mv-color-warm-dark, #5c3d2e);
   background-size: 100% 2px, 100% 1px;
+  /* Stated rather than inherited: the narrowed global hover above now matches
+     this rule's specificity, so source order would otherwise decide it. */
+  text-decoration: none;
 }
 
 .entry-content a:not([class]):active,

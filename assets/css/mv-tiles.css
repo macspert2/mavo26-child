@@ -446,6 +446,17 @@ a.mv-badge.mv-badge--neutral   { color: var(--mv-color-text, #3a3a3a); }
 }
 
 /* ===== Filter chips ===== */
+/* ─────────────────────────────────────────────────────────────────────────
+   DEAD as of 2026-09-13 — commented out, not deleted.
+
+   No `.mv-chip / .mv-chip-group` appears in any PHP, JS or HTML across the theme or the mavo-*
+   plugins. Commented rather than removed because a class can also be typed
+   directly into post content, which no grep of the codebase can see: if
+   something loses its styling, the rules are intact immediately below.
+
+   Delete once a search of post content confirms it is unused.
+   ───────────────────────────────────────────────────────────────────────── */
+/*
 
 .mv-chip-group {
   display: flex;
@@ -477,7 +488,7 @@ a.mv-badge.mv-badge--neutral   { color: var(--mv-color-text, #3a3a3a); }
   background: var(--mv-color-primary, #4e74a5);
   color: #fff;
 }
-
+*/
 /* ===== Search results context ===== */
 
 /* Result tiles stack vertically in the GP content area. */
@@ -1032,6 +1043,17 @@ body.search-results .hentry.mv-tile--result {
     transform: none;
   }
 }
+/* ─────────────────────────────────────────────────────────────────────────
+   DEAD as of 2026-09-13 — commented out, not deleted.
+
+   No `.mv-decision-card / .mv-decision-option` appears in any PHP, JS or HTML across the theme or the mavo-*
+   plugins. Commented rather than removed because a class can also be typed
+   directly into post content, which no grep of the codebase can see: if
+   something loses its styling, the rules are intact immediately below.
+
+   Delete once a search of post content confirms it is unused.
+   ───────────────────────────────────────────────────────────────────────── */
+/*
 .mv-decision-card {
   margin: 2rem 0;
   padding: clamp(1.25rem, 3vw, 2rem);
@@ -1135,3 +1157,4 @@ body.search-results .hentry.mv-tile--result {
     width: 100%;
   }
 }
+*/
