@@ -429,17 +429,27 @@ summary:focus-visible,
  * subject to neither: it never affects layout, and nothing else here uses it.
  *
  * Translucent black, so it darkens whatever colour the button happens to be —
- * the point of this utility is that it never needs to know. Inset by 2px so it
- * hugs the inside of the rim, which modern browsers curve to match
- * border-radius.
+ * the point of this utility is that it never needs to know. A real stamp's rim
+ * is the ink colour, and a dark overlay is what that amounts to.
+ *
+ * Dashed, for the perforated look of a rubber stamp. Note that CSS offers no
+ * control over dash length: the browser chooses the pattern and engines differ.
+ * It does scale with outline-width though, so the 3px here buys longer dashes
+ * as well as a more prominent ring. Controlling the dashes properly would mean
+ * an SVG border-image, which does not follow border-radius at all — a bad trade
+ * for a pill.
+ *
+ * outline-offset must be at least as negative as the width, or the ring paints
+ * partly outside the button: the outline is drawn outward from the border box
+ * inflated by the offset. At -3px with a 3px width it sits flush inside the rim.
  *
  * Deliberately not in the transition list: a stamp lands, it does not fade.
  */
 .mv-stamp:active {
   transform: rotate(.4deg) scale(.98);
   filter: brightness(.92);
-  outline: 2px solid rgba(0, 0, 0, .28);
-  outline-offset: -2px;
+  outline: 3px dashed rgba(0, 0, 0, .32);
+  outline-offset: -3px;
 }
 
 /* For full-width buttons, where rotation reads as breakage. Use both classes:
