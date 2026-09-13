@@ -1,10 +1,14 @@
 /**
  * Site CSS — moved verbatim out of Appearance → Customise → Additional CSS.
  *
- * Nothing here has been changed. The point of the move is only that this file
- * is now in version control: the Customizer stores its CSS in the database,
- * where it has no history, no diff, no review and no rollback — and it was the
+ * It arrived unchanged. The point of the move was only that this file is now
+ * in version control: the Customizer stores its CSS in the database, where it
+ * has no history, no diff, no review and no rollback — and it was the
  * highest-priority stylesheet on the site.
+ *
+ * Since then, deliberately: the booking.com link colour was removed (see
+ * below), and the LINKS block at the end was added. Everything else is still
+ * exactly as it came out of the Customizer.
  *
  * It is enqueued last (see functions.php) so it keeps winning exactly the
  * cascade fights it won before. Tidying it up — tokens, scoping the global
@@ -57,9 +61,9 @@ h2.entry-title {
 strong {
     font-weight: bolder;
 }
-a[href^="https://www.booking.com"] {
-  color: rgb(0, 108, 228);
-}
+/* The booking.com link colour was removed here: #006ce4 is not in the palette,
+   and a colour alone cannot tell a reader that a link is commercial. If those
+   links should be marked, mark them — a disclosure, not a hue. */
 a:hover {
     color: #886353;
     text-decoration: underline;
@@ -352,11 +356,31 @@ ul.archive-page li.wp-block-post a div p {
   color: var(--mv-color-highlight, #a92d87);
 }
 
-/* LVHA says nothing about keyboards. Without this the styles above are
-   unusable for anyone not holding a mouse. */
-.entry-content a:not([class]):focus-visible,
-.comment-content a:not([class]):focus-visible {
-  outline: 2px solid var(--mv-color-primary, #4e74a5);
+/*
+ * Focus, site-wide — not just for content links.
+ *
+ * Scoping this to prose was a mistake: it left every other link relying on the
+ * browser's default ring, which is fine until something deletes it. The menu's
+ * reset did exactly that to `.mavo-bar *`, so the whole navigation — the first
+ * thing a keyboard user reaches — had no visible focus at all.
+ *
+ * This file loads last, so (0,1,1) here beats any equal-or-lower rule that
+ * removed the outline earlier. Components that replace the ring with their own
+ * indicator keep it: the comment and contact forms use a class-based
+ * `:focus` rule with an inset box-shadow, which out-specifies this.
+ *
+ * currentColor rather than a fixed brand colour, because the ring has to be
+ * visible on the archive cards' blue overlay (white text) as well as on white
+ * (dark text). A fixed #4e74a5 would all but disappear on the former.
+ */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid currentColor;
   outline-offset: 3px;
   border-radius: 2px;
 }
