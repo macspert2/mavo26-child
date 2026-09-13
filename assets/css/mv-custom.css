@@ -497,3 +497,73 @@ summary:focus-visible,
     transform: none;
   }
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BUTTON SHAPE — the ticket
+   ═══════════════════════════════════════════════════════════════════════════
+
+   Shape now encodes category, which is the only way a mixed set reads as
+   deliberate rather than accidental:
+
+     action buttons  → ticket: 4px corners, the stamp tilt, perforated on click
+     chips and tags  → pill, unchanged (.mv-chip, .tvf-chip, .mavo-ptppg__pill)
+     icon buttons    → circle, unchanged (.tvf-share-btn, .bc-tooltip-btn)
+
+   The selectors below reach into several plugins on purpose. This file loads
+   last and site-wide, so one block here replaces what would otherwise be six
+   separate plugin edits and six deployments — and reverting is deleting it.
+
+   Notches are applied only to the primary tier, and only where the colour
+   behind the button is known and flat: a painted notch is opaque, not a hole,
+   so it has to match. Every button on this site sits on white or cream; none
+   sits on an image. --billet-bg carries that per context. */
+
+.mv-button,
+#mv-search-again .search-submit,
+.mv-search-header .search-submit,
+.comments-area .comment-form .form-submit input[type="submit"],
+.mv-contact__submit,
+.mv-geo-explorer__panel-cta,
+.tvf-load-more-btn,
+.tvf-reset-btn,
+.mavo-ptppg__copy-btn {
+  border-radius: 4px;
+}
+
+/* Theirs is !important, so this has to be too. */
+#mv-search-newsletter button[type="submit"] { border-radius: 4px !important; }
+
+/* ── The notch, primary tier only ─────────────────────────────────────────── */
+
+.mv-button--primary,
+.comments-area .comment-form .form-submit input[type="submit"] {
+  --billet-bg: #fff;
+  --notch: 7px;
+  background-image:
+    radial-gradient(circle at 0 50%, var(--billet-bg) var(--notch), transparent calc(var(--notch) + .5px)),
+    radial-gradient(circle at 100% 50%, var(--billet-bg) var(--notch), transparent calc(var(--notch) + .5px));
+  background-repeat: no-repeat;
+}
+
+/* Wherever the panel behind is cream rather than white. */
+.mv-section .mv-button--primary,
+.mv-start-here-cta .mv-button--primary,
+.mv-about-mini .mv-button--primary { --billet-bg: var(--mv-color-bg-cream, #f7f4ef); }
+
+/*
+ * A notched button darkens with background-color, never with filter.
+ * filter: brightness() would darken the painted notches too, and they would
+ * stop matching the page the moment the pointer arrived.
+ */
+.mv-button--primary:hover,
+.comments-area .comment-form .form-submit input[type="submit"]:hover {
+  filter: none;
+  background-color: var(--mv-color-primary-contrast, #3c5c84);
+}
+
+.mv-button--primary:active,
+.comments-area .comment-form .form-submit input[type="submit"]:active {
+  filter: none;
+  background-color: var(--mv-color-primary-contrast, #3c5c84);
+}
