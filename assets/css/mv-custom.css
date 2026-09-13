@@ -13,6 +13,8 @@
  * Do not add new rules to the Customizer. Add them here.
  */
 
+/* ── Layout & chrome ──────────────────────────────────────────────────── */
+
 div.mavo-sticky {
     display: flex;
   position: fixed;
@@ -38,6 +40,7 @@ body {
 .inside-article h2, .mv-highlight {
     color: #a92d87;
 }
+/* ── Content: typography, links, figures ──────────────────────────────── */
 /* content */
 body.home h2.entry-title {
     font-size: 40px;
@@ -124,6 +127,8 @@ img.alignright { padding: 4px; margin: 0 0 2px 7px; display: inline; }
 img.alignleft { padding: 4px; margin: 0 7px 2px 0; display: inline; }
 .alignright { float: right; }
 .alignleft { float: left; }
+/* ── Social links & dividers ──────────────────────────────────────────── */
+
 ul.wp-block-social-links {
     display: flex;
   justify-content: center;
@@ -163,6 +168,8 @@ ul.wp-block-social-links {
     height: 1px;
     background-image: linear-gradient(to right, transparent, rgb(35, 82, 124), transparent);
 }
+/* ── Mobile (≤480px) ──────────────────────────────────────────────────── */
+
 @media (max-width: 480px) {
   /* Reduce from 30px → 16px (saves 28px of total horizontal space) */
   .one-container .site-content,
@@ -193,6 +200,7 @@ body:not(.no-sidebar) .entry-content .alignfull {
   .entry-content h3 { font-size: 18px; margin-top: 1.5rem; }
   .entry-content h4 { font-size: 11px; margin-top: 1.25rem; }
 }
+/* ── Archive cards ────────────────────────────────────────────────────── */
 /* cards */
 ul.archive-page {
   display: flex;
@@ -255,6 +263,7 @@ ul.archive-page li.wp-block-post a div p {
     margin: 10px 20px 10px 0px;
   font-weight: 200;
 }
+/* ── Post-it note ─────────────────────────────────────────────────────── */
 /* postIt */
 .post-it-note {
    padding: 2em;
@@ -274,10 +283,116 @@ ul.archive-page li.wp-block-post a div p {
 .post-it-note p {
    color: #23527c;
 }
+/* ── Third-party fixes ────────────────────────────────────────────────── */
 /* other */
 #jetpack-subscribe-label {
     display: none;
 }
 #jetpack_subscription_widget form {
     display: block;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LINKS  —  added after the move, deliberately additive.
+   Nothing above was deleted, so reverting means deleting this block.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/*
+ * Content links: « Ligne d'horizon ».
+ *
+ * Blue with a hairline rule at rest; a warm-brown line wipes across on hover.
+ * Written in LVHA order — :link, :visited, :hover, :active — which is not a
+ * style preference: they share a specificity, so out of order they cancel.
+ *
+ * `a:not([class])` means any link carrying a class opts out automatically —
+ * buttons, tiles, cards, .mfy-read-link, the booking.com rule above. No list
+ * of exceptions to keep up to date.
+ *
+ * Specificity (0,2,1) beats `.inside-article a` (0,1,1) above, so that rule
+ * keeps applying to classed links inside articles and this one wins for prose.
+ *
+ * box-decoration-break: clone is load-bearing. A background-drawn underline on
+ * a link that wraps across two lines is otherwise painted as one sliced box,
+ * and the underline lands under only part of it. `clone` gives each line its
+ * own background. This does not show up in a single-line demo; it shows up in
+ * every real article.
+ */
+.entry-content a:not([class]),
+.comment-content a:not([class]) {
+  color: var(--mv-color-primary, #4e74a5);
+  text-decoration: none;
+  background-image:
+    linear-gradient(var(--mv-color-warm, #886353), var(--mv-color-warm, #886353)),
+    linear-gradient(color-mix(in srgb, var(--mv-color-primary, #4e74a5) 32%, transparent),
+                    color-mix(in srgb, var(--mv-color-primary, #4e74a5) 32%, transparent));
+  background-size: 0% 2px, 100% 1px;
+  background-position: 0 100%, 0 100%;
+  background-repeat: no-repeat;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: background-size .35s cubic-bezier(.22, 1, .36, 1), color .2s ease;
+}
+
+/* :visited accepts colour-family properties only, and ignores alpha — so this
+   is a solid colour, and the underline gradient above cannot change here. */
+.entry-content a:not([class]):visited,
+.comment-content a:not([class]):visited {
+  color: var(--mv-color-warm-dark, #5c3d2e);
+}
+
+.entry-content a:not([class]):hover,
+.comment-content a:not([class]):hover {
+  color: var(--mv-color-warm-dark, #5c3d2e);
+  background-size: 100% 2px, 100% 1px;
+}
+
+.entry-content a:not([class]):active,
+.comment-content a:not([class]):active {
+  color: var(--mv-color-highlight, #a92d87);
+}
+
+/* LVHA says nothing about keyboards. Without this the styles above are
+   unusable for anyone not holding a mouse. */
+.entry-content a:not([class]):focus-visible,
+.comment-content a:not([class]):focus-visible {
+  outline: 2px solid var(--mv-color-primary, #4e74a5);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/*
+ * « Tampon » — motion only, no colours.
+ *
+ * Add the class to any button and it keeps its own palette: brightness()
+ * darkens whatever background it finds, so every foreground/background
+ * combination on the site works without being enumerated.
+ *
+ * The site's existing motion language is a lift (translateY) — comment submit,
+ * .tvf-chip, .mv-tile all use it — so this lifts *and* tilts rather than
+ * replacing one vocabulary with another.
+ *
+ * Rotation scales inversely with width: at 1.2° a chip's corners move under a
+ * pixel, a 600px full-width button's move about six and it reads as broken.
+ * Use .mv-stamp--press on anything full-width.
+ */
+.mv-stamp {
+  transition: transform .2s cubic-bezier(.34, 1.6, .64, 1), filter .2s ease;
+}
+
+.mv-stamp:hover  { transform: translateY(-2px) rotate(-1.2deg); filter: brightness(.96); }
+.mv-stamp:active { transform: translateY(0) rotate(.4deg) scale(.98); filter: brightness(.92); }
+
+.mv-stamp--press:hover  { transform: translateY(-2px); }
+.mv-stamp--press:active { transform: translateY(0) scale(.98); }
+
+@media (prefers-reduced-motion: reduce) {
+  .mv-stamp,
+  .mv-stamp--press {
+    transition: filter .2s ease;
+  }
+  .mv-stamp:hover, .mv-stamp:active,
+  .mv-stamp--press:hover, .mv-stamp--press:active {
+    transform: none;
+  }
 }
