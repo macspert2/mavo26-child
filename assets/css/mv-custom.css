@@ -400,7 +400,23 @@ summary:focus-visible,
  * pixel, a 600px full-width button's move about six and it reads as broken.
  * Use .mv-stamp--press on anything full-width.
  */
-.mv-stamp {
+/*
+ * .mv-button and the search submits are listed alongside .mv-stamp rather than
+ * having the class added to them.
+ *
+ * They already carry a shared class, and that class appears in a dozen template
+ * files across three languages — editing all of them to add a second class
+ * would be churn for no gain. Listing them here gives the site one motion
+ * language in one place. .mv-stamp remains the escape hatch for buttons that
+ * have no class of their own, like the comment submit.
+ *
+ * Their own transform and transition were removed from mv-tiles.css; left in
+ * place they out-specified this and nothing would have changed.
+ */
+.mv-stamp,
+.mv-button,
+#mv-search-again .search-submit,
+.mv-search-header .search-submit {
   transition: transform .2s cubic-bezier(.34, 1.6, .64, 1), filter .2s ease,
               box-shadow .2s ease, background-color .2s ease;
 }
@@ -417,7 +433,10 @@ summary:focus-visible,
  * The raised feeling comes from the component's box-shadow instead, which is
  * where it belongs: shadow says "off the page", rotation says "stamped".
  */
-.mv-stamp:hover  { transform: rotate(-1.2deg); filter: brightness(.96); }
+.mv-stamp:hover,
+.mv-button:hover,
+#mv-search-again .search-submit:hover,
+.mv-search-header .search-submit:hover { transform: rotate(-1.2deg); filter: brightness(.96); }
 
 /*
  * The press: a dark edge, as if the ink caught the rim of the stamp.
@@ -453,7 +472,10 @@ summary:focus-visible,
  *
  * Deliberately not in the transition list: a stamp lands, it does not fade.
  */
-.mv-stamp:active {
+.mv-stamp:active,
+.mv-button:active,
+#mv-search-again .search-submit:active,
+.mv-search-header .search-submit:active {
   transform: rotate(.4deg) scale(.98);
   filter: brightness(.92);
   outline: 5px dashed color-mix(in srgb, currentColor 60%, transparent);

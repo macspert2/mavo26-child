@@ -653,13 +653,14 @@ body.search-results .hentry.mv-tile--result {
 	font-family: inherit;
 	font-size: inherit;
 	cursor: pointer;
-	transition: transform 160ms ease, box-shadow 160ms ease;
+	/* No transform or transition here: .mv-stamp owns the motion for these
+	   buttons too (see mv-custom.css). Left in place they would out-specify it,
+	   exactly as they did on the comment submit. */
 }
 
 .mv-button:hover,
 #mv-search-again .search-submit:hover,
 .mv-search-header .search-submit:hover {
-	transform: translateY(-2px);
 	box-shadow: var(--mv-tile-shadow-hover, 0 12px 30px rgba(58, 58, 58, 0.12));
 }
 
@@ -674,7 +675,6 @@ body.search-results .hentry.mv-tile--result {
 .mv-button:active,
 #mv-search-again .search-submit:active,
 .mv-search-header .search-submit:active {
-	transform: translateY(-1px);
 	box-shadow: var(--mv-tile-shadow, 0 8px 22px rgba(58, 58, 58, 0.08));
 }
 
