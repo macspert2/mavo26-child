@@ -428,28 +428,36 @@ summary:focus-visible,
  * (0,5,1) and still applies while the button is being pressed. An outline is
  * subject to neither: it never affects layout, and nothing else here uses it.
  *
- * Translucent black, so it darkens whatever colour the button happens to be —
- * the point of this utility is that it never needs to know. A real stamp's rim
- * is the ink colour, and a dark overlay is what that amounts to.
+ * The colour is currentColor, faded — not a fixed light or dark.
+ *
+ * A fixed translucent white would be exactly right on this blue button and
+ * invisible on a white one, which would quietly break the one promise this
+ * utility makes: that it works on any button without being told the palette.
+ * currentColor is the button's own text colour, which already has to contrast
+ * with its background, so the rim contrasts too. On the comment button that
+ * resolves to white — the lighter rim you asked for — and on a pale button it
+ * resolves dark, which is the same idea with the values the other way up.
  *
  * Dashed, for the perforated look of a rubber stamp. Note that CSS offers no
  * control over dash length: the browser chooses the pattern and engines differ.
- * It does scale with outline-width though, so the 3px here buys longer dashes
+ * It does scale with outline-width though, so the 5px here buys longer dashes
  * as well as a more prominent ring. Controlling the dashes properly would mean
  * an SVG border-image, which does not follow border-radius at all — a bad trade
  * for a pill.
  *
  * outline-offset must be at least as negative as the width, or the ring paints
  * partly outside the button: the outline is drawn outward from the border box
- * inflated by the offset. At -3px with a 3px width it sits flush inside the rim.
+ * inflated by the offset. At -5px with a 5px width it sits flush inside the rim,
+ * leaving about 5px between the rim and the label on a 10px-padded button. 6px
+ * would start to crowd it.
  *
  * Deliberately not in the transition list: a stamp lands, it does not fade.
  */
 .mv-stamp:active {
   transform: rotate(.4deg) scale(.98);
   filter: brightness(.92);
-  outline: 3px dashed rgba(0, 0, 0, .32);
-  outline-offset: -3px;
+  outline: 5px dashed color-mix(in srgb, currentColor 60%, transparent);
+  outline-offset: -5px;
 }
 
 /* For full-width buttons, where rotation reads as breakage. Use both classes:
