@@ -401,7 +401,8 @@ summary:focus-visible,
  * Use .mv-stamp--press on anything full-width.
  */
 .mv-stamp {
-  transition: transform .2s cubic-bezier(.34, 1.6, .64, 1), filter .2s ease;
+  transition: transform .2s cubic-bezier(.34, 1.6, .64, 1), filter .2s ease,
+              box-shadow .2s ease, background-color .2s ease;
 }
 
 .mv-stamp:hover  { transform: translateY(-2px) rotate(-1.2deg); filter: brightness(.96); }
@@ -413,7 +414,7 @@ summary:focus-visible,
 @media (prefers-reduced-motion: reduce) {
   .mv-stamp,
   .mv-stamp--press {
-    transition: filter .2s ease;
+    transition: filter .2s ease, box-shadow .2s ease, background-color .2s ease;
   }
   .mv-stamp:hover, .mv-stamp:active,
   .mv-stamp--press:hover, .mv-stamp--press:active {

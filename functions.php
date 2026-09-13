@@ -150,6 +150,19 @@ add_action( 'wp_enqueue_scripts', function () {
 } );
 
 /**
+ * The comment submit button carries .mv-stamp (see mv-custom.css).
+ *
+ * Through comment_form_defaults rather than by overriding the template: the
+ * button is rendered by WordPress core's comment_form(), and this is the seam
+ * core provides for exactly this.
+ */
+add_filter( 'comment_form_defaults', function ( $defaults ) {
+    $defaults['class_submit'] = trim( ( $defaults['class_submit'] ?? 'submit' ) . ' mv-stamp' );
+
+    return $defaults;
+} );
+
+/**
  * Site CSS, moved out of the Customizer (assets/css/mv-custom.css).
  *
  * Enqueued at priority 999 so it prints after every other stylesheet, because
