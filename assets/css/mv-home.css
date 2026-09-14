@@ -138,7 +138,7 @@
 	align-items: center;
 	text-align: center;
 	padding: 32px;
-	border-radius: 16px;
+	border-radius: var(--mv-panel-radius, 8px);
 	background: var(--mv-color-bg-soft);
 }
 
@@ -335,7 +335,7 @@
 .mv-section--bg-blue-tint .mv-container {
 	box-sizing: border-box;
 	padding: 40px clamp(20px, 4vw, 48px);
-	border-radius: 16px;
+	border-radius: var(--mv-panel-radius, 8px);
 }
 
 .mv-section--bg-cream .mv-container {
@@ -380,7 +380,7 @@ body.search-results .page-title span::after {
 .mv-search-header__orientation {
 	margin-top: 24px;
 	padding: 20px;
-	border-radius: 16px;
+	border-radius: var(--mv-panel-radius, 8px);
 	background: var(--mv-color-bg-soft, #f0eee9);
 }
 

@@ -45,8 +45,13 @@
   --mv-color-border: #e6e6e6;
   --mv-color-divider: rgba(0, 0, 0, 0.08);
 
-  --mv-tile-radius: 14px;
-  --mv-tile-radius-sm: 10px;
+  --mv-tile-radius: 4px;      /* matches the ticket corner on buttons */
+  --mv-tile-radius-sm: 3px;   /* compact tiles run a touch tighter, as before */
+  /* Panels: the cream/blue section containers, the start-here CTA and the
+     search orientation box. Larger than a tile because a panel frames
+     rather than is framed — but no longer 16px, which read as a leftover
+     once the tiles and buttons went square. */
+  --mv-panel-radius: 8px;
   --mv-tile-shadow: 0 8px 22px rgba(58, 58, 58, 0.08);
   --mv-tile-shadow-hover: 0 12px 30px rgba(58, 58, 58, 0.12);
   --mv-tile-shadow-pressed: 0 5px 16px rgba(58, 58, 58, 0.09);
@@ -62,7 +67,7 @@
   min-width: 0;
   background: var(--mv-color-surface, #fff);
   border: 0;
-  border-radius: var(--mv-tile-radius, 14px);
+  border-radius: var(--mv-tile-radius, 4px);
   box-shadow: var(--mv-tile-shadow, 0 8px 22px rgba(58, 58, 58, 0.08));
   color: var(--mv-color-text, #3a3a3a);
   text-decoration: none;
@@ -262,7 +267,7 @@ a.mv-badge.mv-badge--neutral   { color: var(--mv-color-text, #3a3a3a); }
 /* ===== Variant: Compact ===== */
 
 .mv-tile--compact {
-  border-radius: var(--mv-tile-radius-sm, 10px);
+  border-radius: var(--mv-tile-radius-sm, 3px);
 }
 
 .mv-tile--compact.mv-tile--text,
@@ -389,7 +394,11 @@ a.mv-badge.mv-badge--neutral   { color: var(--mv-color-text, #3a3a3a); }
 
 .mv-tile--result .mv-tile__media {
   aspect-ratio: 4 / 3;
-  border-radius: calc(var(--mv-tile-radius, 14px) - 4px);
+  /* Was calc(--mv-tile-radius - 4px), which meant "a little less round than the
+     card" and gave 10px when the card was 14. At a 4px card it collapses to 0
+     and the thumbnail turns square, so it uses the small-radius token instead —
+     the intent, rather than an arithmetic that only worked at the old value. */
+  border-radius: var(--mv-tile-radius-sm, 3px);
 }
 
 .mv-tile--result .mv-tile__body {
@@ -416,7 +425,7 @@ a.mv-badge.mv-badge--neutral   { color: var(--mv-color-text, #3a3a3a); }
 .mv-toc-box {
   background: var(--mv-color-surface, #fff);
   border: 0;
-  border-radius: var(--mv-tile-radius, 14px);
+  border-radius: var(--mv-tile-radius, 4px);
   box-shadow: var(--mv-tile-shadow, 0 8px 22px rgba(58, 58, 58, 0.08));
   padding: 1rem 1.15rem;
 }
@@ -625,7 +634,7 @@ body.search-results .hentry.mv-tile--result {
 .mavo-toc {
   --mavo-blue: var(--mv-color-primary, #4e74a5);
   --mavo-brown: var(--mv-color-warm, #886353);
-  border-radius: var(--mv-tile-radius, 14px);
+  border-radius: var(--mv-tile-radius, 4px);
   box-shadow: var(--mv-tile-shadow, 0 8px 22px rgba(58, 58, 58, 0.08));
 }
 
@@ -753,7 +762,7 @@ body.search-results .hentry.mv-tile--result {
 .comments-area .comment-body {
   padding: 1.25rem 1.5rem;
   background: #fff;
-  border-radius: var(--mv-tile-radius, 14px);
+  border-radius: var(--mv-tile-radius, 4px);
   box-shadow: var(--mv-tile-shadow, 0 8px 22px rgba(58,58,58,.08));
 }
 
@@ -920,7 +929,7 @@ body.search-results .hentry.mv-tile--result {
 .comments-area .comment-respond {
   margin-top: 2rem;
   background: #fff;
-  border-radius: var(--mv-tile-radius, 14px);
+  border-radius: var(--mv-tile-radius, 4px);
   box-shadow: var(--mv-tile-shadow, 0 8px 22px rgba(58,58,58,.08));
   padding: 1.5rem;
 }
