@@ -595,12 +595,26 @@ a.mv-badge.mv-badge--neutral   { color: var(--mv-color-text, #3a3a3a); }
   align-items: center;
 }
 
+/*
+ * The radius was calc(--mv-tile-radius - 4px), meaning "a little less round
+ * than the card", which gave 10px when the card was 14. At a 4px card it
+ * collapses to 0 and the thumbnail turns square, so it uses the small-radius
+ * token instead: the intent, rather than an arithmetic that only worked at the
+ * old value.
+ *
+ * This comment sits above the rule rather than inside it, and that placement
+ * is load-bearing. Autoptimize's minifier mis-strips a comment that directly
+ * follows a declaration whose value contains a slash -- `aspect-ratio: 4 / 3;`
+ * here. Collapsing the value to `4/3` shifts the offsets it recorded for the
+ * comment, so it deletes the wrong span: the closing brace and the next three
+ * rules went with it, up to the following comment's terminator. One unbalanced
+ * brace in a 120KB aggregate takes the whole stylesheet down from that point
+ * on, which is how the site lost its CSS on 2026-09-14.
+ *
+ * Keep any comment out of a block that contains a slashed value.
+ */
 .mv-tile--result .mv-tile__media {
   aspect-ratio: 4 / 3;
-  /* Was calc(--mv-tile-radius - 4px), which meant "a little less round than the
-     card" and gave 10px when the card was 14. At a 4px card it collapses to 0
-     and the thumbnail turns square, so it uses the small-radius token instead —
-     the intent, rather than an arithmetic that only worked at the old value. */
   border-radius: var(--mv-tile-radius-sm, 3px);
 }
 
