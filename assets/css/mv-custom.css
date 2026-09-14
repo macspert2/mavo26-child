@@ -336,9 +336,21 @@ ul.archive-page li.wp-block-post a div p {
  * and the underline lands under only part of it. `clone` gives each line its
  * own background. This does not show up in a single-line demo; it shows up in
  * every real article.
+ *
+ * a[class="mfy-read-link"] is here because :not([class]) is literal: it means
+ * "has no class attribute", so the moment mavo-for-you's script marks a link
+ * as read, this rule stopped matching it and the link fell back to the
+ * browser's default underline — a different thickness at a different offset
+ * from every other link in the paragraph. The attribute selector matches the
+ * exact single class the script adds, which is precisely the set of links that
+ * had this treatment before it ran. `~=` would be wrong: it would also admit
+ * links carrying other classes, which is the thing :not([class]) exists to
+ * keep out.
  */
 .entry-content a:not([class]),
-.comment-content a:not([class]) {
+.entry-content a[class="mfy-read-link"],
+.comment-content a:not([class]),
+.comment-content a[class="mfy-read-link"] {
   color: var(--mv-color-primary, #4e74a5);
   text-decoration: none;
   background-image:
@@ -350,7 +362,8 @@ ul.archive-page li.wp-block-post a div p {
   background-repeat: no-repeat;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
-  transition: background-size .35s cubic-bezier(.22, 1, .36, 1), color .2s ease;
+  transition: background-size .35s cubic-bezier(.22, 1, .36, 1), color .2s ease,
+              text-shadow var(--mv-motion-fast, 150ms) var(--mv-ease, ease);
 }
 
 /* :visited accepts colour-family properties only, and ignores alpha — so this
@@ -360,8 +373,39 @@ ul.archive-page li.wp-block-post a div p {
   color: var(--mv-color-warm-dark, #5c3d2e);
 }
 
+/*
+ * Read this visit — the same signal, said the same way.
+ *
+ * These two rules have to agree, because to a reader they mean the same thing:
+ * you have been here. They cannot agree completely, and the reason is a
+ * privacy boundary rather than a design choice. :visited honours colour-family
+ * properties only — no shadow, no background, and the alpha channel silently
+ * discarded — so the strike below is the one thing it can never carry. What
+ * they CAN share is the colour, and they share it from the same token.
+ *
+ * So the hierarchy reads: blue is new, warm brown is "you have been here", and
+ * brown-and-struck is "you read this, during this visit". The extra weight is
+ * carried by the only property a class can use and a pseudo-class cannot.
+ *
+ * Placed after :visited on purpose. A read link is almost always a visited one
+ * too, and this must win for it; :hover and :active below are more specific
+ * and still win over both, which is right — a read link must stay responsive.
+ *
+ * This lives here rather than in mavo-for-you.css so that the whole of a prose
+ * link's appearance is in one block, in cascade order, where the next person to
+ * change the visited colour cannot miss the rule that has to change with it.
+ * The plugin styles its own tiles; the theme styles prose.
+ */
+.entry-content a[class="mfy-read-link"],
+.comment-content a[class="mfy-read-link"] {
+  color: var(--mv-color-warm-dark, #5c3d2e);
+  text-shadow: 0 -1px 0 rgba(255, 255, 255, .9), 0 1px 1px rgba(0, 0, 0, .22);
+}
+
 .entry-content a:not([class]):hover,
-.comment-content a:not([class]):hover {
+.entry-content a[class="mfy-read-link"]:hover,
+.comment-content a:not([class]):hover,
+.comment-content a[class="mfy-read-link"]:hover {
   color: var(--mv-color-warm-dark, #5c3d2e);
   background-size: 100% 2px, 100% 1px;
   /* Stated rather than inherited: the narrowed global hover above now matches
@@ -369,9 +413,36 @@ ul.archive-page li.wp-block-post a div p {
   text-decoration: none;
 }
 
+/*
+ * « Empreinte » — the press, and the only part of the buttons' seal that a
+ * prose link can take.
+ *
+ * The seal's motion cannot come along: `transform` does not apply to a
+ * non-replaced inline box, and the fix — display: inline-block — makes the
+ * link one unbreakable box, so a link near the end of a line jumps whole to
+ * the next one and the paragraph reflows. It would be wrong even if it worked:
+ * a recoil says "you pressed this", and nobody presses a word in a sentence.
+ *
+ * The relief can. text-shadow applies to inline text, never affects layout,
+ * and wraps for free.
+ *
+ * One direction only, and this is the part that surprises: relief is a lie
+ * told with light, and a raised letter needs a highlight LIGHTER than the
+ * surface under it. Article prose sits on #fff, and nothing is lighter than
+ * white — so the word can only ever sink, never stand proud. Which costs
+ * nothing, because sinking is exactly what a press does.
+ *
+ * The highlight goes ABOVE the glyphs and the shadow below: there is no
+ * `text-shadow: inset` (only box-shadow has that keyword), so a deboss has to
+ * be faked by moving the light to the other side, which is all a deboss
+ * optically is.
+ */
 .entry-content a:not([class]):active,
-.comment-content a:not([class]):active {
+.entry-content a[class="mfy-read-link"]:active,
+.comment-content a:not([class]):active,
+.comment-content a[class="mfy-read-link"]:active {
   color: var(--mv-color-highlight, #a92d87);
+  text-shadow: 0 -1px 0 rgba(255, 255, 255, .9), 0 1px 1px rgba(0, 0, 0, .3);
 }
 
 /*
