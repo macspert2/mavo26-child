@@ -128,17 +128,95 @@
   color: var(--mv-color-text, #3a3a3a);
   text-decoration: none;
   overflow-wrap: break-word;
-  transition: transform 160ms ease, box-shadow 160ms ease;
+  transition: transform var(--mv-motion-base, 200ms) var(--mv-ease-press, cubic-bezier(.34, 1.6, .64, 1)),
+              box-shadow var(--mv-motion-base, 200ms) var(--mv-ease, ease),
+              filter var(--mv-motion-base, 200ms) var(--mv-ease, ease);
 }
+
+/* ===== Tile interaction — the stamp =====
+ *
+ * The same « tampon » vocabulary the buttons use (see mv-custom.css): tilt on
+ * hover, a dashed rim on press, no colours of its own. What differs is that
+ * the angle has to come down as the tile gets wider.
+ *
+ * A tile's corner travels (width / 2) x sin(angle). At 1.2 degrees that is
+ * about 3px on a 300px card and about 8px on a full-width result row, where it
+ * stops reading as a stamp and starts reading as a rendering fault. So:
+ *
+ *   compact, overlay   small boxes, little or no body text   1.2deg, as buttons
+ *   everything else    media cards carrying an excerpt       0.6deg
+ *   result rows        full width                            no rotation
+ *   utility            a container, not an affordance        nothing at all
+ *
+ * 0.6 degrees is the base rather than 1.2, so an unlisted or future tile gets
+ * the conservative angle by default.
+ *
+ * No translateY on hover, for the reason spelled out in mv-custom.css: on top
+ * of the rotation it cancels the left edge's descent, and the tilt then reads
+ * as a pivot about the left edge instead of about the centre. The lift comes
+ * from the shadow.
+ *
+ * brightness() rather than a colour, so the treatment works on a white card, a
+ * cream one and a photo-backed overlay without enumerating any of them.
+ */
 
 .mv-tile:hover {
-  transform: translateY(-2px);
+  transform: rotate(-0.6deg);
   box-shadow: var(--mv-tile-shadow-hover, 0 12px 30px rgba(58, 58, 58, 0.12));
+  filter: brightness(0.97);
 }
 
+/*
+ * The press ring: outline, not border or box-shadow. A border would widen the
+ * tile on click; a box-shadow would lose to the hover shadow, which still
+ * applies while the tile is held. currentColor faded is the tile's own text
+ * colour, so the rim contrasts on a white card (dark) and on an overlay (light)
+ * without being told which it is. Negative offset at least equal to the width,
+ * or the ring paints outside the box. Not in the transition list: a stamp
+ * lands, it does not fade.
+ */
 .mv-tile:active {
-  transform: translateY(-1px);
+  transform: rotate(0.2deg) scale(0.99);
   box-shadow: var(--mv-tile-shadow-pressed, 0 5px 16px rgba(58, 58, 58, 0.09));
+  outline: 4px dashed color-mix(in srgb, currentColor 40%, transparent);
+  outline-offset: -4px;
+}
+
+/* Small boxes take the button's full angle. */
+.mv-tile--compact:hover,
+.mv-tile--overlay:hover {
+  transform: rotate(-1.2deg);
+}
+
+.mv-tile--compact:active,
+.mv-tile--overlay:active {
+  transform: rotate(0.4deg) scale(0.985);
+  outline-width: 5px;
+  outline-offset: -5px;
+  outline-color: color-mix(in srgb, currentColor 45%, transparent);
+}
+
+/* Full-width rows press instead of rotating. */
+.mv-tile--result:hover {
+  transform: translateY(-2px);
+}
+
+.mv-tile--result:active {
+  transform: translateY(0) scale(0.995);
+}
+
+/*
+ * The utility tile is a box drawn around editorial content — a table of
+ * contents, a tip, a related-posts list. It is not clickable, and hover motion
+ * on it would promise a click that does not exist. Its inner links keep their
+ * own styling.
+ */
+.mv-tile--utility:hover,
+.mv-tile--utility:active {
+  transform: none;
+  box-shadow: var(--mv-tile-shadow, 0 8px 22px rgba(58, 58, 58, 0.08));
+  filter: none;
+  outline: none;
 }
 
 .mv-tile:focus-visible,
@@ -1118,13 +1196,30 @@ body.search-results .hentry.mv-tile--result {
 /* ===== Reduced motion ===== */
 
 @media (prefers-reduced-motion: reduce) {
-  .mv-tile,
+  /*
+   * Shadow, brightness and the press ring stay: none of them is motion. Only
+   * the transform goes -- including the media zoom, which the old rule made
+   * instantaneous rather than absent.
+   */
+  .mv-tile {
+    transition: box-shadow var(--mv-motion-base, 200ms) var(--mv-ease, ease),
+                filter var(--mv-motion-base, 200ms) var(--mv-ease, ease);
+  }
+
   .mv-tile__img {
     transition: none;
   }
 
   .mv-tile:hover,
-  .mv-tile:active {
+  .mv-tile:active,
+  .mv-tile--compact:hover,
+  .mv-tile--compact:active,
+  .mv-tile--overlay:hover,
+  .mv-tile--overlay:active,
+  .mv-tile--result:hover,
+  .mv-tile--result:active,
+  .mv-tile--media:hover .mv-tile__img,
+  .mv-tile--overlay:hover .mv-tile__img {
     transform: none;
   }
 }
