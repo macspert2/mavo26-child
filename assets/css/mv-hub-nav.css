@@ -88,8 +88,8 @@
 }
 
 .mv-hub-nav .mv-hub-nav__hub:focus-visible {
-    outline: 2px solid #453f38;
-    outline-offset: 3px;
+    outline: var(--mv-focus-ring, 2px solid currentColor);
+    outline-offset: var(--mv-focus-offset, 3px);
     text-decoration: underline;
 }
 

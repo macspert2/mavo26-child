@@ -52,9 +52,53 @@
      rather than is framed — but no longer 16px, which read as a leftover
      once the tiles and buttons went square. */
   --mv-panel-radius: 8px;
-  --mv-tile-shadow: 0 8px 22px rgba(58, 58, 58, 0.08);
-  --mv-tile-shadow-hover: 0 12px 30px rgba(58, 58, 58, 0.12);
-  --mv-tile-shadow-pressed: 0 5px 16px rgba(58, 58, 58, 0.09);
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     THE CONTRACT
+
+     The site's shape, motion and depth vocabulary. Everything below is
+     defined here and loaded on every page, so any mavo-* plugin can consume
+     it — always with a literal fallback, `var(--mv-x, 8px)`, so the plugin
+     still renders correctly on its own.
+
+     Shape encodes category, and the container decides, never the image:
+
+         panels (framing surfaces)        --mv-panel-radius      8px
+         tiles, cards, action buttons     --mv-tile-radius       4px
+         compact tiles, small boxes       --mv-tile-radius-sm    3px
+         chips and tags                   --mv-radius-pill
+         icon buttons                     --mv-radius-circle
+         photographs in prose             square — no radius at all
+     ═══════════════════════════════════════════════════════════════════════ */
+
+  --mv-radius-pill:   999px;
+  --mv-radius-circle: 50%;
+
+  /* Motion. Three steps, because thirteen was an accident rather than a
+     vocabulary: fast for colour and opacity, base for transform and shadow,
+     slow for wipes and reveals. Two easings — things enter with `ease` and
+     press with the stamp curve. */
+  --mv-motion-fast: 150ms;
+  --mv-motion-base: 200ms;
+  --mv-motion-slow: 350ms;
+  --mv-ease:        ease;
+  --mv-ease-press:  cubic-bezier(.34, 1.6, .64, 1);
+
+  /* Depth. The canonical names for what the tile shadows already were; the
+     --mv-tile-shadow* names below are kept as aliases so nothing breaks. */
+  --mv-elevation-1: 0 8px 22px rgba(58, 58, 58, 0.08);
+  --mv-elevation-2: 0 12px 30px rgba(58, 58, 58, 0.12);
+  --mv-elevation-3: 0 5px 16px rgba(58, 58, 58, 0.09);
+
+  /* Focus. One ring for the whole site. currentColor rather than a brand
+     colour, so it stays visible on a white card and on a dark overlay alike.
+     The stamp's dashed ring is the single deliberate exception: it means
+     "pressed", not "focused". */
+  --mv-focus-ring:   2px solid currentColor;
+  --mv-focus-offset: 3px;
+  --mv-tile-shadow:         var(--mv-elevation-1);   /* alias */
+  --mv-tile-shadow-hover:   var(--mv-elevation-2);   /* alias */
+  --mv-tile-shadow-pressed: var(--mv-elevation-3);   /* alias */
   --mv-tile-gap: clamp(1rem, 2.2vw, 1.5rem);
   --mv-tile-pad: clamp(1rem, 2vw, 1.25rem);
 }
@@ -88,8 +132,8 @@
 .mv-tile:focus-visible,
 .mv-tile__link:focus-visible,
 .mv-tile__image-link:focus-visible {
-  outline: 3px solid var(--mv-color-focus, #4e74a5);
-  outline-offset: 3px;
+  outline: var(--mv-focus-ring, 2px solid currentColor);
+  outline-offset: var(--mv-focus-offset, 3px);
 }
 
 .mv-tile:focus-within {
@@ -721,8 +765,8 @@ body.search-results .hentry.mv-tile--result {
 .mv-button:focus-visible,
 #mv-search-again .search-submit:focus-visible,
 .mv-search-header .search-submit:focus-visible {
-	outline: 3px solid var(--mv-color-focus);
-	outline-offset: 3px;
+	outline: var(--mv-focus-ring, 2px solid currentColor);
+	outline-offset: var(--mv-focus-offset, 3px);
 }
 
 .mv-button.mv-button--primary {
