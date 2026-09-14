@@ -69,6 +69,18 @@
          chips and tags                   --mv-radius-pill
          icon buttons                     --mv-radius-circle
          photographs in prose             square — no radius at all
+
+     The panel radius is earned by distance, not by the name of the element.
+     Two corners are only compared by the eye when they are close together:
+
+         padding >= 32px   contents sit far enough inside that the corners are
+                           never seen together      -> --mv-panel-radius
+         padding <  32px   container and contents read as one shape and must
+                           agree                    -> --mv-tile-radius
+
+     A 16px-padded box at 8px looks like a larger, separate decision sitting
+     against its own 4px contents — which is how the geo explorer's map wrapper
+     went wrong before this rule was written down.
      ═══════════════════════════════════════════════════════════════════════ */
 
   --mv-radius-pill:   999px;

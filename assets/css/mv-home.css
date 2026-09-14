@@ -380,7 +380,10 @@ body.search-results .page-title span::after {
 .mv-search-header__orientation {
 	margin-top: 24px;
 	padding: 20px;
-	border-radius: var(--mv-panel-radius, 8px);
+	/* 20px of padding puts this corner close enough to the tiles inside it
+	   that the two are read together — so it takes the tile radius, not the
+	   panel one. See the threshold in mv-tiles.css. */
+	border-radius: var(--mv-tile-radius, 4px);
 	background: var(--mv-color-bg-soft, #f0eee9);
 }
 
