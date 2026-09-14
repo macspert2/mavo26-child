@@ -602,20 +602,111 @@ summary:focus-visible,
 .mv-stamp--press:active { animation-name: mv-sceau-plat; }
 
 /*
- * The two buttons the site stretches to full width, which cannot use the class
- * because they are styled by selector: mv-home.css gives both `width: 100%`.
+ * The buttons the site stretches to full width, which cannot use the class
+ * because they are styled by selector: mv-home.css gives them `width: 100%`.
  * At 1 degree their corners travel about five pixels and the tilt reads as a
  * rendering fault rather than a seal, so they press flat instead.
+ *
+ * `animation-name` alone is only enough where the element already has the
+ * `animation` shorthand from a rule above — which .mv-button and .mv-stamp do
+ * and a bare selector does not. Setting the name without a duration leaves
+ * animation-duration at its 0s initial value and nothing runs at all. The
+ * Jetpack subscribe button was caught by exactly that when the tampon's plain
+ * transform became a keyframe; it is handled in its own block below, with the
+ * shorthand spelled out.
  */
-.inside-right-sidebar .mv-button:hover,
-#mv-search-newsletter button[type="submit"]:hover {
+.inside-right-sidebar .mv-button:hover {
   transform: translateY(-2px);
 }
 
-.inside-right-sidebar .mv-button:active,
-#mv-search-newsletter button[type="submit"]:active {
+.inside-right-sidebar .mv-button:active {
   animation-name: mv-sceau-plat;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   THE JETPACK SUBSCRIBE BUTTON
+   ═══════════════════════════════════════════════════════════════════════════
+
+   Two of them on the site, both from `<!-- wp:jetpack/subscriptions /-->`, and
+   neither looked like anything else:
+
+     search sidebar   template-parts/mv-search-sidebar.php, in #mv-search-newsletter
+     footer           a widget, aside#blog_subscription-4, in .footer-widgets-container
+                      (mv-landing-footer.php renders a third on landing pages)
+
+   Two separate reasons they were out of family, both now fixed.
+
+   1. THE STYLING WAS PAGE-SCOPED. mv-home.css had the colour and shape, but
+      that file is enqueued only on home / explorer / search / front-page, and
+      its selectors were scoped to #mv-search-newsletter. The footer instance
+      matched none of it and kept Jetpack's own look: a 9999px pill, 2px
+      border, #32373c fill. The rules are here now — site-wide, and keyed to
+      Jetpack's own block class rather than to one page's wrapper id, so every
+      instance is covered including the landing-page one.
+
+   2. INLINE STYLES. Jetpack's button ships style="" carrying font-size,
+      padding, margin, margin-left, border-radius and border-width. An inline
+      declaration beats any external rule at any specificity, so !important is
+      the only lever — not a sign of fighting the cascade, just the price of
+      styling markup a plugin renders. Only the six properties it actually sets
+      inline need it; the rest are ordinary declarations.
+
+   Yes, these are stylable: the block emits real HTML into the page like
+   anything else. The container class is the stable hook — #subscribe-submit
+   and #subscribe-blog are ids Jetpack repeats on every instance, so on the
+   search page (sidebar + footer widget) they appear twice in one document.
+   Using them as selectors would work by accident and break the first time a
+   third form appeared.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.wp-block-jetpack-subscriptions__container button[type="submit"] {
+  /* Dark fill, light text: the glint casts rather than catches. */
+  --mv-seal-glint: rgba(0, 0, 0, .45);
+
+  background-color: var(--mv-color-primary, #4e74a5) !important;
+  color: var(--mv-color-surface, #fff);
+  border: 0 !important;
+  border-radius: var(--mv-tile-radius, 4px) !important;
+  padding: 10px 20px !important;
+  margin-left: 0 !important;          /* Jetpack's inline style sets 10px */
+  font-size: inherit !important;
+  font-weight: 600;
+  cursor: pointer;
+
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, currentColor 20%, transparent);
+  text-shadow: 0 1px 0 var(--mv-seal-glint);
+  transition: transform var(--mv-motion-base, 200ms) var(--mv-ease-press, cubic-bezier(.34, 1.6, .64, 1)),
+              box-shadow var(--mv-motion-base, 200ms) var(--mv-ease, ease),
+              text-shadow var(--mv-motion-fast, 150ms) var(--mv-ease, ease),
+              background-color var(--mv-motion-base, 200ms) var(--mv-ease, ease);
+}
+
+.wp-block-jetpack-subscriptions__container button[type="submit"]:hover {
+  transform: rotate(-1deg);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, currentColor 42%, transparent),
+              var(--mv-elevation-2, 0 12px 30px rgba(58, 58, 58, .12));
+}
+
+.wp-block-jetpack-subscriptions__container button[type="submit"]:active {
+  /* The shorthand in full, not just animation-name: this button inherits no
+     animation from anywhere, so a bare name would leave the duration at 0s. */
+  animation: mv-sceau var(--mv-seal-time, 280ms) var(--mv-ease-seal, cubic-bezier(.25, .7, .3, 1)) both;
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, currentColor 42%, transparent),
+              inset 0 3px 5px rgba(0, 0, 0, .3),
+              inset 0 -2px 0 rgba(255, 255, 255, .35);
+  text-shadow: 0 -1px 0 var(--mv-seal-glint);
+}
+
+/*
+ * No flat-press exception for the sidebar instance, deliberately.
+ *
+ * mv-home.css declares width: 100% on it, which reads like the full-width case
+ * — but 100% resolves against p#subscribe-submit, which Jetpack does not
+ * stretch, so the button measures the same ~150px there as in the footer. Even
+ * if that is fixed and it fills the 324px sidebar, a corner travels
+ * (324 / 2) x sin(1deg) = 2.8px, comfortably under the ~5px where a tilt starts
+ * reading as a rendering fault. Both instances tilt, and they match.
+ */
 
 /* ═══════════════════════════════════════════════════════════════════════════
    THE SEAL, EXTENDED TO THE PLUGIN BUTTONS
@@ -751,8 +842,8 @@ summary:focus-visible,
   #mv-search-again .search-submit:hover, #mv-search-again .search-submit:active,
   .mv-search-header .search-submit:hover, .mv-search-header .search-submit:active,
   .inside-right-sidebar .mv-button:hover, .inside-right-sidebar .mv-button:active,
-  #mv-search-newsletter button[type="submit"]:hover,
-  #mv-search-newsletter button[type="submit"]:active,
+  .wp-block-jetpack-subscriptions__container button[type="submit"]:hover,
+  .wp-block-jetpack-subscriptions__container button[type="submit"]:active,
   .mv-contact__submit:hover, .mv-contact__submit:active,
   .mv-geo-explorer__panel-cta:hover, .mv-geo-explorer__panel-cta:active,
   .mavo-ptppg__copy-btn:hover, .mavo-ptppg__copy-btn:active,

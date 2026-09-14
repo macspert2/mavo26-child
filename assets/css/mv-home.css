@@ -227,26 +227,50 @@
 /* The email field and submit button are sibling <p id="subscribe-email">
    / <p id="subscribe-submit"> elements inside .form-elements (not the
    outer .container, which doesn't need any layout change) — that's the
-   actual flex row that needs to become a column. */
+   actual flex row that needs to become a column.
+
+   align-items: stretch is the fix for the width, added 2026-09-14.
+
+   Jetpack sets align-items: flex-start on this container. In a row that is
+   harmless — it only affects vertical alignment. Turning the container into a
+   column above silently turned it into a *horizontal* constraint: flex-start
+   on the cross axis makes each child shrink to its content width. So the two
+   <p> wrappers sized themselves to their contents (210px and 150px in a 324px
+   sidebar), and the `width: 100%` declared on the button further down resolved
+   against a 150px parent and did nothing visible. The button looked like it
+   had been given a full-width rule that the cascade was ignoring; in fact the
+   rule applied perfectly to the wrong containing block.
+
+   stretch is the flex default — it is only being restored here. */
 #mv-search-newsletter .wp-block-jetpack-subscriptions__form-elements {
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
+	align-items: stretch;
 }
 
-/* Jetpack's button ships its own inline style="" (border-radius,
-   border-width, padding, font-size) which beats any external CSS
-   regardless of selector specificity — !important is the only way to
-   actually override an inline style, not a sign of fighting the
-   cascade unnecessarily. */
-#mv-search-newsletter button[type="submit"] {
-	background-color: var(--mv-color-primary) !important;
-	color: var(--mv-color-surface) !important;
-	border: none !important;
-	border-radius: 4px !important;
-	padding: 10px 20px !important;
-	font-weight: 600 !important;
+/* An <input> does not fill its parent the way a block element does — it has an
+   intrinsic width from its `size` attribute and keeps it however wide the
+   containing block gets. Stretching the <p> above is necessary but not
+   sufficient; the field needs telling too. border-box so the padding and
+   border stay inside the sidebar rather than pushing 324px to 326px. */
+#mv-search-newsletter .wp-block-jetpack-subscriptions__form-elements input[type="email"] {
+	width: 100%;
+	box-sizing: border-box;
 }
+
+/* The colour and shape of this button moved to mv-custom.css on 2026-09-14.
+   They were page-scoped here — this file only loads on home / explorer /
+   search / front-page — so the identical Jetpack button in the footer widget
+   matched nothing and kept its own 9999px pill. The rules are keyed to
+   Jetpack's block class there, so every instance is covered.
+
+   Removed rather than left in place: at (1,1,1) with !important this beat the
+   site-wide rule at (0,1,1), so leaving it would have kept the search page on
+   the old styling and hidden the fix exactly where it was easiest to test.
+
+   The layout rules above stay here. They are genuinely page-specific: only
+   this sidebar stretches the button to full width and stacks the form. */
 
 /* Start Here intro — guidance list + anchor jump-links (plan2.md §13) */
 
