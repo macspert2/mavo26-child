@@ -88,13 +88,22 @@
 
   /* Motion. Three steps, because thirteen was an accident rather than a
      vocabulary: fast for colour and opacity, base for transform and shadow,
-     slow for wipes and reveals. Two easings — things enter with `ease` and
-     press with the stamp curve. */
+     slow for wipes and reveals. Three easings — things enter with `ease`,
+     press with the stamp curve, and land with the seal curve: a seal press
+     bottoms out against the paper, it does not spring back like rubber. */
   --mv-motion-fast: 150ms;
   --mv-motion-base: 200ms;
   --mv-motion-slow: 350ms;
   --mv-ease:        ease;
   --mv-ease-press:  cubic-bezier(.34, 1.6, .64, 1);
+  --mv-ease-seal:   cubic-bezier(.25, .7, .3, 1);
+  --mv-seal-time:   280ms;
+
+  /* The one value in the seal that cannot be derived: see the tile
+     interaction block for why. White suits every light surface on this site,
+     so it is the default; the overlay tile and the primary buttons override
+     it. */
+  --mv-seal-glint: rgba(255, 255, 255, 0.95);
 
   /* Depth. The canonical names for what the tile shadows already were; the
      --mv-tile-shadow* names below are kept as aliases so nothing breaks. */
@@ -104,8 +113,8 @@
 
   /* Focus. One ring for the whole site. currentColor rather than a brand
      colour, so it stays visible on a white card and on a dark overlay alike.
-     The stamp's dashed ring is the single deliberate exception: it means
-     "pressed", not "focused". */
+     "Pressed" is said with relief, not with a ring, so nothing competes with
+     this one. */
   --mv-focus-ring:   2px solid currentColor;
   --mv-focus-offset: 3px;
   --mv-tile-shadow:         var(--mv-elevation-1);   /* alias */
@@ -129,58 +138,114 @@
   text-decoration: none;
   overflow-wrap: break-word;
   transition: transform var(--mv-motion-base, 200ms) var(--mv-ease-press, cubic-bezier(.34, 1.6, .64, 1)),
-              box-shadow var(--mv-motion-base, 200ms) var(--mv-ease, ease),
-              filter var(--mv-motion-base, 200ms) var(--mv-ease, ease);
+              box-shadow var(--mv-motion-base, 200ms) var(--mv-ease, ease);
 }
 
-/* ===== Tile interaction — the stamp =====
+/* ===== Tile interaction — the seal =====
  *
- * The same « tampon » vocabulary the buttons use (see mv-custom.css): tilt on
- * hover, a dashed rim on press, no colours of its own. What differs is that
- * the angle has to come down as the tile gets wider.
+ * The same « sceau frappé » vocabulary the buttons use (see mv-custom.css):
+ * a tilt on hover, and on press a recoil plus relief — the face of the tile
+ * sinks, as a die would sink it. No colour of its own.
  *
- * A tile's corner travels (width / 2) x sin(angle). At 1.2 degrees that is
- * about 3px on a 300px card and about 8px on a full-width result row, where it
- * stops reading as a stamp and starts reading as a rendering fault. So:
+ * Two things govern every value below.
  *
- *   compact, overlay   small boxes, little or no body text   1.2deg, as buttons
- *   everything else    media cards carrying an excerpt       0.6deg
- *   result rows        full width                            no rotation
- *   utility            a container, not an affordance        nothing at all
+ * 1. The angle comes down as the tile gets wider. A corner travels
+ *    (width / 2) x sin(angle): at 1.2 degrees that is about 3px on a 300px
+ *    card and about 8px on a full-width result row, where it stops reading as
+ *    a stamp and starts reading as a rendering fault.
  *
- * 0.6 degrees is the base rather than 1.2, so an unlisted or future tile gets
- * the conservative angle by default.
+ *      compact, overlay   small boxes, little or no body text   1.2deg
+ *      everything else    media cards carrying an excerpt       0.6deg
+ *      result rows        full width                            no rotation
+ *      utility            a container, not an affordance        nothing
+ *
+ *    0.6 is the base rather than 1.2, so an unlisted or future tile gets the
+ *    conservative angle by default.
+ *
+ * 2. Relief is a lie told with light, and it holds only if the light comes
+ *    from one direction and never moves. Everything here is lit from above:
+ *    a dark inset at the top rim, a thin light line at the bottom, and the
+ *    title's highlight below the glyphs at rest, above them when sunken.
+ *    That flip is what a deboss is, optically — there is no
+ *    `text-shadow: inset`, only box-shadow has that keyword.
  *
  * No translateY on hover, for the reason spelled out in mv-custom.css: on top
  * of the rotation it cancels the left edge's descent, and the tilt then reads
  * as a pivot about the left edge instead of about the centre. The lift comes
  * from the shadow.
- *
- * brightness() rather than a colour, so the treatment works on a white card, a
- * cream one and a photo-backed overlay without enumerating any of them.
  */
+
+/*
+ * Three recoils, one shape: the die comes down, bottoms out at 45%, the paper
+ * answers weakly at 70%, and it holds. Only the angle differs, and it differs
+ * only because the width does. A transition cannot express this — it
+ * interpolates between two values and so cannot overshoot.
+ *
+ * mv-custom.css uses these same three by name for the buttons; keyframes are
+ * global, and this file loads first.
+ */
+@keyframes mv-sceau {
+  0%   { transform: rotate(-1deg)    scale(1);     }
+  45%  { transform: rotate(0.35deg)  scale(0.965); }
+  70%  { transform: rotate(0.2deg)   scale(1.005); }
+  100% { transform: rotate(0.3deg)   scale(0.99);  }
+}
+
+@keyframes mv-sceau-doux {
+  0%   { transform: rotate(-0.6deg)  scale(1);     }
+  45%  { transform: rotate(0.22deg)  scale(0.975); }
+  70%  { transform: rotate(0.12deg)  scale(1.004); }
+  100% { transform: rotate(0.2deg)   scale(0.993); }
+}
+
+/* Full width: the press is real, the rotation would read as breakage. */
+@keyframes mv-sceau-plat {
+  0%   { transform: translateY(-2px) scale(1);     }
+  45%  { transform: translateY(0)    scale(0.982); }
+  70%  { transform: translateY(0)    scale(1.003); }
+  100% { transform: translateY(0)    scale(0.995); }
+}
 
 .mv-tile:hover {
   transform: rotate(-0.6deg);
   box-shadow: var(--mv-tile-shadow-hover, 0 12px 30px rgba(58, 58, 58, 0.12));
-  filter: brightness(0.97);
+}
+
+.mv-tile:active {
+  animation: mv-sceau-doux var(--mv-seal-time, 280ms) var(--mv-ease-seal, cubic-bezier(.25, .7, .3, 1)) both;
+  box-shadow: var(--mv-tile-shadow-pressed, 0 5px 16px rgba(58, 58, 58, 0.09)),
+              inset 0 3px 5px rgba(0, 0, 0, 0.14),
+              inset 0 -2px 0 rgba(255, 255, 255, 0.9);
 }
 
 /*
- * The press ring: outline, not border or box-shadow. A border would widen the
- * tile on click; a box-shadow would lose to the hover shadow, which still
- * applies while the tile is held. currentColor faded is the tile's own text
- * colour, so the rim contrasts on a white card (dark) and on an overlay (light)
- * without being told which it is. Negative offset at least equal to the width,
- * or the ring paints outside the box. Not in the transition list: a stamp
- * lands, it does not fade.
+ * The relief has to reach the photograph, and an inset shadow on .mv-tile
+ * cannot: an inset paints above the element's own background but below its
+ * children, and the media is a child covering the whole top of the card.
+ * On .mv-tile__img it works, because there the photo IS the background.
  */
-.mv-tile:active {
-  transform: rotate(0.2deg) scale(0.99);
-  box-shadow: var(--mv-tile-shadow-pressed, 0 5px 16px rgba(58, 58, 58, 0.09));
-  outline: 4px dashed color-mix(in srgb, currentColor 40%, transparent);
-  outline-offset: -4px;
+.mv-tile:active .mv-tile__img {
+  box-shadow: inset 0 4px 9px rgba(0, 0, 0, 0.34);
 }
+
+/*
+ * Whether a raised letter catches light or casts shadow depends on whether it
+ * is lighter or darker than the surface under it, and CSS cannot ask:
+ * color-mix does not branch, and light-dark() answers a different question
+ * (the visitor's colour scheme, not this tile's fill). So it is named once per
+ * palette — white on a white card, dark on a photo-backed overlay. It is the
+ * only colour in this block.
+ */
+.mv-tile__title {
+  text-shadow: 0 1px 0 var(--mv-seal-glint, rgba(255, 255, 255, 0.95));
+  transition: text-shadow 150ms var(--mv-ease, ease);
+}
+
+.mv-tile:active .mv-tile__title {
+  text-shadow: 0 -1px 0 var(--mv-seal-glint, rgba(255, 255, 255, 0.95));
+}
+
+.mv-tile--overlay { --mv-seal-glint: rgba(0, 0, 0, 0.5); }
 
 /* Small boxes take the button's full angle. */
 .mv-tile--compact:hover,
@@ -190,10 +255,7 @@
 
 .mv-tile--compact:active,
 .mv-tile--overlay:active {
-  transform: rotate(0.4deg) scale(0.985);
-  outline-width: 5px;
-  outline-offset: -5px;
-  outline-color: color-mix(in srgb, currentColor 45%, transparent);
+  animation-name: mv-sceau;
 }
 
 /* Full-width rows press instead of rotating. */
@@ -202,7 +264,7 @@
 }
 
 .mv-tile--result:active {
-  transform: translateY(0) scale(0.995);
+  animation-name: mv-sceau-plat;
 }
 
 /*
@@ -214,9 +276,15 @@
 .mv-tile--utility:hover,
 .mv-tile--utility:active {
   transform: none;
+  animation: none;
   box-shadow: var(--mv-tile-shadow, 0 8px 22px rgba(58, 58, 58, 0.08));
   filter: none;
   outline: none;
+}
+
+.mv-tile--utility .mv-tile__title,
+.mv-tile--utility .mv-box__title {
+  text-shadow: none;
 }
 
 .mv-tile:focus-visible,
@@ -438,7 +506,8 @@ a.mv-badge.mv-badge--neutral   { color: var(--mv-color-text, #3a3a3a); }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 220ms ease;
+  transition: transform 220ms ease,
+              box-shadow var(--mv-motion-base, 200ms) var(--mv-ease, ease);
 }
 
 .mv-tile--media:hover .mv-tile__img,
@@ -1197,13 +1266,16 @@ body.search-results .hentry.mv-tile--result {
 
 @media (prefers-reduced-motion: reduce) {
   /*
-   * Shadow, brightness and the press ring stay: none of them is motion. Only
-   * the transform goes -- including the media zoom, which the old rule made
-   * instantaneous rather than absent.
+   * Relief, shadow and the title's highlight flip all stay: none of them is
+   * motion. Only the transform goes -- including the media zoom, which the
+   * old rule made instantaneous rather than absent.
+   *
+   * `animation: none` is not optional here. Every recoil is now a keyframe,
+   * and a blanket `transform: none` would leave them running underneath it.
    */
   .mv-tile {
     transition: box-shadow var(--mv-motion-base, 200ms) var(--mv-ease, ease),
-                filter var(--mv-motion-base, 200ms) var(--mv-ease, ease);
+                text-shadow var(--mv-motion-fast, 150ms) var(--mv-ease, ease);
   }
 
   .mv-tile__img {
@@ -1221,6 +1293,7 @@ body.search-results .hentry.mv-tile--result {
   .mv-tile--media:hover .mv-tile__img,
   .mv-tile--overlay:hover .mv-tile__img {
     transform: none;
+    animation: none;
   }
 }
 /* ─────────────────────────────────────────────────────────────────────────

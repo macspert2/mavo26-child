@@ -404,19 +404,35 @@ summary:focus-visible,
 }
 
 /*
- * « Tampon » — motion only, no colours.
+ * « Sceau frappé » — motion and relief, no colours.
  *
- * Add the class to any button and it keeps its own palette: brightness()
- * darkens whatever background it finds, so every foreground/background
- * combination on the site works without being enumerated.
+ * Add the class to any button and it keeps its own palette. The rim is
+ * currentColor faded, the deboss is plain black and white: all three work on
+ * whatever surface they land on, so every foreground/background combination on
+ * the site is handled without being enumerated.
  *
- * The site's existing motion language is a lift (translateY) — comment submit,
- * .tvf-chip, .mv-tile all use it — so this lifts *and* tilts rather than
- * replacing one vocabulary with another.
+ * What it replaces: the tampon, which tilted and then drew a dashed ring on
+ * click. Same tilt, but the press is now expressed as relief instead of as a
+ * ring — the face of the button sinks, as a die would sink it. A seal press
+ * also bottoms out rather than springing back, which a transition cannot say:
+ * a transition interpolates between two values and so cannot overshoot. The
+ * three @keyframes live in mv-tiles.css, which loads first; keyframes are
+ * global by name, and the tiles need the same three.
  *
- * Rotation scales inversely with width: at 1.2° a chip's corners move under a
- * pixel, a 600px full-width button's move about six and it reads as broken.
- * Use .mv-stamp--press on anything full-width.
+ * Rotation scales inversely with width: at 1.2 degrees a chip's corners move
+ * under a pixel, a 600px full-width button's move about six and it reads as
+ * broken. Use .mv-stamp--press on anything full-width.
+ *
+ * -----------------------------------------------------------------------
+ * The one value that cannot be derived
+ *
+ * Whether a raised letter catches light or casts shadow depends on whether it
+ * is lighter or darker than the surface under it, and CSS has no way to ask —
+ * color-mix cannot branch, and light-dark() answers a different question (the
+ * visitor's colour scheme, not this button's fill). So --mv-seal-glint is
+ * named once per palette: white is the default, set in mv-tiles.css because
+ * nearly every button here sits on bg-soft with dark text; the two dark-filled
+ * ones override it below.
  */
 /*
  * .mv-button and the search submits are listed alongside .mv-stamp rather than
@@ -435,81 +451,81 @@ summary:focus-visible,
 .mv-button,
 #mv-search-again .search-submit,
 .mv-search-header .search-submit {
-  transition: transform .2s cubic-bezier(.34, 1.6, .64, 1), filter .2s ease,
-              box-shadow .2s ease, background-color .2s ease;
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, currentColor 20%, transparent);
+  text-shadow: 0 1px 0 var(--mv-seal-glint, rgba(255, 255, 255, 0.95));
+  transition: transform var(--mv-motion-base, 200ms) var(--mv-ease-press, cubic-bezier(.34, 1.6, .64, 1)),
+              box-shadow var(--mv-motion-base, 200ms) var(--mv-ease, ease),
+              text-shadow var(--mv-motion-fast, 150ms) var(--mv-ease, ease),
+              background-color var(--mv-motion-base, 200ms) var(--mv-ease, ease);
 }
 
 /*
  * No translateY here, deliberately.
  *
- * transform-origin is already the centre, and rotate(-1.2deg) already drops the
+ * transform-origin is already the centre, and rotate(-1deg) already drops the
  * left edge and raises the right. But a 2px lift on top of it more than cancels
- * the left edge's ~1.6px descent (on a 150px button), so both edges end up
+ * the left edge's ~1.3px descent (on a 150px button), so both edges end up
  * rising and only the right one visibly — which reads as a pivot around the
  * left edge rather than a tilt about the centre.
  *
- * The raised feeling comes from the component's box-shadow instead, which is
- * where it belongs: shadow says "off the page", rotation says "stamped".
+ * The raised feeling comes from the box-shadow instead, which is where it
+ * belongs: shadow says "off the page", rotation says "stamped".
+ *
+ * 1 degree rather than the tampon's 1.2: the rim makes the tilt easier to
+ * read, so it needs less of it.
  */
 .mv-stamp:hover,
 .mv-button:hover,
 #mv-search-again .search-submit:hover,
-.mv-search-header .search-submit:hover { transform: rotate(-1.2deg); filter: brightness(.96); }
+.mv-search-header .search-submit:hover {
+  transform: rotate(-1deg);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, currentColor 42%, transparent),
+              var(--mv-elevation-2, 0 12px 30px rgba(58, 58, 58, .12));
+}
 
 /*
- * The press: a dark edge, as if the ink caught the rim of the stamp.
+ * The press: the face sinks.
  *
- * `outline` rather than `border` or `box-shadow`, for three reasons. A border
- * would widen the button by 4px on click, because its width is auto. A
- * box-shadow would lose to the component's own hover shadow, which is set at
- * (0,5,1) and still applies while the button is being pressed. An outline is
- * subject to neither: it never affects layout, and nothing else here uses it.
+ * Three declarations do all of it, and each is one half of a pair with the
+ * resting state above — which is the whole trick. Relief is a lie told with
+ * light, and it holds only as long as the light comes from one direction and
+ * never moves. Lit from above:
  *
- * The colour is currentColor, faded — not a fixed light or dark.
+ *   inset 0 3px 5px black    the top rim falls into shadow
+ *   inset 0 -2px 0 white     the bottom rim catches the light
+ *   text-shadow above        the label's highlight moves to the other side
  *
- * A fixed translucent white would be exactly right on this blue button and
- * invisible on a white one, which would quietly break the one promise this
- * utility makes: that it works on any button without being told the palette.
- * currentColor is the button's own text colour, which already has to contrast
- * with its background, so the rim contrasts too. On the comment button that
- * resolves to white — the lighter rim you asked for — and on a pale button it
- * resolves dark, which is the same idea with the values the other way up.
+ * That last one is the one people notice without being able to say why. There
+ * is no `text-shadow: inset` — only box-shadow has that keyword — so sunken
+ * text has to be faked by moving the highlight across the glyphs, which is all
+ * a real deboss is, optically.
  *
- * Dashed, for the perforated look of a rubber stamp. Note that CSS offers no
- * control over dash length: the browser chooses the pattern and engines differ.
- * It does scale with outline-width though, so the 5px here buys longer dashes
- * as well as a more prominent ring. Controlling the dashes properly would mean
- * an SVG border-image, which does not follow border-radius at all — a bad trade
- * for a pill.
- *
- * outline-offset must be at least as negative as the width, or the ring paints
- * partly outside the button: the outline is drawn outward from the border box
- * inflated by the offset. At -5px with a 5px width it sits flush inside the rim,
- * leaving about 5px between the rim and the label on a 10px-padded button. 6px
- * would start to crowd it.
- *
- * Deliberately not in the transition list: a stamp lands, it does not fade.
+ * Why box-shadow rather than the outline the tampon used: an outline cannot
+ * blur, and unblurred relief reads as a border. The hover shadow that used to
+ * out-specify a box-shadow press is no longer a problem, because this rule
+ * simply replaces it — both are box-shadow on the same element.
  */
 .mv-stamp:active,
 .mv-button:active,
 #mv-search-again .search-submit:active,
 .mv-search-header .search-submit:active {
-  transform: rotate(.4deg) scale(.98);
-  filter: brightness(.92);
-  outline: 5px dashed color-mix(in srgb, currentColor 60%, transparent);
-  outline-offset: -5px;
+  animation: mv-sceau var(--mv-seal-time, 280ms) var(--mv-ease-seal, cubic-bezier(.25, .7, .3, 1)) both;
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, currentColor 42%, transparent),
+              inset 0 3px 5px rgba(0, 0, 0, .3),
+              inset 0 -2px 0 rgba(255, 255, 255, .35);
+  text-shadow: 0 -1px 0 var(--mv-seal-glint, rgba(255, 255, 255, 0.95));
 }
 
 /* For full-width buttons, where rotation reads as breakage. Use both classes:
-   class="mv-stamp mv-stamp--press" — the press ring comes from .mv-stamp. */
+   class="mv-stamp mv-stamp--press" — the relief comes from .mv-stamp. */
 .mv-stamp--press:hover  { transform: translateY(-2px); }
-.mv-stamp--press:active { transform: translateY(0) scale(.98); }
+.mv-stamp--press:active { animation-name: mv-sceau-plat; }
 
 /*
  * The two buttons the site stretches to full width, which cannot use the class
  * because they are styled by selector: mv-home.css gives both `width: 100%`.
- * At 1.2° their corners travel about six pixels and the tilt reads as a
- * rendering fault rather than a stamp, so they press instead.
+ * At 1 degree their corners travel about five pixels and the tilt reads as a
+ * rendering fault rather than a seal, so they press flat instead.
  */
 .inside-right-sidebar .mv-button:hover,
 #mv-search-newsletter button[type="submit"]:hover {
@@ -518,7 +534,7 @@ summary:focus-visible,
 
 .inside-right-sidebar .mv-button:active,
 #mv-search-newsletter button[type="submit"]:active {
-  transform: translateY(0) scale(.995);
+  animation-name: mv-sceau-plat;
 }
 
 /*
@@ -526,6 +542,10 @@ summary:focus-visible,
  * elements wearing the class. .mv-button and the search submits take their
  * motion from this file now, and mv-home.css only covers them on the handful
  * of pages it loads on.
+ *
+ * `animation: none` is not optional: every recoil here is a keyframe, and a
+ * blanket `transform: none` would leave them running underneath it. The relief
+ * and the highlight flip both stay — neither is motion.
  */
 @media (prefers-reduced-motion: reduce) {
   .mv-stamp,
@@ -533,7 +553,9 @@ summary:focus-visible,
   .mv-button,
   #mv-search-again .search-submit,
   .mv-search-header .search-submit {
-    transition: filter .2s ease, box-shadow .2s ease, background-color .2s ease;
+    transition: box-shadow var(--mv-motion-base, 200ms) var(--mv-ease, ease),
+                text-shadow var(--mv-motion-fast, 150ms) var(--mv-ease, ease),
+                background-color var(--mv-motion-base, 200ms) var(--mv-ease, ease);
   }
   .mv-stamp:hover, .mv-stamp:active,
   .mv-stamp--press:hover, .mv-stamp--press:active,
@@ -544,9 +566,9 @@ summary:focus-visible,
   #mv-search-newsletter button[type="submit"]:hover,
   #mv-search-newsletter button[type="submit"]:active {
     transform: none;
+    animation: none;
   }
 }
-
 
 /* ═══════════════════════════════════════════════════════════════════════════
    BUTTON SHAPE — the ticket
@@ -582,14 +604,56 @@ summary:focus-visible,
 
 /* ── The notch, primary tier only ─────────────────────────────────────────── */
 
+/*
+ * These two are the site's only dark-filled buttons, so they are also the only
+ * place --mv-seal-glint has to be flipped: white text casts a shadow when it
+ * stands proud, it does not catch light.
+ *
+ * They are also the only notched ones, and the notch and the seal's rim cannot
+ * both be box-shadows. An inset box-shadow paints on top of the background, so
+ * the perimeter rim would draw a coloured arc straight across the painted
+ * notches at either end and they would stop matching the page behind them —
+ * which is the one thing a painted notch has to do. So here the relief is a
+ * background layer instead, stacked *under* the notches: earlier in the
+ * background-image list means nearer the front, so the two notch gradients
+ * come first and paint over the shading.
+ *
+ * Revealed by growing its height from 0, because background-size animates
+ * reliably and a gradient's own colour stops do not.
+ */
 .mv-button--primary,
 .comments-area .comment-form .form-submit input[type="submit"] {
   --billet-bg: #fff;
   --notch: 7px;
+  --mv-seal-glint: rgba(0, 0, 0, .45);
+
   background-image:
     radial-gradient(circle at 0 50%, var(--billet-bg) var(--notch), transparent calc(var(--notch) + .5px)),
-    radial-gradient(circle at 100% 50%, var(--billet-bg) var(--notch), transparent calc(var(--notch) + .5px));
-  background-repeat: no-repeat;
+    radial-gradient(circle at 100% 50%, var(--billet-bg) var(--notch), transparent calc(var(--notch) + .5px)),
+    linear-gradient(rgba(0, 0, 0, .28), rgba(0, 0, 0, .05) 55%, transparent 78%);
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-size: auto, auto, 100% 0%;
+  background-position: 0 0, 0 0, 0 0;
+  box-shadow: none;
+  transition: transform var(--mv-motion-base, 200ms) var(--mv-ease-press, cubic-bezier(.34, 1.6, .64, 1)),
+              background-size var(--mv-motion-fast, 150ms) var(--mv-ease, ease),
+              text-shadow var(--mv-motion-fast, 150ms) var(--mv-ease, ease),
+              background-color var(--mv-motion-base, 200ms) var(--mv-ease, ease);
+}
+
+/* The shading is the whole relief here, so hover gets a hint of it and the
+   press gets all of it. No rim to strengthen, and no outer shadow either: a
+   drop shadow under a notched button lands in the notches too. */
+.mv-button--primary:hover,
+.comments-area .comment-form .form-submit input[type="submit"]:hover {
+  box-shadow: none;
+  background-size: auto, auto, 100% 22%;
+}
+
+.mv-button--primary:active,
+.comments-area .comment-form .form-submit input[type="submit"]:active {
+  box-shadow: none;
+  background-size: auto, auto, 100% 100%;
 }
 
 /* Wherever the panel behind is cream rather than white. */
