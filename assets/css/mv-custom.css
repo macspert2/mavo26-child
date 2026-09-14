@@ -521,7 +521,10 @@ summary:focus-visible,
 .mv-stamp,
 .mv-button,
 #mv-search-again .search-submit,
-.mv-search-header .search-submit {
+.mv-search-header .search-submit,
+.mv-contact__submit,
+.mv-geo-explorer__panel-cta,
+.mavo-ptppg__copy-btn {
   box-shadow: inset 0 0 0 2px color-mix(in srgb, currentColor 20%, transparent);
   text-shadow: 0 1px 0 var(--mv-seal-glint, rgba(255, 255, 255, 0.95));
   transition: transform var(--mv-motion-base, 200ms) var(--mv-ease-press, cubic-bezier(.34, 1.6, .64, 1)),
@@ -548,7 +551,10 @@ summary:focus-visible,
 .mv-stamp:hover,
 .mv-button:hover,
 #mv-search-again .search-submit:hover,
-.mv-search-header .search-submit:hover {
+.mv-search-header .search-submit:hover,
+.mv-contact__submit:hover,
+.mv-geo-explorer__panel-cta:hover,
+.mavo-ptppg__copy-btn:hover {
   transform: rotate(-1deg);
   box-shadow: inset 0 0 0 2px color-mix(in srgb, currentColor 42%, transparent),
               var(--mv-elevation-2, 0 12px 30px rgba(58, 58, 58, .12));
@@ -579,7 +585,10 @@ summary:focus-visible,
 .mv-stamp:active,
 .mv-button:active,
 #mv-search-again .search-submit:active,
-.mv-search-header .search-submit:active {
+.mv-search-header .search-submit:active,
+.mv-contact__submit:active,
+.mv-geo-explorer__panel-cta:active,
+.mavo-ptppg__copy-btn:active {
   animation: mv-sceau var(--mv-seal-time, 280ms) var(--mv-ease-seal, cubic-bezier(.25, .7, .3, 1)) both;
   box-shadow: inset 0 0 0 2px color-mix(in srgb, currentColor 42%, transparent),
               inset 0 3px 5px rgba(0, 0, 0, .3),
@@ -608,6 +617,109 @@ summary:focus-visible,
   animation-name: mv-sceau-plat;
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   THE SEAL, EXTENDED TO THE PLUGIN BUTTONS
+   ═══════════════════════════════════════════════════════════════════════════
+
+   Five buttons live in other plugins and until now took only the 4px corner
+   from the shape block below — right silhouette, four different behaviours on
+   click. They are harmonised here rather than in five plugin files for the
+   reason the shape block already gives: this file loads last and site-wide, so
+   one block replaces five edits and five deployments, and reverting is
+   deleting it.
+
+   They do not all take the same amount of the seal, because they are not all
+   the same kind of object. The seal has two separable layers — the MOTION
+   (tilt, recoil) and the RESTING RIM (the die's edge) — and only the motion is
+   universal:
+
+     solid fill, no border of its own     full seal
+       .mv-contact__submit, .mv-geo-explorer__panel-cta, .mavo-ptppg__copy-btn
+       Added to the three lists above. All three are dark-filled with white
+       text, so all three flip --mv-seal-glint.
+
+     solid fill, its own border           motion + deboss, no rim
+       .tvf-load-more-btn
+       It already carries a 1.5px border; a rim inside a border is the same
+       line drawn twice, 1.5px apart, which reads as a mistake rather than as
+       relief.
+
+     no fill, no border — a text control  motion + the glint flip only
+       .tvf-reset-btn
+       A rim would draw a box where the design deliberately has none, and a
+       deboss needs a face to sink: there is nothing there to darken. What is
+       left is exactly the treatment prose links get, which is the right answer
+       — this is a link that happens to be a <button>.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Dark fill, light text: a raised letter casts a shadow, it does not catch
+   light. (The white default lives in mv-tiles.css.) */
+.mv-contact__submit,
+.mv-geo-explorer__panel-cta,
+.mavo-ptppg__copy-btn {
+  --mv-seal-glint: rgba(0, 0, 0, .45);
+}
+
+/*
+ * The copy button goes width: 100% below 480px, where a 1 degree tilt moves
+ * its corners far enough to read as a rendering fault. Same exception the
+ * sidebar and newsletter buttons take, for the same reason — theirs is by
+ * selector, this one is by viewport.
+ */
+@media (max-width: 480px) {
+  .mavo-ptppg__copy-btn:hover  { transform: translateY(-2px); }
+  .mavo-ptppg__copy-btn:active { animation-name: mv-sceau-plat; }
+}
+
+/* ── Tier 2: brings its own border, so no rim ─────────────────────────────── */
+
+/*
+ * :not(:disabled) is load-bearing. The plugin sets `transform: none` on
+ * :disabled, which ties with a bare :hover rule here at (0,2,0) — and this
+ * file loads last, so without the guard a button disabled mid-load would tilt
+ * under the pointer while refusing the click.
+ */
+.tvf-load-more-btn {
+  transition: transform var(--mv-motion-base, 200ms) var(--mv-ease-press, cubic-bezier(.34, 1.6, .64, 1)),
+              box-shadow var(--mv-motion-base, 200ms) var(--mv-ease, ease),
+              text-shadow var(--mv-motion-fast, 150ms) var(--mv-ease, ease),
+              background-color var(--mv-motion-base, 200ms) var(--mv-ease, ease),
+              border-color var(--mv-motion-base, 200ms) var(--mv-ease, ease);
+}
+
+.tvf-load-more-btn:not(:disabled):hover {
+  transform: rotate(-1deg);
+}
+
+.tvf-load-more-btn:not(:disabled):active {
+  animation: mv-sceau var(--mv-seal-time, 280ms) var(--mv-ease-seal, cubic-bezier(.25, .7, .3, 1)) both;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, .22),
+              inset 0 -2px 0 rgba(255, 255, 255, .7);
+  text-shadow: 0 -1px 0 var(--mv-seal-glint, rgba(255, 255, 255, .95));
+}
+
+/* ── Tier 3: a link that happens to be a <button> ─────────────────────────── */
+
+/*
+ * No rim and no deboss — there is no face to sink. The tilt and the glint flip
+ * are the whole of it, which is the same pair of declarations prose links take
+ * on :active, and for the same reason: relief on a transparent ground can only
+ * be said by the text itself.
+ */
+.tvf-reset-btn {
+  transition: transform var(--mv-motion-base, 200ms) var(--mv-ease-press, cubic-bezier(.34, 1.6, .64, 1)),
+              color var(--mv-motion-fast, 150ms) var(--mv-ease, ease),
+              background-color var(--mv-motion-fast, 150ms) var(--mv-ease, ease),
+              text-shadow var(--mv-motion-fast, 150ms) var(--mv-ease, ease);
+}
+
+.tvf-reset-btn:hover  { transform: rotate(-1deg); }
+
+.tvf-reset-btn:active {
+  animation: mv-sceau var(--mv-seal-time, 280ms) var(--mv-ease-seal, cubic-bezier(.25, .7, .3, 1)) both;
+  text-shadow: 0 -1px 0 rgba(255, 255, 255, .9), 0 1px 1px rgba(0, 0, 0, .3);
+}
+
 /*
  * Reduced motion has to name everything the rules above move — not just the
  * elements wearing the class. .mv-button and the search submits take their
@@ -623,7 +735,12 @@ summary:focus-visible,
   .mv-stamp--press,
   .mv-button,
   #mv-search-again .search-submit,
-  .mv-search-header .search-submit {
+  .mv-search-header .search-submit,
+  .mv-contact__submit,
+  .mv-geo-explorer__panel-cta,
+  .mavo-ptppg__copy-btn,
+  .tvf-load-more-btn,
+  .tvf-reset-btn {
     transition: box-shadow var(--mv-motion-base, 200ms) var(--mv-ease, ease),
                 text-shadow var(--mv-motion-fast, 150ms) var(--mv-ease, ease),
                 background-color var(--mv-motion-base, 200ms) var(--mv-ease, ease);
@@ -635,7 +752,12 @@ summary:focus-visible,
   .mv-search-header .search-submit:hover, .mv-search-header .search-submit:active,
   .inside-right-sidebar .mv-button:hover, .inside-right-sidebar .mv-button:active,
   #mv-search-newsletter button[type="submit"]:hover,
-  #mv-search-newsletter button[type="submit"]:active {
+  #mv-search-newsletter button[type="submit"]:active,
+  .mv-contact__submit:hover, .mv-contact__submit:active,
+  .mv-geo-explorer__panel-cta:hover, .mv-geo-explorer__panel-cta:active,
+  .mavo-ptppg__copy-btn:hover, .mavo-ptppg__copy-btn:active,
+  .tvf-load-more-btn:not(:disabled):hover, .tvf-load-more-btn:not(:disabled):active,
+  .tvf-reset-btn:hover, .tvf-reset-btn:active {
     transform: none;
     animation: none;
   }
