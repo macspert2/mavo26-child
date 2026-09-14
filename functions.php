@@ -134,11 +134,14 @@ add_filter( 'upload_mimes', 'allow_svg_uploads' );
  */
 add_action( 'wp_enqueue_scripts', function () {
     if ( is_page( [ 'accueil', 'explorer', 'home', 'startseite' ] ) || is_front_page() || is_search() ) {
+        // filemtime, like the other child-theme stylesheets. The theme version
+        // only changes when someone remembers to bump it, which is exactly when
+        // a CSS edit silently fails to reach anyone.
         wp_enqueue_style(
             'mv-home',
             get_stylesheet_directory_uri() . '/assets/css/mv-home.css',
             [],
-            wp_get_theme()->get( 'Version' )
+            filemtime( get_stylesheet_directory() . '/assets/css/mv-home.css' )
         );
     }
     wp_enqueue_style(
