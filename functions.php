@@ -237,6 +237,25 @@ add_action('admin_head', function() {
     </style>';
 });
 
+/* cache-enabler: cache only pages/posts */
+add_filter( 'cache_enabler_bypass_cache', function ( $bypass ) {
+
+    if ( is_admin() ) {
+        return $bypass;
+    }
+
+    if (
+        is_archive()
+        || is_search()
+        || is_feed()
+        || is_404()
+    ) {
+        return true;
+    }
+
+    return $bypass;
+} );
+
 // add comments to json-ld - remove microdata from comments
 /* add_filter( 'wpseo_schema_graph', function( $graph, $context ) {
     if ( ! is_singular() ) return $graph;
