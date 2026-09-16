@@ -48,9 +48,8 @@ if ( empty( $keys ) ) {
 $placeholder_image = mv_get_placeholder_image();
 $lang               = function_exists( 'pll_current_language' ) ? pll_current_language( 'slug' ) : 'fr';
 
-// Per-language link targets — only French has a full-finder page today;
-// other languages fall back to French rather than 404. Add an entry here
-// once an EN/DE full-finder page exists.
+// Per-language link targets. All three languages now have both a focus page
+// and a full-finder page, so the ?? fallbacks below should never fire.
 $focus_urls = [
 	'fr' => 'https://www.mamanvoyage.com/nos-idees-de-voyage/',
 	'en' => 'https://www.mamanvoyage.com/en/our-travel-ideas/',
@@ -58,6 +57,8 @@ $focus_urls = [
 ];
 $full_urls  = [
 	'fr' => 'https://www.mamanvoyage.com/ou-partir-trouvez-votre-prochain-voyage/',
+	'en' => 'https://www.mamanvoyage.com/en/where-to/',
+	'de' => 'https://www.mamanvoyage.com/de/wohin-reisen/',
 ];
 $link_base  = 'full' === $link_to
 	? ( $full_urls[ $lang ] ?? $full_urls['fr'] )
