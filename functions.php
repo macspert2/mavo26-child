@@ -4,6 +4,45 @@ if ( ! defined( 'ABSPATH' ) ) {
         exit; // Exit if accessed directly.
 }
 
+/**
+ * Cache-busting version for a child-theme asset, from its mtime.
+ *
+ * mtime rather than the theme version, because the theme version only changes
+ * when someone remembers to bump it — which is exactly the moment a CSS edit
+ * silently fails to reach anyone.
+ *
+ * Defined once because the fallback kept being forgotten: three call sites
+ * guarded with file_exists() and three called filemtime() bare, where a missing
+ * file means a PHP warning and `false` as the version.
+ *
+ * @param string $relative Path inside the child theme, e.g. 'assets/css/mv-home.css'.
+ */
+function mv_asset_version( string $relative ) {
+	$path = get_stylesheet_directory() . '/' . ltrim( $relative, '/' );
+
+	return file_exists( $path ) ? filemtime( $path ) : wp_get_theme()->get( 'Version' );
+}
+
+/**
+ * An absolute URL on this site for a path that already carries its own
+ * language prefix (e.g. '/a-propos/', '/en/about/').
+ *
+ * Deliberately not home_url(). Polylang runs in directory mode here and filters
+ * home_url(), so on an English page it can return the English home — which
+ * would turn '/a-propos/' into '/en/a-propos/' and break links that are
+ * *meant* to point at the French page. get_option('home') is the configured
+ * site address before any of that, and set_url_scheme() keeps http/https
+ * correct.
+ *
+ * For "this language's front page", use pll_home_url() instead — that is the
+ * question Polylang exists to answer.
+ */
+function mv_site_url( string $path = '/' ): string {
+	$base = untrailingslashit( (string) get_option( 'home' ) );
+
+	return set_url_scheme( $base . '/' . ltrim( $path, '/' ) );
+}
+
 require_once get_stylesheet_directory() . '/inc/mv-settings.php';
 require_once get_stylesheet_directory() . '/inc/mv-landing-footer.php';
 require_once get_stylesheet_directory() . '/inc/mv-search-page.php';
@@ -122,33 +161,39 @@ add_filter('tiny_mce_before_init', function ($init) {
     return $init;
 } );
 
-function allow_svg_uploads( $mimes ) {
-    $mimes['svg'] = 'image/svg+xml';
-    return $mimes;
-}
-add_filter( 'upload_mimes', 'allow_svg_uploads' );
+/*
+ * SVG uploads used to be enabled here (an upload_mimes filter adding
+ * image/svg+xml). Removed: WordPress does not sanitise SVG, and an SVG can
+ * carry <script>, an onload attribute or a foreignObject, so an uploaded one
+ * is served from this origin as executable markup. Nothing in the theme
+ * referenced an uploaded .svg — every icon on the site is inline SVG in a
+ * template — so the capability was unused.
+ *
+ * If SVG uploads are ever needed again, add sanitising on upload rather than
+ * re-adding the mime type on its own.
+ */
 
 /**
  * Page-specific component CSS: homepage variants, explorer, and search results.
  * Not loaded on post/archive pages where none of these components appear.
  */
 add_action( 'wp_enqueue_scripts', function () {
-    if ( is_page( [ 'accueil', 'explorer', 'home', 'startseite' ] ) || is_front_page() || is_search() ) {
-        // filemtime, like the other child-theme stylesheets. The theme version
-        // only changes when someone remembers to bump it, which is exactly when
-        // a CSS edit silently fails to reach anyone.
+    // mv_is_landing_page() (inc/mv-landing-footer.php, required above) owns the
+    // list of landing-page slugs. It was spelled out a second time here, in a
+    // different order, which is how two copies of one list start disagreeing.
+    if ( mv_is_landing_page() || is_search() ) {
         wp_enqueue_style(
             'mv-home',
             get_stylesheet_directory_uri() . '/assets/css/mv-home.css',
             [],
-            filemtime( get_stylesheet_directory() . '/assets/css/mv-home.css' )
+            mv_asset_version( 'assets/css/mv-home.css' )
         );
     }
     wp_enqueue_style(
         'mavo-tiles',
         get_stylesheet_directory_uri() . '/assets/css/mv-tiles.css',
         [],
-        filemtime( get_stylesheet_directory() . '/assets/css/mv-tiles.css' )
+        mv_asset_version( 'assets/css/mv-tiles.css' )
     );
 } );
 
@@ -326,7 +371,9 @@ function mavo_remove_header() {
 }
 add_filter( 'generate_copyright','tu_custom_copyright' );
 function tu_custom_copyright() {
-	echo 'Copyright &copy; '.date('Y').'&nbsp;';
+	// wp_date, not date: date() reads the server's timezone, so for the few
+	// hours either side of New Year the footer showed the wrong year.
+	echo 'Copyright &copy; ' . esc_html( wp_date( 'Y' ) ) . '&nbsp;';
 	bloginfo('name');
 }
 add_filter( 'generate_font_display', function() {
@@ -615,25 +662,43 @@ function theme_shortcode_catcards($atts, $content = null, $code = '') {
 }
 add_shortcode('catcards-inc-ul', 'theme_shortcode_catcards');
 
-function publish_later_on_feed($where) {
+/**
+ * Hold a post back from the feeds for its first few minutes, so a publish that
+ * is immediately corrected does not go out in the first state.
+ *
+ * Three things were wrong with the version this replaces, all of them the
+ * defaults of the snippet it came from:
+ *
+ *   - it tested the global is_feed() and took only $where, so it could not tell
+ *     the feed's own query from any other query running on a feed request, and
+ *     applied the clause to all of them;
+ *   - it concatenated its values into SQL instead of preparing them. Nothing
+ *     here is user input, so it was not injectable — but this is the shape
+ *     people copy;
+ *   - TIMESTAMPDIFF(MINUTE, post_date_gmt, now) > 10 cannot use the post_date
+ *     index. Comparing the column against a cutoff computed in PHP is the same
+ *     question asked so that MySQL can answer it from the index — which the
+ *     feeds need more than most pages, since cache_enabler_bypass_cache()
+ *     deliberately leaves them uncached.
+ */
+function publish_later_on_feed( $where, $query = null ) {
         global $wpdb;
 
-        if ( is_feed() ) {
-                // timestamp in WP-format
-                $now = gmdate('Y-m-d H:i:s');
-
-                // value for wait; + device
-                $wait = '10'; // integer
-
-                // http://dev.mysql.com/doc/refman/5.0/en/date-and-time-functions.html#function_timestampdiff
-                $device = 'MINUTE'; //MINUTE, HOUR, DAY, WEEK, MONTH, YEAR
-
-                // add SQL-sytax to default $where
-                $where .= " AND TIMESTAMPDIFF($device, $wpdb->posts.post_date_gmt, '$now') > $wait ";
+        if ( ! $query instanceof WP_Query || ! $query->is_feed() || ! $query->is_main_query() ) {
+                return $where;
         }
-        return $where;
+
+        $hold_minutes = (int) apply_filters( 'mavo_feed_hold_minutes', 10 );
+
+        if ( $hold_minutes < 1 ) {
+                return $where;
+        }
+
+        $cutoff = gmdate( 'Y-m-d H:i:s', time() - ( $hold_minutes * MINUTE_IN_SECONDS ) );
+
+        return $where . $wpdb->prepare( " AND {$wpdb->posts}.post_date_gmt < %s ", $cutoff );
 }
-add_filter('posts_where', 'publish_later_on_feed');
+add_filter( 'posts_where', 'publish_later_on_feed', 10, 2 );
 
 //truncate feed at more tag
 function mytheme_content_feed($feed_type = null) {
@@ -671,12 +736,32 @@ function jetpackme_exclude_posts_subscriptions( $categories ) {
 }
 add_filter( 'jetpack_subscriptions_exclude_these_categories', 'jetpackme_exclude_posts_subscriptions' );
 
+/**
+ * The category kept out of the RSS/Atom feeds.
+ *
+ * Was a bare '-8467' inline, with nothing saying what that category is — so
+ * nobody could tell whether it was still the right one, and deleting or
+ * merging the category would have silently stopped the exclusion.
+ *
+ * Verify with: wp term get category MAVO_FEED_EXCLUDED_CATEGORY
+ * (or Posts → Categories, hovering the row shows tag_ID= in the edit link).
+ *
+ * Filterable so the ID can be corrected without editing the theme.
+ */
+if ( ! defined( 'MAVO_FEED_EXCLUDED_CATEGORY' ) ) {
+    define( 'MAVO_FEED_EXCLUDED_CATEGORY', 8467 );
+}
+
 function exclude_category($query) {
     if ( $query->is_feed() ) {
         $feed = $query->get('feed');
         // Only the real RSS/Atom feeds — NOT the plugin's sitemap feeds
         if ( in_array( $feed, array('feed','rdf','rss','rss2','atom'), true ) ) {
-            $query->set('cat', '-8467');
+            $excluded = absint( apply_filters( 'mavo_feed_excluded_category', MAVO_FEED_EXCLUDED_CATEGORY ) );
+
+            if ( $excluded ) {
+                $query->set( 'cat', '-' . $excluded );
+            }
         }
     }
     return $query;

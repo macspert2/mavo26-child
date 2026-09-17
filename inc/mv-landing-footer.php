@@ -30,6 +30,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * The curated landing pages: the three language homepages and Explorer.
+ *
+ * The single definition of that set. It is used beyond this file — the
+ * mv-home.css enqueue in functions.php asks the same question — so the slug
+ * list lives here only, rather than being written out again at each call site.
+ */
 function mv_is_landing_page(): bool {
 	return is_page( [ 'accueil', 'home', 'startseite', 'explorer' ] ) || is_front_page();
 }
@@ -100,27 +107,38 @@ function mv_render_landing_footer(): void {
 	];
 	$t = $strings[ $lang ] ?? $strings['fr'];
 
-	$links = [
+	/*
+	 * Paths, resolved through mv_site_url() below, rather than absolute
+	 * mamanvoyage.com URLs: spelled out in full they sent a staging copy's
+	 * readers to production, and would have survived a domain change by
+	 * pointing at the old domain. (mv_site_url() rather than home_url()
+	 * because Polylang filters the latter — see its definition.)
+	 *
+	 * Only `about` is translated. Contact, legal and privacy point at the
+	 * French pages in every language on purpose — those exist only in French.
+	 */
+	$paths = [
 		'fr' => [
-			'about'   => 'https://www.mamanvoyage.com/a-propos/',
-			'contact' => 'https://www.mamanvoyage.com/a-propos/contactez-moi/',
-			'legal'   => 'https://www.mamanvoyage.com/a-propos/mentions-legales/',
-			'privacy' => 'https://www.mamanvoyage.com/a-propos/politique-de-confidentialite/',
+			'about'   => '/a-propos/',
+			'contact' => '/a-propos/contactez-moi/',
+			'legal'   => '/a-propos/mentions-legales/',
+			'privacy' => '/a-propos/politique-de-confidentialite/',
 		],
 		'en' => [
-			'about'   => 'https://www.mamanvoyage.com/en/about/',
-			'contact' => 'https://www.mamanvoyage.com/a-propos/contactez-moi/',
-			'legal'   => 'https://www.mamanvoyage.com/a-propos/mentions-legales/',
-			'privacy' => 'https://www.mamanvoyage.com/a-propos/politique-de-confidentialite/',
+			'about'   => '/en/about/',
+			'contact' => '/a-propos/contactez-moi/',
+			'legal'   => '/a-propos/mentions-legales/',
+			'privacy' => '/a-propos/politique-de-confidentialite/',
 		],
 		'de' => [
-			'about'   => 'https://www.mamanvoyage.com/de/ueber-mich/',
-			'contact' => 'https://www.mamanvoyage.com/a-propos/contactez-moi/',
-			'legal'   => 'https://www.mamanvoyage.com/a-propos/mentions-legales/',
-			'privacy' => 'https://www.mamanvoyage.com/a-propos/politique-de-confidentialite/',
+			'about'   => '/de/ueber-mich/',
+			'contact' => '/a-propos/contactez-moi/',
+			'legal'   => '/a-propos/mentions-legales/',
+			'privacy' => '/a-propos/politique-de-confidentialite/',
 		],
 	];
-	$l = $links[ $lang ] ?? $links['fr'];
+
+	$l = array_map( 'mv_site_url', $paths[ $lang ] ?? $paths['fr'] );
 	?>
 	<div class="footer-widgets mv-landing-footer">
 		<div class="inside-footer-widgets mv-landing-footer__inner mv-container">

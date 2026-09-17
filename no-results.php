@@ -37,17 +37,34 @@ $mv_t = $mv_strings[ $mv_lang ] ?? $mv_strings['fr'];
 // FR has a real Start Here page and destinations hub; EN/DE have
 // neither, so they get a single "back to homepage" button instead of
 // 3 buttons pointing at pages that don't exist for them.
+//
+// Built from the site's own address rather than written out as absolute
+// URLs: those sent a staging copy's visitors to production, and would have
+// survived a domain change by quietly pointing at the old one. The home button
+// asks Polylang for the language's own front page where it can.
+$mv_home = function ( string $lang ): string {
+	if ( function_exists( 'pll_home_url' ) ) {
+		$url = (string) pll_home_url( $lang );
+
+		if ( '' !== $url ) {
+			return $url;
+		}
+	}
+
+	return mv_site_url( '/' );
+};
+
 $mv_buttons = [
 	'fr' => [
-		[ 'label' => 'Explorer Maman Voyage', 'url' => 'https://www.mamanvoyage.com/explorer/' ],
-		[ 'label' => 'Toutes nos destinations', 'url' => 'https://www.mamanvoyage.com/nos-voyages/destinations/' ],
-		[ 'label' => 'Retour à l’accueil', 'url' => 'https://www.mamanvoyage.com/' ],
+		[ 'label' => 'Explorer Maman Voyage', 'url' => mv_site_url( '/explorer/' ) ],
+		[ 'label' => 'Toutes nos destinations', 'url' => mv_site_url( '/nos-voyages/destinations/' ) ],
+		[ 'label' => 'Retour à l’accueil', 'url' => $mv_home( 'fr' ) ],
 	],
 	'en' => [
-		[ 'label' => 'Back to homepage', 'url' => 'https://www.mamanvoyage.com/en/' ],
+		[ 'label' => 'Back to homepage', 'url' => $mv_home( 'en' ) ],
 	],
 	'de' => [
-		[ 'label' => 'Zur Startseite', 'url' => 'https://www.mamanvoyage.com/de/' ],
+		[ 'label' => 'Zur Startseite', 'url' => $mv_home( 'de' ) ],
 	],
 ];
 $mv_page_buttons = $mv_buttons[ $mv_lang ] ?? $mv_buttons['fr'];

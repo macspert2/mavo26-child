@@ -161,7 +161,7 @@ add_action( 'wp_enqueue_scripts', function () {
 		'mv-hub-nav',
 		get_stylesheet_directory_uri() . '/assets/css/mv-hub-nav.css',
 		[],
-		filemtime( get_stylesheet_directory() . '/assets/css/mv-hub-nav.css' )
+		mv_asset_version( 'assets/css/mv-hub-nav.css' )
 	);
 } );
 

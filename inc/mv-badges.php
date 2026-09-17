@@ -744,8 +744,13 @@ function _mv_search_aliases(): array {
 
 /**
  * Build a map of normalized place name → geo level (country/region/city) from
- * the geo_tagger_places table. Cached as a transient for 24 h so search scoring
- * can detect query geo type even when a post isn't tagged at that level.
+ * mavo-geotag-plus. Cached as a transient for 24 h so search scoring can detect
+ * query geo type even when a post isn't tagged at that level.
+ *
+ * Read through PlaceRepository like every other geo lookup in this file. It was
+ * the one that queried {$wpdb->prefix}geo_tagger_places directly and without a
+ * class_exists() guard, so deactivating that plugin turned the search page into
+ * a MySQL error instead of simply dropping the geo signal.
  */
 function _mv_search_geo_type_map(): array {
 	static $local = null;
@@ -759,15 +764,21 @@ function _mv_search_geo_type_map(): array {
 		return $local;
 	}
 
-	global $wpdb;
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery
-	$rows = $wpdb->get_results(
-		"SELECT name_fr, name_en, name_de, level FROM {$wpdb->prefix}geo_tagger_places WHERE level IN ('country','region','city')"
-	);
+	if ( ! class_exists( '\GeoTagger\PlaceRepository' ) ) {
+		return $local = [];
+	}
+
+	$levels = [ 'country' => true, 'region' => true, 'city' => true ];
+	$rows   = ( new \GeoTagger\PlaceRepository() )->get_all_places();
 
 	$local = [];
 	foreach ( (array) $rows as $row ) {
 		$level = $row->level ?? '';
+
+		if ( ! isset( $levels[ $level ] ) ) {
+			continue;
+		}
+
 		foreach ( [ $row->name_fr ?? '', $row->name_en ?? '', $row->name_de ?? '' ] as $raw ) {
 			if ( '' === $raw ) {
 				continue;
