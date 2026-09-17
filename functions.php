@@ -878,8 +878,8 @@ if (
         $bpul
     );
 }
-        $bpul = get_stylesheet_directory() . '/js/bpulv5.js';
-        wp_enqueue_script( 'bpul_script', get_stylesheet_directory_uri() . '/js/bpulv5.js', [], file_exists( $bpul ) ? filemtime( $bpul ) : '1.0', true );
+        $bpul_file = get_stylesheet_directory() . '/js/bpulv5.js';
+        wp_enqueue_script( 'bpul_script', get_stylesheet_directory_uri() . '/js/bpulv5.js', [], file_exists( $bpul_file ) ? filemtime( $bpul_file ) : '1.0', true );
         $script = 'const BPU_URL = atob("' . base64_encode( $bpul).'"); ';
         wp_add_inline_script( 'bpul_script', $script, 'before' );
     }
