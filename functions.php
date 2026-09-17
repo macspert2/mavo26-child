@@ -912,7 +912,7 @@ function bpul_script() {
         return;
     }
 
-if ( has_category( [ 'expatriation-angleterre', 'accessoires-voyage' ], $post_id ) ) {
+if ( has_category( [ 'expatriation-angleterre', 'accessoires-voyage', 'hebergements' ], $post_id ) ) {
     return;
 }
 
