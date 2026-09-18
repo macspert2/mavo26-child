@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 
 add_action( 'post_tag_edit_form_fields', 'mv_geo_hub_edit_form_fields', 10, 1 );
 function mv_geo_hub_edit_form_fields( \WP_Term $term ): void {
-	$hub_page_id = (int) get_term_meta( $term->term_id, '_mv_hub_page_id', true );
+	$hub_page_id = mv_geo_hub_page_id( $term->term_id );
 	$hub_url     = $hub_page_id ? get_permalink( $hub_page_id ) : '';
 	wp_nonce_field( 'mv_geo_hub_save_' . $term->term_id, '_mv_geo_hub_nonce' );
 	?>
@@ -69,30 +69,46 @@ function mv_geo_hub_save_tag_fields( int $term_id ): void {
 	}
 
 	// Remove the old reverse link from the previously linked page (if any).
-	$old_page_id = (int) get_term_meta( $term_id, '_mv_hub_page_id', true );
+	$old_page_id = mv_geo_hub_page_id( $term_id );
 	if ( $old_page_id ) {
 		delete_post_meta( $old_page_id, '_mv_geo_term_id' );
 	}
 
 	$raw_url = isset( $_POST['mv_geo_hub_url'] ) ? sanitize_text_field( wp_unslash( $_POST['mv_geo_hub_url'] ) ) : '';
+	$page_id = 0;
 
-	if ( '' === $raw_url ) {
+	if ( '' !== $raw_url ) {
+		// Accept relative paths (/france/) by prepending home_url.
+		if ( str_starts_with( $raw_url, '/' ) ) {
+			$raw_url = home_url( $raw_url );
+		}
+
+		// Unresolvable URL clears the link rather than storing something broken.
+		$page_id = (int) url_to_postid( $raw_url );
+	}
+
+	if ( $page_id ) {
+		update_term_meta( $term_id, '_mv_hub_page_id', $page_id );
+		update_post_meta( $page_id, '_mv_geo_term_id', $term_id );
+	} else {
 		delete_term_meta( $term_id, '_mv_hub_page_id' );
+	}
+
+	if ( $page_id === $old_page_id ) {
 		return;
 	}
 
-	// Accept relative paths (/france/) by prepending home_url.
-	if ( str_starts_with( $raw_url, '/' ) ) {
-		$raw_url = home_url( $raw_url );
-	}
-
-	$page_id = url_to_postid( $raw_url );
-	if ( ! $page_id ) {
-		// URL doesn't resolve to a post — save nothing (keep old value cleared).
-		delete_term_meta( $term_id, '_mv_hub_page_id' );
-		return;
-	}
-
-	update_term_meta( $term_id, '_mv_hub_page_id', $page_id );
-	update_post_meta( $page_id, '_mv_geo_term_id', $term_id );
+	/**
+	 * Fires when a geo tag's landing page is set, changed or cleared.
+	 *
+	 * Breadcrumbs are cached as rendered HTML and JSON-LD against a fingerprint
+	 * of place + language, which cannot see a URL change — so without this the
+	 * old /tag/europe/ link would survive in every cached breadcrumb beneath
+	 * Europe indefinitely. Mavo Geotag Plus listens and drops its caches.
+	 *
+	 * @param int $term_id     The geo tag.
+	 * @param int $page_id     The landing page now linked, or 0 if cleared.
+	 * @param int $old_page_id What it was linked to before.
+	 */
+	do_action( 'mavo_geo_term_url_changed', $term_id, $page_id, $old_page_id );
 }

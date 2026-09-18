@@ -46,6 +46,9 @@ function mv_site_url( string $path = '/' ): string {
 require_once get_stylesheet_directory() . '/inc/mv-settings.php';
 require_once get_stylesheet_directory() . '/inc/mv-landing-footer.php';
 require_once get_stylesheet_directory() . '/inc/mv-search-page.php';
+// Before mv-badges.php and mv-geo-hub-admin.php: both call into it, and the
+// badges run on the front end where the admin file is never loaded.
+require_once get_stylesheet_directory() . '/inc/mv-geo-hub.php';
 require_once get_stylesheet_directory() . '/inc/mv-badges.php';
 require_once get_stylesheet_directory() . '/inc/mv-geo-hub-shortcodes.php';
 require_once get_stylesheet_directory() . '/inc/mv-hub-nav.php';
